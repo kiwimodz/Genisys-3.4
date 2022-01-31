@@ -9,13 +9,16 @@ enum ids : int
 	ID_AIMBOT,
 	ID_ESP,
 	ID_CHEATS,
+	ID_EXPLOITS,
 	ID_ENTITY,
 	ID_PLAYERSLIST,
 	ID_RECENTLIST,
 	ID_PLAYERS,
+	ID_PLAYERSV1,
 	ID_ACCOUNT,
 	ID_SETTINGS,
 	ID_PLAYERS_SUB,
+	ID_PLAYERS_SUBV1,
 	ID_RECENTS_SUB,
 	ID_ANTIAIM,
 	ID_RADAR,
@@ -89,7 +92,7 @@ extern char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, m
 
 extern Detour Party_ReadMember_d;
 extern bool Party_ReadMember(PartyMember* partyMember, msg_t* msg, bool check);
-
+extern void(*Live_SendJoinRequest)(SceNpId* r3, int r4);
 extern SceNpId DefaultNpInfo;
 struct menudata_s
 {
@@ -97,7 +100,7 @@ public:
 	char DefName[16];
 	int Offset;
 	Vector2 OptPos;
-	bool entityaimbot, cham, rgba, i32_Name, camocolor, Grab, bInGame, bdisconnect;
+	bool entityaimbot, cham, rgba, i32_Name, camocolor, Grab, bInGame, bdisconnect, hostaw;
 	bool engnsounds, renderonme, renderonplayers, renderchamsonme, sping, bo2theme, ip_spoofing, btrickmode, bgunsound, disabledlc, benablecamos, flshname, addname, addname1, combo_active, smokec, nightmode, dankmap, skyc, skyr, fade, lockcolor, mp, fps, fmpssaving, fpssaving, res, serverinfo, host, map, game, ents, maxc, ping, temp1, temp2, fahrenheit, bForceInv, bClosedBypass;
 	int flagx, flagy, bfade, sypos1, inttyp, signin, msize, SMPing, drawInterval;
 	float frenderfovx;

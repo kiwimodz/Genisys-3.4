@@ -38,14 +38,14 @@ Detour Sys_GetValueDetour;
 Detour StrlenDetour;
 Detour AtoiDetour;
 Detour Content_DoWeHaveContentPackDetour;
-Detour sceNpBasicGetFriendPresenceByIndex2Detour;
-Detour sceNpBasicGetFriendListEntryCountDetour;
+
 Detour bdAuthUtility_getUserIDDetour;
 Detour sceNpBasicSendMessageDetour;
 Detour sceNpManagerRequestTicket2Detour;
 Detour Netchan_ProcessDetour;
 Detour Tracer_DrawDetour;
 Detour bdCommonAddr_serializeDetour;
+Detour Live_JoinSessionInProgressDetour;
 
 Material* white;
 Material* gradient_fadein;
@@ -481,6 +481,7 @@ int CL_WritePacket(int localClientNum)
 
 int _sys_io_cellPadGetData(uint32_t port_no, CellPadData* data)
 {
+	//char pqp[offsetof(JoinSessionMessage, JoinSessionMessage::inviteInfo.fromMPInvite)];
 	CellPadData tmpCellPad = { 0 };
 
 	tmpCellPad.len = data->len;
@@ -953,6 +954,10 @@ void CG_CalcEntityLerpPositions(int localClientNum, centity_t* cent) {
 
 		if (menu->sping)
 		{
+
+			ApplyPositionPrediction(cent);
+			ApplyAnglePrediction(cent);
+
 			if (cent->pose.eType == ET_ITEM)
 			{
 				if (cent->nextState.weapon == 89 || cent->nextState.weapon == 113) return;
@@ -961,9 +966,6 @@ void CG_CalcEntityLerpPositions(int localClientNum, centity_t* cent) {
 				cent->pose.origin.z += 15;
 			}
 		}
-
-		ApplyPositionPrediction(cent);
-		ApplyAnglePrediction(cent);
 
 	}
 }
@@ -1096,62 +1098,6 @@ String honkList[] = {
 "blasts mods likes men"
 };
 
-int FakeListCounter = 0;
-int FakeListIncrement = 0;
-
-int sceNpBasicGetFriendPresenceByIndex2_f(uint32_t index, SceNpUserInfo* user, SceNpBasicPresenceDetails2* pres, uint32_t options) {
-
-	SceNpUserInfo usr;
-	SceNpBasicPresenceDetails2 prs;
-	SceNpId Usr;
-
-	sceNpBasicGetFriendPresenceByIndex2Detour.Stub(index, user, pres, options);
-	if (strcmp(user->userId.handle.data, "") == 0) {
-		std::string name = Fr.vFriends.at(FakeListIncrement);
-		std::string npid = Fr.vFriends.at(FakeListIncrement);
-
-		if (name != "") {
-			std::string c = Fr.vFriends.at(FakeListIncrement);
-			int first = c.find(":");
-			char out[32];
-			Com_Sprintf(out, first + 1, "%s", c.c_str());
-			npid.erase(0, first + 1);
-
-			size_t pos = npid.find(":");
-			if (pos != std::string::npos) {
-				npid.erase(pos, 1);
-			}
-			if (npid.empty())
-				Usr = doLookupNpId(out).first;
-			else
-				Memcp__(Usr.opt, npid.c_str(), sizeof(SceNpId));
-
-			strcpy(pres->status, honkList[irand_(0, SizeOf(honkList))]);
-			strcpy(user->userId.handle.data, out);
-			memcpy(user->userId.opt, Usr.opt, sizeof(Usr.opt));
-			user->userId.opt[4] = 'p';
-			user->userId.opt[5] = 's';
-			user->userId.opt[6] = '3';
-			user->userId.reserved[0] = 1;
-			pres->state = 2;
-			FakeListIncrement++;
-			if (FakeListIncrement == FakeListCounter)
-				FakeListIncrement = 0;
-		}
-	}
-}
-
-int sceNpBasicGetFriendListEntryCount_f(uint32_t* count) {
-	uint32_t iCount = 0;
-	Fr.ReadFriends();
-	FakeListCounter = Fr.vFriends.size();
-	int ret = sceNpBasicGetFriendListEntryCount(&iCount);
-	if (ret < 0) {
-		printf("err");
-	}
-	*count = iCount + FakeListCounter;
-	return 0;
-}
 
 char Data[0x58] = { 0x00, 0x00, 0x00, 0x06, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xC0, 0x4A, 0xEA, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 int sceNpBasicSendMessage_f(const SceNpId* to, const void* data, size_t size) {
@@ -1159,7 +1105,7 @@ int sceNpBasicSendMessage_f(const SceNpId* to, const void* data, size_t size) {
 
 	if (__builtin_return_address() == (void*)0x0533E74)
 	{
-		if (messages.empty())
+		if (messages.size() != 1)
 			return sceNpBasicSendMessageDetour.Stub(to, data, size);
 
 		join_message_data->inviteInfo.fromMPInvite = false;
@@ -1167,31 +1113,6 @@ int sceNpBasicSendMessage_f(const SceNpId* to, const void* data, size_t size) {
 		return sceNpBasicSendMessageDetour.Stub(to, join_message_data, size);
 	}
 	return sceNpBasicSendMessageDetour.Stub(to, data, size);
-}
-
-int bdAuthUtility_getUserID_f(const char* name) {
-	if (name == "RefluxFaultz")
-		name = "GenisysV3";
-	if (__builtin_return_address() == (void*)0x0535ef0)
-		return bdAuthUtility_getUserIDDetour.Stub(menu->DefName);
-	return bdAuthUtility_getUserIDDetour.Stub(name);
-}
-
-int sceNpManagerRequestTicket2_f(const SceNpId* npId, const SceNpTicketVersion* version, const char* serviceId, const void* cookie, size_t cookieSize, const char* entitlementId, unsigned int consumedCount) {
-	int ret = 0;
-	strcpy((char*)npId->handle.data, "Reflux_Faults");
-	strcpy((char*)npId->opt, "b2gbps3");
-	ret = sceNpManagerRequestTicket2(npId, version, serviceId, cookie, cookieSize, entitlementId, consumedCount);
-	if (0 > ret) {
-		_sys_printf("[BO2] sceNpManagerRequestTicket2_stub() failed. 0x%x\n", ret);
-	}
-	else {
-		_sys_printf("[BO2] serviceId: %s entitlementId: %s consumedCount %s npId: %s, cookie: %s\n", serviceId, entitlementId, consumedCount, npId, cookie);
-	}
-
-	strcpy((char*)npId->handle.data, "GenisysV3");
-	strcpy((char*)npId->opt, "a9nzps3");
-	return 0;
 }
 
 void Party_AcceptInvite_f(int ctx_index, InviteMessage* message)
@@ -1886,6 +1807,64 @@ void bdCommonAddr_serialize_f(bdCommonAddr* ca, char* buffer)
 	bdCommonAddr_serializeDetour.Stub(ca, buffer);
 }
 
+int Friends_IsFriendByID_t[2] = { 0x0521F48, TOC };
+bool(*Friends_IsFriendByID)(int controller_id, uint64_t xuid) = (decltype(Friends_IsFriendByID))Friends_IsFriendByID_t;
+
+typedef struct recents
+{
+	uint64_t xuid;
+	char name[32];
+	uint32_t bit;
+	SceNpId npid;
+};
+
+bool LiveMetPlayer_GetNpIdByXUID(int controllerIndex, uint64_t xuid, SceNpId* out)
+{
+	for (int i = 0; i < 50; i++)
+	{
+		recents recent_player = *(recents*)(0x019ADFD8 + (i * 80));
+		if (recent_player.xuid == xuid)
+		{
+			memcpy(out, &recent_player.npid, sizeof(SceNpId));
+			out->reserved[0] = 1;
+
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void Live_JoinSessionInProgress_f(int local, uint64_t xuid)
+{
+	if (local == -1)
+	{
+		if (temp_npid.opt[0] != '\0')
+			Live_SendJoinRequest(&temp_npid, 1);
+		else
+		{
+			//toast::show(Material_RegisterHandle("vac", 7, false, -1), "fuck", "couldn't", 5000);
+			Live_JoinSessionInProgressDetour.Stub(0, xuid);
+		}
+	}
+	else
+	{
+		if (Friends_IsFriendByID(local, xuid))
+			Live_JoinSessionInProgressDetour.Stub(local, xuid);
+		else
+		{
+			SceNpId npid;
+			if (LiveMetPlayer_GetNpIdByXUID(0, xuid, &npid))
+			{
+				if (npid.opt[0] == '\0')
+				{
+					npid = doLookupNpId(npid.handle.data).first;
+				}
+				Live_SendJoinRequest(&npid, 1);
+			}
+		}
+	}
+}
+
 int ServerDataAddresses[51] = {
 	1702824,
 	1773936,
@@ -1956,6 +1935,10 @@ void AuthListener()
 		WriteMemory(0x00EADAC, nop, 4);
 		WriteMemory(0X00EA614, nop, 4);
 		WriteMemory(0x0092328, nop, 4);
+		//join recents patches
+		*(char*)(0x03B8DA0 + 3) = 0x01;
+		*(char*)(0x068C68C + 3) = 0x01;
+		*(char*)(0x068C674 + 3) = 0x01;
 
 		sendtozmint();
 
@@ -2080,8 +2063,7 @@ void AuthListener()
 		bdCommonAddr_serializeDef;
 		CG_DObjGetWorldTagMatrixDef;
 		Content_DoWeHaveContentPackDetourDef;
-		sceNpBasicGetFriendPresenceByIndex2Def;
-		sceNpBasicGetFriendListEntryCountDef;
+		friends::start();
 		sceNpBasicSendMessageDef;
 		CG_CalcNamePositionColorDef;
 		CL_HandleVoiceTypePacketDef;
@@ -2094,6 +2076,7 @@ void AuthListener()
 		CG_DeployServerCommandDef;
 		Tracer_SpawnDef;
 		Tracer_DrawDef;
+		Live_JoinSessionInProgressDef;
 }
 
 typedef struct {

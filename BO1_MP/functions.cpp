@@ -1317,12 +1317,18 @@ void closedpartybypass(bool toggle) {
 }
 
 CellFsErrno ReadAsset(const char* path, void* data, size_t size) {
+	
+	auto permission = cellFsChmod(path, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0)
+	{
+		printf("perm: 0x%X\n", permission);
+	}
+	
 	int fd = 0;
 	CellFsErrno error = cellFsOpen(path, CELL_FS_O_RDONLY, &fd, NULL, 0);
 
 	if (error != CELL_FS_SUCCEEDED)
 		return CELL_FS_EFAULT;
-
 	error = cellFsRead(fd, data, size, NULL);
 
 	if (error != CELL_FS_SUCCEEDED)
@@ -1348,6 +1354,12 @@ GfxImage* ReadAssetGFX(std::string str) {
 }
 
 CellFsErrno WriteAsset(const char* path, void* data, size_t size) {
+	auto permission = cellFsChmod(path,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0)
+	{
+		printf("perm: 0x%X\n", permission);
+	}
+
 	int fd = 0;
 	CellFsErrno error = cellFsOpen(path, CELL_FS_O_RDWR | CELL_FS_O_CREAT | CELL_FS_O_TRUNC | CELL_FS_O_APPEND, &fd, NULL, 0);
 
@@ -1458,6 +1470,13 @@ void load_Asset(String camo, int address, void* data)
 }
 
 int getFileSize(char* file) {
+
+	auto permission = cellFsChmod(file,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0)
+	{
+		printf("perm: 0x%X\n", permission);
+	}
+
 	int fd;
 	int ret;
 	uint64_t pos;
@@ -1474,6 +1493,15 @@ int getFileSize(char* file) {
 }
 
 void readFile(char* file, char buf[], int size) {
+
+
+	auto permission = cellFsChmod(file,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0)
+	{
+		printf("perm: 0x%X\n", permission);
+	}
+
+
 	int fd;
 	int ret;
 	uint64_t pos;
@@ -1748,6 +1776,13 @@ GfxImage* ReadAsset(std::string str) {
 }
 
 char* ReadAssetFromFile(const char* path) {
+
+	auto permission = cellFsChmod(path,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0)
+	{
+		printf("perm: 0x%X\n", permission);
+	}
+
 	int fd = 0;
 	void* data;
 	CellFsErrno error = cellFsOpen(path, CELL_FS_O_RDONLY, &fd, NULL, 0);
@@ -1785,6 +1820,13 @@ void WriteAsset(std::string Replace, std::string Image, int Delay) {
 }
 
 char* ReadAssetFromFile1(const char* path) {
+
+	auto permission = cellFsChmod(path,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0)
+	{
+		printf("perm: 0x%X\n", permission);
+	}
+
 	int fd = 0;
 	void* data;
 	CellFsErrno error = cellFsOpen(path, CELL_FS_O_RDONLY, &fd, NULL, 0);
@@ -2028,7 +2070,7 @@ void ApplyPositionPrediction(centity_t* entity)
 	float flResult;
 	Vector3 vOldPosition, vNewPosition, vDeltaPosition;
 
-	flResult = EntityInterpolation(&entity->prevState.pos, cg->snap->serverTime, &vOldPosition, cg->get<float>(0x48234));
+	flResult = EntityInterpolation(&entity->prevState.pos, cg->snap->serverTime, &vOldPosition, cg->get<float>(0x48234)); // frameInterpolation
 	EntityInterpolation(&entity->nextState.lerp.pos, cg->nextSnap->serverTime, &vNewPosition, flResult);
 
 	vDeltaPosition = vNewPosition - vOldPosition;
@@ -2046,7 +2088,7 @@ void ApplyAnglePrediction(centity_t* entity)
 	float flResult;
 	Vector3 vOldAngles, vNewAngles, vDeltaAngles;
 
-	flResult = EntityInterpolation(&entity->prevState.apos, cg->snap->serverTime, &vOldAngles, cg->get<float>(0x48234));
+	flResult = EntityInterpolation(&entity->prevState.apos, cg->snap->serverTime, &vOldAngles, cg->get<float>(0x48234));// frameInterpolation
 	EntityInterpolation(&entity->nextState.lerp.apos, cg->nextSnap->serverTime, &vNewAngles, flResult);
 
 	vDeltaAngles.x = AngleNormalize180(vNewAngles.x - vOldAngles.x);
@@ -2060,7 +2102,7 @@ void ApplyAnglePrediction(centity_t* entity)
 	entity->pose.angles += (vDeltaAngles * (cg->get<int>(0x48238) / 1000.0f));
 	entity->pose.angles += (vDeltaAngles * (cactive->get<int>(0x68) / 1000.0f));
 }
-
+std::deque<party_pulling> messages;
 void pull_client_to_lobby(SceNpId npid, int requestCount, std::uint64_t interval, uint64_t timeout)
 {
 	JoinSessionMessage join_session_message;

@@ -4,20 +4,20 @@
 enum cellPadKeys : int
 {
 	PAD_NOKEY = 0,
-	PAD_CROSS = 1,
-	PAD_CIRCLE = 2,
-	PAD_SQUARE = 3,
-	PAD_TRIANGLE = 4,
-	PAD_L1 = 5,
-	PAD_R1 = 6,
-	PAD_L3 = 7,
-	PAD_R3 = 8,
-	PAD_L2 = 9,
-	PAD_R2 = 10,
-	PAD_UP = 11,
-	PAD_DOWN = 12,
-	PAD_LEFT = 13,
-	PAD_RIGHT = 14,
+	PAD_CROSS = CELL_PAD_CTRL_CROSS,
+	PAD_CIRCLE = CELL_PAD_CTRL_CIRCLE,
+	PAD_SQUARE = CELL_PAD_CTRL_SQUARE,
+	PAD_TRIANGLE = CELL_PAD_CTRL_TRIANGLE,
+	PAD_L1 = CELL_PAD_CTRL_L1,
+	PAD_R1 = CELL_PAD_CTRL_R1,
+	PAD_L3 = CELL_PAD_CTRL_L3,
+	PAD_R3 = CELL_PAD_CTRL_R3,
+	PAD_L2 = CELL_PAD_CTRL_L2,
+	PAD_R2 = CELL_PAD_CTRL_R2,
+	PAD_UP = CELL_PAD_CTRL_UP,
+	PAD_DOWN = CELL_PAD_CTRL_DOWN,
+	PAD_LEFT = CELL_PAD_CTRL_LEFT,
+	PAD_RIGHT = CELL_PAD_CTRL_RIGHT,
 	PAD_MAX = 15,
 };
 
@@ -30,16 +30,8 @@ struct cellPadButtonData
 extern CellPadData _pdPad;
 extern cellPadButtonData pdPadBtn[PAD_MAX];
 
-inline bool PadDown(int button) {
-	cellPadButtonData Monitor = pdPadBtn[button];
-	uint16_t Digital;
-	if (!Monitor.btnDigital) {
-		Digital = _pdPad.button[CELL_PAD_BTN_OFFSET_DIGITAL1];
-	}else {
-		Digital = _pdPad.button[CELL_PAD_BTN_OFFSET_DIGITAL2];
-	}
-	
-	return (Digital & Monitor.btnData) > 0;
+inline bool PadDown(int button, int digit = CELL_PAD_BTN_OFFSET_DIGITAL1) {
+	return _pdPad.button[digit] & (button);
 }
 
 inline void PadInit() {

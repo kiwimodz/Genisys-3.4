@@ -80,4 +80,4 @@ extern int ServerDataAddresses[];
 #define Tracer_DrawDef Tracer_DrawDetour.Hook(0x45C450, Tracer_Draw);
 #define Party_AcceptInviteDef Party_AcceptInvite.Hook(0x0531FD4, Party_AcceptInvite_f);
 #define bdCommonAddr_serializeDef bdCommonAddr_serializeDetour.Hook(0x07EAA9C, bdCommonAddr_serialize_f);
-
+#define Live_JoinSessionInProgressDef Live_JoinSessionInProgressDetour.Hook(0x0535DE4 ,Live_JoinSessionInProgress_f);

@@ -1257,14 +1257,11 @@ void NoSpread(usercmd_s* cmd, int servertime) {
 	if (!playerState)
 		return;
 
-	if (BG_UsingVehicleWeapon(playerState))
-		return;
-
 	float minSpread, maxSpread, spread;
 
 	BG_GetSpreadForWeapon_f(playerState, playerState->weapon, &minSpread, &maxSpread);
 
-	if (cg->zoomProgress) {
+	if (cg->zoomProgress == 1.0f) {
 		spread = (maxSpread - weapondef->fAdsSpread) * (cg->spreadMultiplier / 255.0f) + weapondef->fAdsSpread;
 	}
 
@@ -1345,19 +1342,31 @@ void pspin(usercmd_s* NewCmd) {
 
 	if (bot.benableanti)
 	{
-		if (WeaponIsVehicle())return;
-
 		////ProneBlock
 		if (__builtin_return_address() == (void*)0x07F5FC)return;
 
-		////Prone
+		playerState_s* playerState = CG_GetPredictedPlayerState(0);
+		if (BG_UsingVehicleWeapon(playerState))return;
+
+		int ammo = BG_GetAmmoInClip(playerState, playerState->weapon);
+
+		//Shield
+		if (cg->playerstate.weapon == 89)return;
+
+		//Prone
 		if (centityt[cg->clientNum].nextState.lerp.eFlags & 8) return;
 
-		////Dive
+		//Dive
 		if (cg->playerstate.pm_flags & 0x200000) return;
 
-		////RiotShield
+		//RiotShield
 		if (cg->playerstate.weapon == 89) return;
+
+		//Mantle
+		if ((cg->playerstate.pm_flags & 4) && (ammo > 0)) return;
+
+		//Ladder
+		if (cg->playerstate.pm_flags & 8) return;
 
 		static int itickx, iwaitx, iticky, iwaity;
 
