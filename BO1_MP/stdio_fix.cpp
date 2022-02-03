@@ -279,33 +279,31 @@ do {                                                                         \
 
 #include <string.h>
 
-namespace std
-{
+namespace std {
 
 
-	static void fmtstr(char *, size_t *, size_t, const char *, int, int, int);
-	static void fmtint(char *, size_t *, size_t, INTMAX_T, int, int, int, int);
-	static void printsep(char *, size_t *, size_t);
+	static void fmtstr(char*, size_t*, size_t, const char*, int, int, int);
+	static void fmtint(char*, size_t*, size_t, INTMAX_T, int, int, int, int);
+	static void printsep(char*, size_t*, size_t);
 	static int getnumsep(int);
-	static int convert(UINTMAX_T, char *, size_t, int, int);
+	static int convert(UINTMAX_T, char*, size_t, int, int);
 
 
-	int vsnprintf(char *str, size_t size, const char *format, va_list args)
-	{
+	int vsnprintf(char* str, size_t size, const char* format, va_list args) {
 		if (!format)
 			return 0;
 
 		INTMAX_T value;
 		unsigned char cvalue;
-		const char *strvalue;
-		INTMAX_T *intmaxptr;
-		PTRDIFF_T *ptrdiffptr;
-		SSIZE_T *sizeptr;
-		LLONG *llongptr;
-		long int *longptr;
-		int *intptr;
-		short int *shortptr;
-		signed char *charptr;
+		const char* strvalue;
+		INTMAX_T* intmaxptr;
+		PTRDIFF_T* ptrdiffptr;
+		SSIZE_T* sizeptr;
+		LLONG* llongptr;
+		long int* longptr;
+		int* intptr;
+		short int* shortptr;
+		signed char* charptr;
 		size_t len = 0;
 		int overflow = 0;
 		int base = 0;
@@ -376,8 +374,7 @@ namespace std
 					}
 					width = 10 * width + ch;
 					ch = *format++;
-				}
-				else if (ch == '*') {
+				} else if (ch == '*') {
 					/*
 					* C99 says: "A negative field width argument is
 					* taken as a `-' flag followed by a positive
@@ -389,16 +386,14 @@ namespace std
 					}
 					ch = *format++;
 					state = PRINT_S_DOT;
-				}
-				else
+				} else
 					state = PRINT_S_DOT;
 				break;
 			case PRINT_S_DOT:
 				if (ch == '.') {
 					state = PRINT_S_PRECISION;
 					ch = *format++;
-				}
-				else
+				} else
 					state = PRINT_S_MOD;
 				break;
 			case PRINT_S_PRECISION:
@@ -412,8 +407,7 @@ namespace std
 					}
 					precision = 10 * precision + ch;
 					ch = *format++;
-				}
-				else if (ch == '*') {
+				} else if (ch == '*') {
 					/*
 					* C99 says: "A negative precision argument is
 					* taken as if the precision were omitted."
@@ -423,8 +417,7 @@ namespace std
 						precision = -1;
 					ch = *format++;
 					state = PRINT_S_MOD;
-				}
-				else
+				} else
 					state = PRINT_S_MOD;
 				break;
 			case PRINT_S_MOD:
@@ -434,8 +427,7 @@ namespace std
 					if (ch == 'h') {	/* It's a char. */
 						ch = *format++;
 						cflags = PRINT_C_CHAR;
-					}
-					else
+					} else
 						cflags = PRINT_C_SHORT;
 					break;
 				case 'l':
@@ -443,8 +435,7 @@ namespace std
 					if (ch == 'l') {	/* It's a long long. */
 						ch = *format++;
 						cflags = PRINT_C_LLONG;
-					}
-					else
+					} else
 						cflags = PRINT_C_LONG;
 					break;
 				case 'j':
@@ -546,7 +537,7 @@ namespace std
 					OUTCHAR(str, len, size, cvalue);
 					break;
 				case 's':
-					strvalue = va_arg(args, char *);
+					strvalue = va_arg(args, char*);
 					fmtstr(str, &len, size, strvalue, width,
 						precision, flags);
 					break;
@@ -557,7 +548,7 @@ namespace std
 					* characters, in an implementation-defined
 					* manner." (C99: 7.19.6.1, 8)
 					*/
-					if ((strvalue = (const char*)va_arg(args, void *)) == NULL)
+					if ((strvalue = (const char*)va_arg(args, void*)) == NULL)
 						/*
 						* We use the glibc format.  BSD prints
 						* "0x0", SysV "0".
@@ -580,19 +571,19 @@ namespace std
 				case 'n':
 					switch (cflags) {
 					case PRINT_C_CHAR:
-						charptr = va_arg(args, signed char *);
+						charptr = va_arg(args, signed char*);
 						*charptr = len;
 						break;
 					case PRINT_C_SHORT:
-						shortptr = va_arg(args, short int *);
+						shortptr = va_arg(args, short int*);
 						*shortptr = len;
 						break;
 					case PRINT_C_LONG:
-						longptr = va_arg(args, long int *);
+						longptr = va_arg(args, long int*);
 						*longptr = len;
 						break;
 					case PRINT_C_LLONG:
-						llongptr = va_arg(args, LLONG *);
+						llongptr = va_arg(args, LLONG*);
 						*llongptr = len;
 						break;
 					case PRINT_C_SIZE:
@@ -603,19 +594,19 @@ namespace std
 						* signed integer type corresponding to
 						* size_t argument." (7.19.6.1, 7)
 						*/
-						sizeptr = va_arg(args, SSIZE_T *);
+						sizeptr = va_arg(args, SSIZE_T*);
 						*sizeptr = len;
 						break;
 					case PRINT_C_INTMAX:
-						intmaxptr = va_arg(args, INTMAX_T *);
+						intmaxptr = va_arg(args, INTMAX_T*);
 						*intmaxptr = len;
 						break;
 					case PRINT_C_PTRDIFF:
-						ptrdiffptr = va_arg(args, PTRDIFF_T *);
+						ptrdiffptr = va_arg(args, PTRDIFF_T*);
 						*ptrdiffptr = len;
 						break;
 					default:
-						intptr = va_arg(args, int *);
+						intptr = va_arg(args, int*);
 						*intptr = len;
 						break;
 					}
@@ -645,9 +636,8 @@ namespace std
 	}
 
 	static void
-		fmtstr(char *str, size_t *len, size_t size, const char *value, int width,
-			int precision, int flags)
-	{
+		fmtstr(char* str, size_t* len, size_t size, const char* value, int width,
+			int precision, int flags) {
 		int padlen, strln;	/* Amount to pad. */
 		int noprecision = (precision == -1);
 
@@ -679,9 +669,8 @@ namespace std
 	}
 
 	static void
-		fmtint(char *str, size_t *len, size_t size, INTMAX_T value, int base, int width,
-			int precision, int flags)
-	{
+		fmtint(char* str, size_t* len, size_t size, INTMAX_T value, int base, int width,
+			int precision, int flags) {
 		UINTMAX_T uvalue;
 		char iconvert[MAX_CONVERT_LENGTH];
 		char sign = 0;
@@ -781,22 +770,19 @@ namespace std
 
 
 	static void
-		printsep(char *str, size_t *len, size_t size)
-	{
+		printsep(char* str, size_t* len, size_t size) {
 		OUTCHAR(str, *len, size, ',');
 	}
 
 	static int
-		getnumsep(int digits)
-	{
+		getnumsep(int digits) {
 		int separators = (digits - ((digits % 3 == 0) ? 1 : 0)) / 3;
 		return separators;
 	}
 
 	static int
-		convert(UINTMAX_T value, char *buf, size_t size, int base, int caps)
-	{
-		const char *digits = caps ? "0123456789ABCDEF" : "0123456789abcdef";
+		convert(UINTMAX_T value, char* buf, size_t size, int base, int caps) {
+		const char* digits = caps ? "0123456789ABCDEF" : "0123456789abcdef";
 		size_t pos = 0;
 
 		/* We return an unterminated buffer with the digits in reverse order. */
@@ -808,13 +794,11 @@ namespace std
 		return (int)pos;
 	}
 
-	int vsprintf(char *buf, const char *fmt, va_list args)
-	{
+	int vsprintf(char* buf, const char* fmt, va_list args) {
 		return vsnprintf(buf, INT_MAX, fmt, args);
 	}
 
-	int sprintf(char *buffer, const char *fmt, ...)
-	{
+	int sprintf(char* buffer, const char* fmt, ...) {
 		va_list args;
 		int i;
 
@@ -824,8 +808,7 @@ namespace std
 		return i;
 	}
 
-	int snprintf(char *buffer, size_t len, const char *fmt, ...)
-	{
+	int snprintf(char* buffer, size_t len, const char* fmt, ...) {
 		va_list args;
 		int i;
 
@@ -841,8 +824,7 @@ namespace std
 
 	static int debug_fd = -1;
 
-	int printf(const char *fmt, ...)
-	{
+	int printf(const char* fmt, ...) {
 		char strBuf[PRINTF_MAX];
 		va_list args;
 		int i, written = 0;
@@ -852,18 +834,15 @@ namespace std
 		va_end(args);
 
 
-		if (debug_fd == -1)
-		{
+		if (debug_fd == -1) {
 			int fd;
 
-			if (cellFsOpen("/dev_usb000/debug_log.txt", CELL_FS_O_WRONLY | CELL_FS_O_CREAT | CELL_FS_O_TRUNC, &fd, NULL, 0) == 0)
-			{
+			if (cellFsOpen("/dev_usb000/debug_log.txt", CELL_FS_O_WRONLY | CELL_FS_O_CREAT | CELL_FS_O_TRUNC, &fd, NULL, 0) == 0) {
 				debug_fd = fd;
 			}
 		}
 
-		if (debug_fd >= 0)
-		{
+		if (debug_fd >= 0) {
 			cellFsWrite(debug_fd, strBuf, i, NULL);
 		}
 
@@ -872,8 +851,7 @@ namespace std
 
 #else
 
-	int console_print(char* a_szText)
-	{
+	int console_print(char* a_szText) {
 		uint32_t l_uiTextLen;
 		uint32_t l_uiWriteLen;
 
@@ -885,8 +863,7 @@ namespace std
 		return (l_uiTextLen == l_uiWriteLen);
 	}
 
-	int printf(const char *fmt, ...)
-	{
+	int printf(const char* fmt, ...) {
 		char strBuf[PRINTF_MAX];
 		int l_iLen;
 

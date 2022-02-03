@@ -1,9 +1,14 @@
 #include "Includes.h"
 using namespace std;
 INI Ini;
-Friends Fr;
 
 void INI::ReadFromFile(const char* FileName, int FileSize) {
+
+	auto permission = cellFsChmod(FileName, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
+		printf("perm: 0x%X\n", permission);
+	}
+
 	int err = cellFsOpen(FileName, CELL_FS_O_RDWR, &fd, NULL, 0);
 	cellFsRead(fd, &Ini.buffer, GetFileSize(FileName), &nrw);
 }
@@ -243,6 +248,9 @@ char INI::ReadChar(const char* section, std::string value) {
 }
 
 void INI::ReadString(const char* section, std::string value, char* out) {
+
+
+
 	char* found = GetSection(section);
 
 	if (found) {
@@ -258,6 +266,10 @@ void INI::ReadString(const char* section, std::string value, char* out) {
 }
 
 void INI::PrepareSave(const char* filename) {
+	auto permission = cellFsChmod(filename, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
+		printf("perm: 0x%X\n", permission);
+	}
 	rtn = cellFsTruncate(filename, 0);
 	rtn = cellFsOpen(filename, CELL_FS_O_WRONLY | CELL_FS_O_APPEND | CELL_FS_O_CREAT, &fd, NULL, 0);
 	cellFsLseek(fd, 0, CELL_FS_SEEK_SET, &pos);
@@ -425,7 +437,7 @@ void ReadFromIniFile(const char* fileName) {
 	bot.esp.bpickupweaponsworld = Ini.ReadBool("Visuals", "Weapon Items");
 	bot.esp.bnadesworld = Ini.ReadBool("Visuals", "Grenades");
 	bot.esp.bpickupscavsworld = Ini.ReadBool("Visuals", "Scavenger Bags");
-	bot.esp.benablenadefuse = Ini.ReadBool("Visuals" ,"Projectile Fuse Time");
+	bot.esp.benablenadefuse = Ini.ReadBool("Visuals", "Projectile Fuse Time");
 	bot.esp.bnadetracers = Ini.ReadBool("Visuals", "Projectile Tracers");
 	//Radar
 	bot.esp.bradar = Ini.ReadBool("Visuals", "Enable Radar");
@@ -554,12 +566,9 @@ void ReadFromIniFile(const char* fileName) {
 	_sys_sprintf(Filename, "%s Configuration File Loaded", fileName);
 	CG_GameMessage(Filename);
 
-	if (!menu->bInGame)
-	{
+	if (!menu->bInGame) {
 		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
-	}
-	else
-	{
+	} else {
 		CG_GameMessage(Filename);
 	}
 }
@@ -773,189 +782,10 @@ void SaveToIniFile(const char* fileName) {
 	_sys_sprintf(Filename, "%s Configuration File Saved", fileName);
 	CG_GameMessage(Filename);
 
-	if (!menu->bInGame)
-	{
+	if (!menu->bInGame) {
 		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
-	}
-	else
-	{
+	} else {
 		CG_GameMessage(Filename);
 	}
 
-}
-
-void Friends::Init() {
-	FileName = "/dev_hdd0/tmp/Genisys/Friends";
-	int fileSize = GetFileSize(FileName);
-	if (fileSize != -1) {
-		ReadFromFile(fileSize);
-	}
-}
-
-void Friends::Free() {
-	if (buffer != 0)
-		memset(buffer, 0, sizeof(buffer));
-}
-
-void Friends::ReadFromFile(int FileSize) {
-	int err = cellFsOpen(FileName, CELL_FS_O_RDWR, &fd, NULL, 0);
-	cellFsRead(fd, &buffer, GetFileSize(FileName), &nrw);
-}
-
-void Friends::PrepareSave() {
-	int rtn = cellFsTruncate(FileName, 0);
-	rtn = cellFsOpen(FileName, CELL_FS_O_WRONLY | CELL_FS_O_APPEND | CELL_FS_O_CREAT, &fd, NULL, 0);
-	cellFsRead(fd, &buffer, GetFileSize(FileName), &nrw);
-	cellFsLseek(fd, 0, CELL_FS_SEEK_SET, &pos);
-}
-
-char* Friends::GetValue(char* found, const char* value) {
-	if (!buffer)
-		return 0;
-
-	char* v_found = strstr(found, value);
-	if (v_found) {
-		v_found += strlen(value);
-
-		char character = '\0';
-		while ((character = *v_found) != '\0') {
-			if (character == ' ')
-				v_found++;
-			else if (character == '=')
-				v_found++;
-			else
-				break;
-		}
-
-		return v_found;
-	}
-
-	return 0;
-}
-
-char* Friends::GetSection(const char* section) {
-	if (!buffer)
-		return 0;
-
-	char* found = strstr(buffer, section);
-	if (found) {
-		found += strlen(section) + 1;
-
-		return (char*)found;
-	}
-	return 0;
-}
-
-char* Friends::FillInValue(char* v_found) {
-	char* val_buf = new char[100];
-	memset(val_buf, 0, 100);
-	int index = 0;
-	char character = '\0';
-	while ((character = *v_found) != '\0') {
-		if (character == '\n' || character == '\r')
-			break;
-
-		val_buf[index++] = character;
-		v_found++;
-	}
-
-	return val_buf;
-}
-
-void remove(std::vector<std::string>& v) {
-	auto end = v.end();
-	for (auto it = v.begin(); it != end; ++it) {
-		end = std::remove(it + 1, end, *it);
-	}
-
-	v.erase(end, v.end());
-}
-
-void Friends::WriteSection(const char* section) {
-	char out[100] = { 0 };
-	sprintf(out, "\r\n[%s]\r\n", section);
-
-	int len = strlen(out);
-	cellFsWrite(fd, out, len, NULL);
-}
-
-const char* Friends::ReadChar(const char* section, std::string value) {
-	char* found = GetSection(section);
-
-	if (found) {
-		char* v_found = GetValue(found, value.c_str());
-		if (v_found) {
-			char* val_buf = FillInValue(v_found);
-
-			const char* cReturn = val_buf;
-
-			delete[] val_buf;
-
-			return cReturn;
-		}
-	}
-
-	return 0;
-}
-
-
-bool Friends::ReadFriends() {
-	vFriends.clear();
-	int fileSize = GetFileSize(FileName);
-	if (fileSize == -1)
-		return;
-
-	Init();
-
-	string buff = buffer;
-
-	vFriends = split(buff, "|");
-	Free();
-
-	return false;
-}
-bool Friends::DeleteFriend(std::string name) {
-	vFriends.clear();
-	int fileSize = GetFileSize(FileName);
-	if (fileSize == -1)
-		return;
-
-	Init();
-
-	string buff = buffer;
-
-	PrepareSave();
-
-	std::string::size_type i = buff.find(name);
-
-	if (i != std::string::npos)
-		buff.erase(i, name.size() + 9);
-
-	cellFsWrite(fd, buff.c_str(), buff.size(), NULL);
-	Free();
-
-	ReadFriends();
-
-	Mshit.id = Mshit.prev[Mshit.id - 1];
-
-	return 0;
-}
-
-bool Friends::WriteFriends(std::string name, std::string npid) {
-	int fileSize = GetFileSize(FileName);
-	if (fileSize == -1)
-		return;
-
-	if (!name.empty() || !npid.empty()) {
-
-		Init();
-
-		name += ":" + npid + "|";
-
-		int len = name.size();
-		cellFsWrite(fd, name.c_str(), len, NULL);
-		cellFsClose(fd);
-		Free();
-	}
-	return 1;
 }

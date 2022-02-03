@@ -51,13 +51,11 @@ void noshit() {
 		//*(int*)0x01CC19D8 = 0x45CB2000;
 	}
 
-	if (menu->i32_Name)
-	{
+	if (menu->i32_Name) {
 		WriteMemory(0x52DFC0, &Nop, 4);
 	}
 
-	else
-	{
+	else {
 		WriteMemory(0x52DFC0, &Restore32, 4);
 	}
 }
@@ -153,8 +151,7 @@ float (*BG_GetSurfacePenetrationDepth_f)(PenetrateType pentype, int surfaceType)
 
 float BG_GetSurfacePenetrationDepth(PenetrateType pentype, int surfaceType) {
 
-	if (surfaceType >= 0x20)
-	{
+	if (surfaceType >= 0x20) {
 		return;
 	}
 	return  BG_GetSurfacePenetrationDepth_f(pentype, surfaceType);;
@@ -216,8 +213,7 @@ void VectorAngles(Vector3& forward, Vector3& angles) {
 			pitch = 90;
 		else
 			pitch = 270;
-	}
-	else {
+	} else {
 		yaw = (atan2f(forward.z, -forward.x) * 180 / XM_PI) - 90;
 
 		if (yaw < 0)
@@ -291,8 +287,7 @@ bool(*CG_ShouldSimulateBulletFire)(int client, BulletFireParams* bp) = (bool(*)(
 int EntityIsDeployedRiotshield_t[2] = { 0x06bf0e0, TOC };
 int(*EntityIsDeployedRiotshield)(centity_s* cent) = (int(*)(centity_s*))EntityIsDeployedRiotshield_t;
 
-bool HitRiotshield(BulletTraceResults* traceresults)
-{
+bool HitRiotshield(BulletTraceResults* traceresults) {
 	if (traceresults->ignoreHitEnt)
 		return false;
 
@@ -301,10 +296,8 @@ bool HitRiotshield(BulletTraceResults* traceresults)
 
 	int wHitID = Trace_GetEntityHitId(&traceresults->trace);
 
-	if (wHitID != 1022)
-	{
-		if (EntityIsDeployedRiotshield(&centity[wHitID]))
-		{
+	if (wHitID != 1022) {
+		if (EntityIsDeployedRiotshield(&centity[wHitID])) {
 			return true;
 		}
 	}
@@ -318,8 +311,7 @@ bool HitRiotshield(BulletTraceResults* traceresults)
 int  BG_GetDamageRangeScale_t[2] = { 0x060A890  , TOC };
 float (*BG_GetDamageRangeScale_f)(int weapon) = (float (*)(int)) BG_GetDamageRangeScale_t;
 
-bool weapon_is_buckshot()
-{
+bool weapon_is_buckshot() {
 	auto* weapon_def = BG_GetWeaponDef(centity[cg->clientNum].WeaponID);
 	if (weapon_def && (weapon_def->weaponClass == 3 || weapon_def->weaponClass == 13))
 		return true;
@@ -327,10 +319,8 @@ bool weapon_is_buckshot()
 	return false;
 }
 
-float get_bullet_range()
-{
-	if (weapon_is_buckshot())
-	{
+float get_bullet_range() {
+	if (weapon_is_buckshot()) {
 		auto* weapon_def = BG_GetWeaponDef(centity[cg->clientNum].WeaponID);
 		auto min_damage = BG_GetDamageRangeScale_f(centity[cg->clientNum].WeaponID) * weapon_def->damageRange[5];
 
@@ -340,8 +330,7 @@ float get_bullet_range()
 	return Dvar_FindVar("bulletrange")->current.value;
 }
 
-bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br, Vector3 end, int target)
-{
+bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br, Vector3 end, int target) {
 	BulletTraceResults backbr;
 
 	memset(&backbr.trace.normal, 0, 16);
@@ -398,8 +387,7 @@ bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br
 	if (!fronttrace || HitRiotshield(br))
 		return false;
 
-	if (Trace_GetEntityHitId(&br->trace) == target)
-	{
+	if (Trace_GetEntityHitId(&br->trace) == target) {
 		if (bot.bvisible)
 			return true;
 	}
@@ -417,8 +405,7 @@ bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br
 
 	Vector3 lastHitPos;
 
-	if (br->trace.startsolid == 0)
-	{
+	if (br->trace.startsolid == 0) {
 		int NumOfLoops = 5;
 
 		if (BG_GetFireType(weapon) != 8)
@@ -430,8 +417,7 @@ bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br
 
 		minFXDist = (minFXDist * minFXDist);
 
-		for (int i = 0; i < NumOfLoops && fronttrace; i++)
-		{
+		for (int i = 0; i < NumOfLoops && fronttrace; i++) {
 			float frontsurfaceDepth = BG_GetSurfacePenetrationDepth_f(pentype, br->surfaceType);
 
 			if (HasPerk(weapon, 6))
@@ -474,23 +460,19 @@ bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br
 
 			allsolid = (backtrace && backbr.trace.allsolid) || (br->trace.startsolid && backbr.trace.startsolid);
 
-			if (!backtrace && !allsolid)
-			{
+			if (!backtrace && !allsolid) {
 				Vector3 vec_length = lastHitPos - br->hitPos;
 
 				float length = VectorLength(vec_length);
 
-				if (!br->trace.allsolid && (minFXDist < length))
-				{
+				if (!br->trace.allsolid && (minFXDist < length)) {
 					if (Trace_GetEntityHitId(&br->trace) == target)
 						return true;
 				}
 
 				if (Trace_GetEntityHitId(&br->trace) == target)
 					return true;
-			}
-			else
-			{
+			} else {
 				float tempdepth;
 
 				if (allsolid)
@@ -503,8 +485,7 @@ bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br
 				if (1.0f <= tempdepth)
 					depth = tempdepth;
 
-				if (backtrace)
-				{
+				if (backtrace) {
 					float backSurfaceDepth = BG_GetSurfacePenetrationDepth_f(pentype, backbr.surfaceType);
 
 					if (HasPerk(weapon, 6))
@@ -529,8 +510,7 @@ bool CG_SimulateBulletFire_Internal(BulletFireParams* bp, BulletTraceResults* br
 
 				float length = VectorLength(vec_length);
 
-				if (!allsolid && !weapDef->weaponType && (minFXDist < length))
-				{
+				if (!allsolid && !weapDef->weaponType && (minFXDist < length)) {
 					if (!fronttrace)
 						return false;
 				}
@@ -560,8 +540,7 @@ short EntBoneIndex = { 0 };
 short HandleTag(int i) {
 	if (bot.tagtype == AUTO_BONE || (centity[i].WeaponID == 89 || centity[i].OldWeapon == 89)) {
 		return 1000;
-	}
-	else {
+	} else {
 		switch (bot.tagtype) {
 		case tj_ankle_ri:
 			return AimBoneIndex[j_ankle_ri];
@@ -677,8 +656,7 @@ bool AimTarget_IsWallable(int i, int bone) {
 	return ret;
 }
 
-bool pTriggerbot(int i)
-{
+bool pTriggerbot(int i) {
 	BulletFireParams bp;
 	BulletTraceResults br;
 	WeaponDef* weapDef = BG_GetWeaponDef(cg->playerstate.weapon);
@@ -713,8 +691,7 @@ bool IsTargetHitable(int i, int bone) {
 	if ((!bot.bvisible) && (!bot.bautowall))
 		return true;
 
-	if (bot.bautowall || bot.bvisible)
-	{
+	if (bot.bautowall || bot.bvisible) {
 		Aw = AimTarget_IsWallable(i, bone) ? bot.bautowall_esp[i] = true : bot.bautowall_esp[i] = false;
 	}
 
@@ -747,7 +724,7 @@ bool AimingAtEnemyAimbot(int i) {
 	float fMaxAngle = 999;
 	Vector3 ToForward = AnglesToFoward(YourOrigin, cg->playerstate.viewAngles, Scale);
 	float fAngle = GetDistance(ToForward, MyOrigin);
-	if (fMaxAngle > fAngle&& fAngle <= 40) {
+	if (fMaxAngle > fAngle && fAngle <= 40) {
 		fMaxAngle = fAngle;
 	}
 	if (fMaxAngle != 999) {
@@ -766,7 +743,7 @@ bool RAimingAtEnemyAimbot(int i) {
 	float fMaxAngle = 999;
 	Vector3 ToForward = AnglesToFoward(YourOrigin, cg->playerstate.viewAngles, Scale);
 	float fAngle = GetDistance(ToForward, MyOrigin);
-	if (fMaxAngle > fAngle&& fAngle <= 250) {
+	if (fMaxAngle > fAngle && fAngle <= 250) {
 		fMaxAngle = fAngle;
 	}
 	if (fMaxAngle != 999) {
@@ -797,31 +774,25 @@ bool AimTarget_GetTargetBounds(int i) {
 			return false;
 		else
 			return true;
-	}
-	else
+	} else
 		return false;
 }
 
-bool isPlayerWallable(int ClientNumber)
-{
+bool isPlayerWallable(int ClientNumber) {
 	static int iterator[18];
 
 	if (HandleTag(ClientNumber) == 1000)//autobone
 	{
-		for (int i = 0; i < bot.loop_number_autobone; i++)
-		{
+		for (int i = 0; i < bot.loop_number_autobone; i++) {
 			if (local->iplayer[ClientNumber])
 				return;
 
-			if (!IsTargetHitable(ClientNumber, AimBoneIndex[iterator[ClientNumber]]))
-			{
+			if (!IsTargetHitable(ClientNumber, AimBoneIndex[iterator[ClientNumber]])) {
 				if (iterator[ClientNumber] == 12)
 					iterator[ClientNumber] = 0;
 
 				iterator[ClientNumber]++;
-			}
-			else
-			{
+			} else {
 				bot.psztag[ClientNumber] = AimBoneIndex[iterator[ClientNumber]];
 				iterator[ClientNumber] = 0;
 				return true;
@@ -831,8 +802,7 @@ bool isPlayerWallable(int ClientNumber)
 		return false;
 	}
 
-	else
-	{
+	else {
 		bot.psztag[ClientNumber] = HandleTag(ClientNumber);
 		return IsTargetHitable(ClientNumber, HandleTag(ClientNumber));
 	}
@@ -840,8 +810,7 @@ bool isPlayerWallable(int ClientNumber)
 	return true;
 }
 
-bool Can_Target(int client_number)
-{
+bool Can_Target(int client_number) {
 	bool ret;
 
 	Sys_EnterCriticalSection(CRITSECT_XANIM_ALLOC);
@@ -851,20 +820,18 @@ bool Can_Target(int client_number)
 
 	Sys_LeaveCriticalSection(CRITSECT_DOBJ_ALLOC);
 	Sys_LeaveCriticalSection(CRITSECT_XANIM_ALLOC);
-	
+
 	return ret;
 }
 
-int GetNearestLogicalClient()
-{
+int GetNearestLogicalClient() {
 	float hittableResult = 99999999.f;
 
 	float IgnoreResult = 99999999.f;
 
 	int ViableClient = -1;
 
-	for (int i = 0; i < 18; i++)
-	{
+	for (int i = 0; i < 18; i++) {
 		if (local->iplayer[i] || i == cg->clientNum || !CScr_IsAlive(i) || CG_IsEntityFriendlyNotEnemy(&centity[i]))
 			continue;
 
@@ -873,8 +840,7 @@ int GetNearestLogicalClient()
 		if (get_bullet_range() < flDistance)
 			continue;
 
-		if ((flDistance < IgnoreResult || Pshieldcheck(i) || local->pplayer[i]) && !local->iplayer[i])
-		{
+		if ((flDistance < IgnoreResult || Pshieldcheck(i) || local->pplayer[i]) && !local->iplayer[i]) {
 			IgnoreResult = flDistance;
 			local->target_num = i;
 		}
@@ -882,8 +848,7 @@ int GetNearestLogicalClient()
 		if (!Can_Target(i))
 			continue;
 
-		if (bot.aimtype == AIM_TYPE_TRIGGERBOT)
-		{
+		if (bot.aimtype == AIM_TYPE_TRIGGERBOT) {
 			if (AimTarget_GetTargetBounds(i)) {
 
 				hittableResult = flDistance;
@@ -891,8 +856,7 @@ int GetNearestLogicalClient()
 			}
 		}
 
-		else if (flDistance < hittableResult || Pshieldcheck(i) || local->pplayer[i] && !local->iplayer[i])
-		{
+		else if (flDistance < hittableResult || Pshieldcheck(i) || local->pplayer[i] && !local->iplayer[i]) {
 			hittableResult = flDistance;
 			ViableClient = i;
 		}
@@ -901,8 +865,7 @@ int GetNearestLogicalClient()
 	return ViableClient;
 }
 
-void GetNearestPlayermp()
-{
+void GetNearestPlayermp() {
 	float hittableResult = 99999999.f;
 
 	playerState_s* playerState = CG_GetPredictedPlayerState(0);
@@ -935,8 +898,7 @@ void GetNearestPlayermp()
 	if (NearestClient == -1)
 		return;
 
-	if (bot.aimtype == AIM_TYPE_TRIGGERBOT)
-	{
+	if (bot.aimtype == AIM_TYPE_TRIGGERBOT) {
 		if (AimTarget_GetTargetBounds(NearestClient)) {
 			local->inbounds = true;
 			local->target_num = NearestClient;
@@ -948,8 +910,7 @@ void GetNearestPlayermp()
 	float flDistance = centity[NearestClient].Origin.distance(centity[cg->clientNum].Origin);
 
 	if (local->target_num != -1 && NearestClient != local->target_num) {
-		if (flDistance < hittableResult || Pshieldcheck(local->target_num) || local->pplayer[local->target_num] && !local->iplayer[local->target_num])
-		{
+		if (flDistance < hittableResult || Pshieldcheck(local->target_num) || local->pplayer[local->target_num] && !local->iplayer[local->target_num]) {
 			local->target_num = NearestClient;
 			local->alive = true;
 			return;
@@ -976,8 +937,7 @@ void SnapAimbot() {
 	else if (bot.keytype == KEY_L1) {
 		if (cg->zoomProgress > bot.ads) {
 			goto Next;
-		}
-		else {
+		} else {
 			goto End;
 		}
 	}
@@ -1049,12 +1009,11 @@ void AimTarget_GetTarget() {
 
 	if (centity[cg->clientNum].WeaponID == 89) return;
 	if (!menu->bInGame)return;
-	
-		GetNearestPlayermp();
+
+	GetNearestPlayermp();
 }
 
-void ClampAngles(Vector3& angles)
-{
+void ClampAngles(Vector3& angles) {
 	while (angles.x > 180.0f)
 		angles.x -= 360.0f;
 
@@ -1129,17 +1088,21 @@ void setanglesMP() {
 
 	diff = BoneTag(local->target_num) - local->vorigin;
 
+	ApplyPrediction(diff, local->target_num, bot.fprediction);
+
 	VectoAngles(diff, &local->vangles);
 
-	if(bot.bnoflinch)
-	local->vangles -= local->fangles;
+	if (bot.bnoflinch)
+		local->vangles -= (local->fangles / 2);
 
 	if (!local->alive) return;
 
 	if (bot.aimtype == AIM_TYPE_TRIGGERBOT) {
 		if ((bot.keytype == KEY_L1) && cg->zoomProgress > bot.ads || bot.keytype == KEY_NONE) {
 			if (local->inbounds) {
-				vangles = local->vangles - cactive->BaseAngles;//cg->get<Vector3>(0x69B20);//weapon angles 0x69B20
+				vangles.x += local->vangles.x - cg->get<Vector3>(0x64C30).x;//weapon angles 0x69B20
+				vangles.y += local->vangles.y - cg->get<Vector3>(0x64C30).y;//weapon angles 0x69B20
+
 				SmoothAngleSet(vangles, cactive->ViewAngles, bot.snaps);
 				local->shoot = true;
 			}
@@ -1149,7 +1112,8 @@ void setanglesMP() {
 	if (bot.aimtype == AIM_TYPE_AIM_BOT || bot.aimtype == AIM_TYPE_SNAP) {
 
 		if ((bot.keytype == KEY_L1) && cg->zoomProgress > bot.ads || bot.keytype == KEY_NONE) {
-			cactive->ViewAngles = local->vangles - cactive->BaseAngles;
+			cactive->ViewAngles.x += local->vangles.x - cg->get<Vector3>(0x64C30).x;
+			cactive->ViewAngles.y += local->vangles.y - cg->get<Vector3>(0x64C30).y;
 			local->shoot = true;
 		}
 	}
@@ -1157,8 +1121,7 @@ void setanglesMP() {
 
 void aimbot() {
 
-	if (menu->fpssaving)
-	{
+	if (menu->fpssaving) {
 		AimTarget_GetTarget();
 	}
 }
@@ -1257,14 +1220,11 @@ void NoSpread(usercmd_s* cmd, int servertime) {
 	if (!playerState)
 		return;
 
-	if (BG_UsingVehicleWeapon(playerState))
-		return;
-
 	float minSpread, maxSpread, spread;
 
 	BG_GetSpreadForWeapon_f(playerState, playerState->weapon, &minSpread, &maxSpread);
 
-	if (cg->zoomProgress) {
+	if (cg->zoomProgress == 1.0f) {
 		spread = (maxSpread - weapondef->fAdsSpread) * (cg->spreadMultiplier / 255.0f) + weapondef->fAdsSpread;
 	}
 
@@ -1297,8 +1257,8 @@ void psilent(usercmd_s* cmd) {
 
 		float OldAngleY = SHORT2ANGLE(cmd->viewAngles[1]);
 		if (local->alive) {
-			cmd->viewAngles[0] = ANGLE2SHORT(local->vangles.x - cactive->BaseAngles.x);//slient
-			cmd->viewAngles[1] = ANGLE2SHORT(local->vangles.y - cactive->BaseAngles.y);
+			cmd->viewAngles[0] += ANGLE2SHORT(local->vangles.x - cg->get<Vector3>(0x64C30).x);//slient
+			cmd->viewAngles[1] += ANGLE2SHORT(local->vangles.y - cg->get<Vector3>(0x64C30).y);
 			local->shoot = true;
 		}
 	}
@@ -1338,26 +1298,36 @@ void pspin(usercmd_s* NewCmd) {
 	local->fakeAngles[0] = 0.0f;
 	local->fakeAngles[1] = 0.0f;
 
-	if (NewCmd->buttons[0] & CMD_MASK_FIRE)
-	{
+	if (NewCmd->buttons[0] & CMD_MASK_FIRE) {
 		NewCmd->buttons[0] &= ~CMD_MASK_FIRE;
 	}
 
-	if (bot.benableanti)
-	{
-		if (WeaponIsVehicle())return;
-
+	if (bot.benableanti) {
 		////ProneBlock
 		if (__builtin_return_address() == (void*)0x07F5FC)return;
 
-		////Prone
+		playerState_s* playerState = CG_GetPredictedPlayerState(0);
+		if (BG_UsingVehicleWeapon(playerState))return;
+
+		int ammo = BG_GetAmmoInClip(playerState, playerState->weapon);
+
+		//Shield
+		if (cg->playerstate.weapon == 89)return;
+
+		//Prone
 		if (centityt[cg->clientNum].nextState.lerp.eFlags & 8) return;
 
-		////Dive
+		//Dive
 		if (cg->playerstate.pm_flags & 0x200000) return;
 
-		////RiotShield
+		//RiotShield
 		if (cg->playerstate.weapon == 89) return;
+
+		//Mantle
+		if ((cg->playerstate.pm_flags & 4) && (ammo > 0)) return;
+
+		//Ladder
+		if (cg->playerstate.pm_flags & 8) return;
 
 		static int itickx, iwaitx, iticky, iwaity;
 
@@ -1379,8 +1349,7 @@ void pspin(usercmd_s* NewCmd) {
 		if (CScr_IsAlive(cg->clientNum)) {
 			if (!bot.baaadvanced) {
 				if (bot.block3dpaa) {
-					if (bot.breversebot)
-					{
+					if (bot.breversebot) {
 						bot.bspinbot = false, bot.spinscale = 0.0f, bot.pitchscaley = 0.0f;
 						local->fakeAngles[1] = local->vangles.y - 180.0f - cg->playerstate.delta_angles.y;
 						NewCmd->viewAngles[1] += ANGLE2SHORT(local->fakeAngles[1]);
@@ -1388,8 +1357,7 @@ void pspin(usercmd_s* NewCmd) {
 				}
 
 				else {
-					if (bot.breversebot)
-					{
+					if (bot.breversebot) {
 						bot.bspinbot = false, bot.spinscale = 0.0f, bot.pitchscaley = 0.0f;
 						local->fakeAngles[1] = 0.0f - 180.0f;
 						NewCmd->viewAngles[1] -= ANGLE2SHORT(local->fakeAngles[1]);
@@ -1788,8 +1756,7 @@ void pspin(usercmd_s* NewCmd) {
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			cactive->ViewAngles = cactive->BaseAngles;
 			cactive->ViewAngles.y = 0;
 		}
@@ -1815,15 +1782,12 @@ void PredictPlayerState() {
 			}
 		}
 
-		if (bot.snake_bot)
-		{
-			if (__builtin_return_address() == (void*)0x07F5FC && bot.snake)
-			{
+		if (bot.snake_bot) {
+			if (__builtin_return_address() == (void*)0x07F5FC && bot.snake) {
 				bot.snake = false;
 			}
 
-			if (ready && PadDown(PAD_DOWN) && !Mshit.Mopened)
-			{
+			if (ready && PadDown(PAD_DOWN) && !Mshit.Mopened) {
 				Wait(500);
 
 				bot.snake = !bot.snake;
@@ -1831,8 +1795,7 @@ void PredictPlayerState() {
 
 			if (bot.snake) {
 
-				if (snakebotTick > 10 && snakebotTick < 15)
-				{
+				if (snakebotTick > 10 && snakebotTick < 15) {
 					pCurrentCmd->buttons[0] |= 0x800000;
 					pOldCmd->buttons[0] &= 0x7FFFFFFF;
 				}
@@ -1842,9 +1805,7 @@ void PredictPlayerState() {
 				snakebotTick++;
 				pCurrentCmd->buttons[0] |= 0x40040000;
 			}
-		}
-		else
-		{
+		} else {
 			bot.snake = false;
 		}
 
@@ -1855,30 +1816,25 @@ void PredictPlayerState() {
 		pOldCmd->viewAngles[1] = iBackupAngles[1];
 		pOldCmd->viewAngles[2] = iBackupAngles[2];
 
-		if (bot.blean)
-		{
+		if (bot.blean) {
 			static int itick, iwait;
 			bool istate = ((Sys_Milliseconds() - itick) > iwait);
 
-			if (!PadDown(PAD_R3)){
-				if (isButtonDown(B_DpadLeft) && !Mshit.Mopened)
-				{
-					if (istate)
-					{
+			if (!PadDown(PAD_R3)) {
+				if (isButtonDown(B_DpadLeft) && !Mshit.Mopened) {
+					if (istate) {
 						toggleL = !toggleL;
-							itick = Sys_Milliseconds(), iwait = 500;
+						itick = Sys_Milliseconds(), iwait = 500;
 					}
 				}
 			}
-			if (toggleL) 
-			{
+			if (toggleL) {
 				toggleR = false;
 				pCurrentCmd->buttons[0] |= 0x2000000;
 				pCurrentCmd->buttons[1] |= 0x0;
 			}
 
-			if (ready && PadDown(PAD_RIGHT) && !Mshit.Mopened)
-			{
+			if (ready && PadDown(PAD_RIGHT) && !Mshit.Mopened) {
 				Wait(500);
 				toggleR = !toggleR;
 			}
@@ -1888,9 +1844,7 @@ void PredictPlayerState() {
 				pCurrentCmd->buttons[0] |= 0x1000000;
 				pCurrentCmd->buttons[1] |= 0x0;
 			}
-		}
-		else
-		{
+		} else {
 			toggleL = false;
 			toggleR = false;
 		}
@@ -1902,8 +1856,7 @@ void PredictPlayerState() {
 		++pOldCmd->time;
 		--pCurrentCmd->time;
 
-		if (!WeaponIsVehicle())
-		{
+		if (!WeaponIsVehicle()) {
 			psilent(pOldCmd);
 		}
 
@@ -1911,25 +1864,20 @@ void PredictPlayerState() {
 	}
 }
 
-void SendCMD()
-{
+void SendCMD() {
 	usercmd_s* pOldCmd = &cactive->UserCmd[(cactive->CurrentCmdNumber - 1) & 0x7F];
 
-	if (!WeaponIsVehicle())
-	{
-		autoshoot(pOldCmd, pOldCmd);
-	}
+	autoshoot(pOldCmd, pOldCmd);
 }
 
-void Writepacket()
-{
+void Writepacket() {
 	usercmd_s* pNewCmd = &cactive->UserCmd[(cactive->CurrentCmdNumber + 1) & 0x7F];
 	usercmd_s* pCurrentCmd = &cactive->UserCmd[cactive->CurrentCmdNumber & 0x7F];
 	usercmd_s* pOldCmd = &cactive->UserCmd[(cactive->CurrentCmdNumber - 1) & 0x7F];
 
-	if (WeaponIsVehicle())
-	{
+	if (WeaponIsVehicle()) {
 		psilent(pCurrentCmd);
+		autoshoot(pOldCmd, pOldCmd);
 		autoshoot(pCurrentCmd, pCurrentCmd);
 	}
 

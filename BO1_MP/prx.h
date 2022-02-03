@@ -29,7 +29,7 @@ extern Material* compass_hk;
 extern Material* waypoint_recon_artillery_strike;
 
 extern int ServerDataAddresses[];
-	
+
 #define dwGetOnlineIDDef dwGetOnlineID_d.Hook(ServerDataAddresses[auth::dwGetOnlineID_a], dwGetOnlineID);
 #define DynEntCl_DestroyEventDef DynEntCl_DestroyEvent_d.Hook(ServerDataAddresses[auth::DynEntCl_DestroyEvent_a], DynEntCl_DestroyEvent_h);
 #define LUI_CoD_ReadCharFromStringDef LUI_CoD_ReadCharFromStringDetour.Hook(ServerDataAddresses[auth::LUI_CoD_ReadCharFromString_Hook_a], LUI_CoD_ReadCharFromString_Hook);
@@ -80,4 +80,4 @@ extern int ServerDataAddresses[];
 #define Tracer_DrawDef Tracer_DrawDetour.Hook(0x45C450, Tracer_Draw);
 #define Party_AcceptInviteDef Party_AcceptInvite.Hook(0x0531FD4, Party_AcceptInvite_f);
 #define bdCommonAddr_serializeDef bdCommonAddr_serializeDetour.Hook(0x07EAA9C, bdCommonAddr_serialize_f);
-
+#define Live_JoinSessionInProgressDef Live_JoinSessionInProgressDetour.Hook(0x0535DE4 ,Live_JoinSessionInProgress_f);

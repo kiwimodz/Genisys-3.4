@@ -153,6 +153,7 @@ if "$(Username)" == "kiwi_modz"
     <ClCompile Include="cheats_mp.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="detour.cpp" />
+    <ClCompile Include="friends.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="ini.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -171,7 +172,8 @@ if "$(Username)" == "kiwi_modz"
     <ClInclude Include="cellPad.h" />
     <ClInclude Include="cheats_mp.h" />
     <ClInclude Include="console.h" />
-    <ClInclude Include="detour.h" />
+    <ClInclude Include="Detour.h" />
+    <ClInclude Include="friends.hpp" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="ini.h" />
@@ -187,13 +189,4 @@ if "$(Username)" == "kiwi_modz"
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
 </Project>

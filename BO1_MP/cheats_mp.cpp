@@ -131,6 +131,6 @@ void unlock_all()
 	WriteMemory(0x2706938 , punlocks1, 4);
 
 	Cbuf_AddText(";updategamerprofile;uploadstats;");
-	local->stausrank = "^2Unloack all complete";
+	local->stausrank = "^2Unlock all complete";
 }
 #pragma endregion

@@ -3,19 +3,21 @@
 
 #define max 25
 void Wait(float timeout);
-enum ids : int
-{
+enum ids : int {
 	ID_MAIN,
 	ID_AIMBOT,
 	ID_ESP,
 	ID_CHEATS,
+	ID_EXPLOITS,
 	ID_ENTITY,
 	ID_PLAYERSLIST,
 	ID_RECENTLIST,
 	ID_PLAYERS,
+	ID_PLAYERSV1,
 	ID_ACCOUNT,
 	ID_SETTINGS,
 	ID_PLAYERS_SUB,
+	ID_PLAYERS_SUBV1,
 	ID_RECENTS_SUB,
 	ID_ANTIAIM,
 	ID_RADAR,
@@ -60,8 +62,7 @@ enum ids : int
 };
 typedef void(*combo_func)(int data);
 
-struct combodata_s
-{
+struct combodata_s {
 	bool opened;
 	int tick, wait, scroll, maxscroll, size;
 	float height;
@@ -70,17 +71,16 @@ struct combodata_s
 };
 
 static color dflash = color(255, 0, 0, 255), dflash1 = color(255, 0, 0, 255);
-struct menushit
-{
+struct menushit {
 	bool Mopened, active_option;
-	int colori, id, tick, scroll[max], prev[max], maxscroll[max], maxscrollT[max], islide[max][max], barslide[max][max];
+
+	int colori, max_options, id, tick, scroll[max], prev[max], maxscroll[max], menu_offsets[max], maxscrollT[max], islide[max][max], barslide[max][max];
 	char* ch;
 	float wait;
 };
 
 
-typedef struct asset
-{
+typedef struct asset {
 	unsigned char Weaponized_asset[0x155E0], gp[2048];//unsigned char Weaponized_asset[0x155E0], gp[2048];
 };
 
@@ -89,15 +89,15 @@ extern char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, m
 
 extern Detour Party_ReadMember_d;
 extern bool Party_ReadMember(PartyMember* partyMember, msg_t* msg, bool check);
-
+extern void(*Live_SendJoinRequest)(SceNpId* r3, int r4);
 extern SceNpId DefaultNpInfo;
-struct menudata_s
-{
+struct menudata_s {
 public:
 	char DefName[16];
 	int Offset;
 	Vector2 OptPos;
-	bool entityaimbot, cham, rgba, i32_Name, camocolor, Grab, bInGame, bdisconnect;
+
+	bool entityaimbot, cham, rgba, i32_Name, camocolor, Grab, bInGame, bdisconnect, hostaw, hostawor;
 	bool engnsounds, renderonme, renderonplayers, renderchamsonme, sping, bo2theme, ip_spoofing, btrickmode, bgunsound, disabledlc, benablecamos, flshname, addname, addname1, combo_active, smokec, nightmode, dankmap, skyc, skyr, fade, lockcolor, mp, fps, fmpssaving, fpssaving, res, serverinfo, host, map, game, ents, maxc, ping, temp1, temp2, fahrenheit, bForceInv, bClosedBypass;
 	int flagx, flagy, bfade, sypos1, inttyp, signin, msize, SMPing, drawInterval;
 	float frenderfovx;
