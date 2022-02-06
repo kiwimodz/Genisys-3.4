@@ -74,7 +74,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <InlineFunctionDebug>true</InlineFunctionDebug>
-      <FastMath>true</FastMath>
       <MsErrors>false</MsErrors>
       <RelaxAlias>Default</RelaxAlias>
       <AssumeCorrectAlignment>Default</AssumeCorrectAlignment>

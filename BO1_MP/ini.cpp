@@ -566,7 +566,7 @@ void ReadFromIniFile(const char* fileName) {
 	_sys_sprintf(Filename, "%s Configuration File Loaded", fileName);
 	CG_GameMessage(Filename);
 
-	if (!menu->bInGame) {
+	if (!cl_ingame_()) {
 		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
 	} else {
 		CG_GameMessage(Filename);
@@ -782,7 +782,7 @@ void SaveToIniFile(const char* fileName) {
 	_sys_sprintf(Filename, "%s Configuration File Saved", fileName);
 	CG_GameMessage(Filename);
 
-	if (!menu->bInGame) {
+	if (!cl_ingame_()) {
 		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
 	} else {
 		CG_GameMessage(Filename);

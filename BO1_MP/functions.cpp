@@ -381,7 +381,7 @@ bool(*CG_IsEntityFriendlyNotEnemy_f)(int r1, centity_s* r2) = (bool(*)(int, cent
 
 #pragma region cg
 bool CG_IsEntityFriendlyNotEnemy(centity_s* cent) {
-	if (!menu->bInGame)return false;
+	if (!cl_ingame_())return false;
 	return CG_IsEntityFriendlyNotEnemy_f(0, cent);
 }
 
@@ -493,7 +493,7 @@ float sky_rotate;
 bool runoncexxx = true;
 void Smokehandle() {
 	if (strstr("Uplink", Dvar_GetString("party_mapname"))) {
-		if (!menu->nightmode && menu->bInGame) {
+		if (!menu->nightmode && cl_ingame_()) {
 			//*(int*)0x07599D0 = 0x60000000;
 			*(int*)0x01cc1018 = 0x01000000;//0x2B28CC4 <-- pointer from r_exposureTweak
 			*(int*)0x01CC1078 = 0x40900000;//r_exposureValue
@@ -731,7 +731,7 @@ void Flash_name_() {
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
 		static bool runonce = false;
 		if (istate) {
-			if (menu->bInGame) {
+			if (cl_ingame_()) {
 				runonce = false;
 				I_ChangeClan();
 			} else {
@@ -772,7 +772,7 @@ void Add_name_() {
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
 
 		if (istate) {
-			if (menu->bInGame) {
+			if (cl_ingame_()) {
 				I_ChangeAdd();
 			} else {
 				char Addver[32];
@@ -792,7 +792,7 @@ void Add_name__() {
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
 
 		if (istate) {
-			if (menu->bInGame) {
+			if (cl_ingame_()) {
 				I_ChangeAdd1();
 			} else {
 				char Addver[256];
@@ -1448,10 +1448,9 @@ int CL_GetLocalClientMigrationState(int localClientNum) {
 
 bool cl_ingame_() {
 	if (CL_AllLocalClientsDisconnected() == 0 && !SV_IsMigrating() && CL_GetLocalClientMigrationState(0) == CMSTATE_INACTIVE) {
-		if (*(int*)0x06c2488 == false) {
+		if (*(int*)0x0F0F88C != 0)
 			return false;
-		}
-
+		
 		if (menu->bdisconnect) {
 			menu->fpssaving = false;
 			return false;
@@ -1475,9 +1474,6 @@ bool cl_ingame_() {
 }
 
 void Global_Ingame() {
-
-	menu->bInGame = cl_ingame_();
-
 	if (*(bool*)(0x01cb68d8) == false) {
 
 		menu->bdisconnect = false;

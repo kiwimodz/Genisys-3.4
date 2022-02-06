@@ -116,7 +116,7 @@ void Change_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int 
 
 	if (strlen(buffer) <= 0) return;
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		char ingameflash[256];
 		_sys_sprintf(ingameflash, ";cmd userinfo \"\\clanAbbrev\\%s\\name\\%s\\xuid\\%s", "", buffer, 0x26C06E8);
 		WriteMemory(0x026C0658, buffer, 32);
@@ -270,7 +270,7 @@ void ResetName() {
 	sceNpManagerGetOnlineId(&onlineid);
 
 	menu->flshname = false;
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		char ingameflash[256];
 		_sys_sprintf(ingameflash, ";cmd userinfo \"\\clanAbbrev\\%s\\name\\%s\\xuid\\%s", "", onlineid.data, 0x26C06E8);
 		Cbuf_AddText(ingameflash);
@@ -534,12 +534,12 @@ void Ui_interface() {
 			height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 		}
 
-		if (!menu->bInGame && menu->game && menu->host && menu->map) {
+		if (!cl_ingame_() && menu->game && menu->host && menu->map) {
 			menu->serverinfo = true;
 		}
 	}
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (!menu->serverinfo) {
 			if (!menu->ping) {
 				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Latency: %i", cg->ping);
@@ -1032,9 +1032,9 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 
 			char buffer[200];
 			auto client_num = Party_FindMember(get_current_party(), from);
-			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 			Com_Sprintf(buffer, sizeof(buffer), "Relay Crash Attempt From %s Blocked", name);
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
 			} else {
 				CG_GameMessage(buffer);
@@ -1049,9 +1049,9 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 
 			char buffer[200];
 			auto client_num = Party_FindMember(get_current_party(), from);
-			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 			Com_Sprintf(buffer, sizeof(buffer), "Join Party Crash Attempt From %s Blocked", name);
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
 			} else {
 				CG_GameMessage(buffer);
@@ -1065,9 +1065,9 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 
 			char buffer[200];
 			auto client_num = Party_FindMember(get_current_party(), from);
-			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 			Com_Sprintf(buffer, sizeof(buffer), "Pseg Crash Attempt From %s Blocked", name);
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
 			} else {
 				CG_GameMessage(buffer);
@@ -2101,7 +2101,7 @@ int Savedtagtype;
 bool ingameonce;
 
 void resetipflags() {
-	if (!menu->bInGame) {
+	if (!cl_ingame_()) {
 		if (!ingameonce) {
 			for (int i = 0; i <= 18; i++) {
 				local->iplayer[i] = false;
@@ -2140,7 +2140,7 @@ dvar_t* penetration_min_fx_dist;
 
 void RenderMenu() {
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.cancelreload) {
 			if (cg->health > 0) {
 				Cancel_Reload();
@@ -2148,7 +2148,7 @@ void RenderMenu() {
 		}
 	}
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 
 		if (!penetration_count && !penetration_multiplier && !penetration_min_fx_dist) {
 			penetration_count = Dvar_FindVar("penetrationCount");
@@ -2303,7 +2303,7 @@ void RenderMenu() {
 		menu->skin6 = menu->skin3;
 	}
 
-	if (menu->camocolor && (menu->bInGame && cg->health > 0)) {
+	if (menu->camocolor && (cl_ingame_() && cg->health > 0)) {
 		uint8_t r = 255 * menu->rgbac.r;
 		uint8_t g = 255 * menu->rgbac.g;
 		uint8_t b = 255 * menu->rgbac.b;
@@ -2663,7 +2663,7 @@ void RenderMenu() {
 				playerIP = "0.0.0.0";
 			}
 
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				if (*(bool*)0x0FA7A03)//Lobby or Party
 				{
 					nameip[i] = (char*)(0x0F9E698 + (i * 328));//Lobby
@@ -2690,7 +2690,7 @@ void RenderMenu() {
 		String pszNpid;
 		String pszPing;
 
-		if (!menu->bInGame) {
+		if (!cl_ingame_()) {
 			if (*(bool*)0x0FA7A03)//Lobby or Party
 			{
 				pszName = (char*)0x0F9E698 + (Mshit.scroll[ID_PLAYERS] * 328);//Lobby
@@ -2723,7 +2723,7 @@ void RenderMenu() {
 
 		for (int i = 0; i < 18; i++) {
 
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				if (*(bool*)0x0FA7A03)//Lobby or Party
 				{
 					nameip[i] = (char*)(0x0F9E698 + (i * 328));//Lobby
@@ -2745,7 +2745,7 @@ void RenderMenu() {
 		}
 		break;
 	case ID_PLAYERS_SUBV1:
-		if (!menu->bInGame) {
+		if (!cl_ingame_()) {
 			if (*(bool*)0x0FA7A03)//Lobby or Party
 			{
 				pszName = (char*)0x0F9E698 + (Mshit.scroll[ID_PLAYERSV1] * 328);//Lobby

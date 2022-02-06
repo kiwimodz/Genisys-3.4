@@ -542,7 +542,7 @@ void EntityCount() {
 	bot.esp.getNumberOfEntities = 0;
 	bot.esp.maxclients = 0;
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		for (int i = 0; i < 1048; i++) {
 			if (!menu->ents) {
 

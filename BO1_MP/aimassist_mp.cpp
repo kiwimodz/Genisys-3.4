@@ -543,35 +543,35 @@ short HandleTag(int i) {
 	} else {
 		switch (bot.tagtype) {
 		case tj_ankle_ri:
-			return AimBoneIndex[j_ankle_ri];
+			return j_ankle_ri;
 
 
 		case tj_ankle_le:
-			return AimBoneIndex[j_ankle_le];
+			return j_ankle_le;
 
 
 		case tj_knee_ri:
-			return AimBoneIndex[j_knee_ri];
+			return j_knee_ri;
 
 
 		case tj_knee_le:
-			return AimBoneIndex[j_knee_le];
+			return j_knee_le;
 
 
 		case tj_spineupper:
-			return AimBoneIndex[j_spineupper];
+			return j_spineupper;
 
 
 		case tj_neck:
-			return AimBoneIndex[j_neck];
+			return j_neck;
 
 
 		case tj_head:
-			return AimBoneIndex[j_head];
+			return j_head;
 
 
 		case tj_helmet:
-			return AimBoneIndex[j_helmet];
+			return j_helmet;
 
 
 		default:
@@ -766,7 +766,7 @@ bool AimTarget_GetTargetBounds(int i) {
 	if (bot.psztag == NULL) return false;
 
 	Vector2 ScreenPos;
-	if (WorldPosToScreenPos(local->player[i].vtag[bot.psztag[i]], &ScreenPos)) {
+	if (WorldPosToScreenPos(local->player[i].vtag[j_head], &ScreenPos)) {
 		if (!(ScreenPos.x > ((cg->refdef.Width / 2) - (Bound.x / 4.5))
 			&& ScreenPos.x < ((cg->refdef.Width / 2) + (Bound.x / 4.5))
 			&& ScreenPos.y >((cg->refdef.Height / 2) - (Bound.y / 4.5))
@@ -787,13 +787,13 @@ bool isPlayerWallable(int ClientNumber) {
 			if (local->iplayer[ClientNumber])
 				return;
 
-			if (!IsTargetHitable(ClientNumber, AimBoneIndex[iterator[ClientNumber]])) {
+			if (!IsTargetHitable(ClientNumber, iterator[ClientNumber])) {
 				if (iterator[ClientNumber] == 12)
 					iterator[ClientNumber] = 0;
 
 				iterator[ClientNumber]++;
 			} else {
-				bot.psztag[ClientNumber] = AimBoneIndex[iterator[ClientNumber]];
+				bot.psztag[ClientNumber] = iterator[ClientNumber];
 				iterator[ClientNumber] = 0;
 				return true;
 			}
@@ -887,7 +887,7 @@ void GetNearestPlayermp() {
 			return;
 	}
 
-	if (!menu->bInGame)
+	if (!cl_ingame_())
 		return;
 
 	if (menu->bdisconnect)
@@ -1008,7 +1008,7 @@ void ApplyPrediction(Vector3& position, int i, float flMultiplier) {
 void AimTarget_GetTarget() {
 
 	if (centity[cg->clientNum].WeaponID == 89) return;
-	if (!menu->bInGame)return;
+	if (!cl_ingame_())return;
 
 	GetNearestPlayermp();
 }
@@ -1292,7 +1292,7 @@ bool WeaponIsVehicle() {
 
 void pspin(usercmd_s* NewCmd) {
 
-	if (!menu->bInGame)
+	if (!cl_ingame_())
 		return;
 
 	local->fakeAngles[0] = 0.0f;
@@ -1768,7 +1768,7 @@ void pspin(usercmd_s* NewCmd) {
 int snakebotTick = 0; bool toggleL;
 bool toggleR;
 void PredictPlayerState() {
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 
 		static int iBackupAngles[3];
 

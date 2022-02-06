@@ -375,7 +375,7 @@ bool SendPacket;
 float tick;
 
 int CG_PredictPlayerState(int localClientNum) {
-	if (menu->bInGame && cg->health > 0) {
+	if (cl_ingame_() && cg->health > 0) {
 		local->ishost = Session_IsHost_f(0x26C2BC8, cg->clientNum);
 
 		PredictPlayerState();
@@ -385,7 +385,7 @@ int CG_PredictPlayerState(int localClientNum) {
 }
 
 int CL_SendCmd(int localClientNum) {
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		SendCMD();
 	}
 	CL_SendCmdDetour.Stub(localClientNum);
@@ -396,7 +396,7 @@ int CL_WritePacket(int localClientNum) {
 
 	Writepacket();
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.fakelagscale > 0.00) {
 			SendPacket = false;
 			tick++;
@@ -435,14 +435,14 @@ int _sys_io_cellPadGetData(uint32_t port_no, CellPadData* data) {
 		data->button[CELL_PAD_BTN_OFFSET_DIGITAL2] &= ~CELL_PAD_CTRL_CIRCLE;
 	}
 
-	if (!Mshit.Mopened && menu->bInGame) {
+	if (!Mshit.Mopened && cl_ingame_()) {
 		if (bot.blean) {
 			data->button[CELL_PAD_BTN_OFFSET_DIGITAL1] &= ~CELL_PAD_CTRL_RIGHT;
 		}
 	}
 
 	if (cg->health > 0) {
-		if (menu->bInGame && bot.benablal && local->alive && bot.aimtype != AIM_TYPE_SILENT && bot.aimtype != AIM_TYPE_TRIGGERBOT && bot.keytype != KEY_L1 && centity[cg->clientNum].WeaponID != 89) {
+		if (cl_ingame_() && bot.benablal && local->alive && bot.aimtype != AIM_TYPE_SILENT && bot.aimtype != AIM_TYPE_TRIGGERBOT && bot.keytype != KEY_L1 && centity[cg->clientNum].WeaponID != 89) {
 
 			playerState_s* playerState = CG_GetPredictedPlayerState(0);
 
@@ -539,7 +539,7 @@ int R_EndFrame() {
 	Add_name_();
 	Add_name__();
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		runreauthonce = false;
 		ingame3 = true;
 		spinYy = (spinYy > 360) ? (spinYy - 360) : (spinYy + 2);
@@ -610,7 +610,7 @@ Vector3 zero_ = Vector3(1, 1, 1);
 Console console;
 
 void CL_ConsolePrint(int localClientNum, int channel, const char* txt, int duration, int pixelWidth, int flags) {
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.drawconsole) {
 			CL_ConsolePrintDetour.Stub(localClientNum, channel, txt, duration, pixelWidth, flags);
 		}
@@ -632,7 +632,7 @@ void Com_Error(int code, const char* fmt, char* ap) {
 
 void LUI_LuaCall_DrawRectangleH(LUI_Element* r3, float f1, float f2, float f3, float f4, float red, float green, float blue, float alpha, int r9, int r10) {
 
-	if (menu->bo2theme && !menu->bInGame) {
+	if (menu->bo2theme && !cl_ingame_()) {
 		const char* icon = r3->material->name;
 
 		if (strstr(icon, "menu_mp_soldiers")) {
@@ -676,7 +676,6 @@ const char* SE_GetString_FastFile(const char* psPackageAndStringReference) {
 	}
 
 	if (!strcmp(psPackageAndStringReference, "MPUI_HOST_MIGRATION")) {
-		menu->bInGame = false;
 	}
 
 	if (!strcmp(psPackageAndStringReference, "MENU_SELECT_GRENADE")) {
@@ -728,7 +727,7 @@ int BG_UnlockablesGetUsedAllocationH(int* cacRoot, loadoutClass_t customClass) {
 }
 
 void CG_FireWeaponH(int localClientNum, centity_t* cent, int event, int eventParm, const unsigned __int16 tagName, Weapon weapon, playerState_s* ps, bool leftGun) {
-	if (menu->bInGame && (ps->weaponstate == WEAPON_FIRING)) {
+	if (cl_ingame_() && (ps->weaponstate == WEAPON_FIRING)) {
 		if (CScr_IsAlive(localClientNum) && (cent[localClientNum].pose.localClientNum == localClientNum)) {
 			if (menu->flagx == 50) {
 				menu->flagy = irand_(0, 45);
@@ -762,7 +761,7 @@ void (*Tracer_Spawn_f)(int localClientNum, Vector3* pstart, Vector3* pend, centi
 
 TracerDef* weapon_tracer;
 void Tracer_Spawn(int localClientNum, Vector3* pstart, Vector3* pend, centity_s* instigator, int weapon) {
-	if (bot.esp.btracers && menu->bInGame) {
+	if (bot.esp.btracers && cl_ingame_()) {
 		auto friends = CG_IsEntityFriendlyNotEnemy(&centity[cg->clientNum]);
 		weapon_tracer = BG_TracerType(centity[cg->clientNum].WeaponID, friends);
 
@@ -792,7 +791,7 @@ void Tracer_Spawn(int localClientNum, Vector3* pstart, Vector3* pend, centity_s*
 }
 
 char CG_BulletHitEventH(int localClientNum, int sourceEntityNum, int targetEntityNum, int weapon, Vector3* endPos, int surfacetype, Vector3* normal, Vector3* seeThruDecalNormal, int nothing, int event_, char eventParam, int hitContents, char boneIndex) {
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.esp.btracers && sourceEntityNum == cg->clientNum) {
 			playerState_s* playerState = CG_GetPredictedPlayerState(0);
 			int iShots, iIgnoreNum;
@@ -825,7 +824,7 @@ void CG_CalcEntityLerpPositions(int localClientNum, centity_t* cent) {
 
 	CG_CalcEntityLerpPositionsDetour.Stub(localClientNum, cent);
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.benableanti) {
 			if (cent->nextState.number == cg->clientNum) {
 				cgst->clients[cg->clientNum].viewAngle.x = local->fakeAngles[0];
@@ -862,7 +861,7 @@ int __cdecl CG_DObjGetWorldTagMatrix(cpose_t* pose, DObj* obj, unsigned int tagN
 	if (__builtin_return_address() == (void*)0x00D46B8 && obj && (obj->entnum - 1) == cg->clientNum) {
 		playerState_s* playerState = CG_GetPredictedPlayerState(0);
 		if (!BG_UsingVehicleWeapon(playerState)) {
-			if (menu->bInGame) {
+			if (cl_ingame_()) {
 				if (bot.benableanti && bot.bthirdp) {
 					*origin = centityt[cg->clientNum].pose.origin;
 					origin->z += 70.0f;
@@ -1061,7 +1060,7 @@ int MSG_ReadShort_Hook(msg_t* msg) {
 
 Detour CG_ProcessSnapshotsDetour;
 void CG_ProcessSnapshots(int localClientNum) {
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.benable) {
 			setanglesMP();
 		}
@@ -1079,7 +1078,7 @@ void CG_DeployServerCommand_Hook(int localClientNum) {
 		int iTeamNum = _atoi(Cmd_Argv(1));
 		if (iTeamNum < 0 || iTeamNum > 10) {//max team exploit
 
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), "RME Blocked", 5000);
 			} else {
 				CG_GameMessage("RME Blocked");
@@ -1099,7 +1098,7 @@ unsigned int atoihook(const char* s, char** endptr, int base, const char* nptr) 
 
 	if (__builtin_return_address() == (void*)0xBE768) {//max score
 
-		if (menu->bInGame) {
+		if (cl_ingame_()) {
 			if (atoilen > 0xFA || atoilen < 0) {
 				return 0;
 			}
@@ -1214,7 +1213,7 @@ Detour BG_CalculateViewMovementAnglesDetour;
 void BG_CalculateViewMovementAngles(viewState_t* viewstate, Vector3* angles, bool ignoresway) {
 	BG_CalculateViewMovementAnglesDetour.Stub(viewstate, angles, ignoresway);
 
-	if (menu->bInGame && bot.bnoflinch) {
+	if (cl_ingame_() && bot.bnoflinch) {
 		local->fangles = *angles;
 	}
 }
@@ -1256,7 +1255,7 @@ static std::size_t check_invalid_material_handles(std::string text) {
 		if (text.substr(pos).size() > 1) {
 			material.flip = text.at(pos + 1);
 
-			if (material.flip == 'H' || material.flip == 'I') {
+			if (material.flip == 'H' || material.flip == 'I' || material.flip == 'B') {
 				if (text.substr(pos).size() > 5) {
 					material.width = text.at(pos + 2);
 					material.height = text.at(pos + 3);
@@ -1456,7 +1455,7 @@ void ThreadedAimbot(uint64_t arg) {
 
 	while (!alwaysfalse) {
 
-		if (menu->bInGame) {
+		if (cl_ingame_()) {
 
 			if (cg->health > 0) {
 				if (iniTD) {
@@ -1488,13 +1487,13 @@ void CG_Player(int localClientNum, centity_s* cent) {
 		runone_25 = true;
 	}
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 
 		if (cent->Type == ET_PLAYER) {
 
 			if (bot.esp.ballies || bot.esp.baxis) {
 
-				AimTarget_GetTagPos_f(cent, EspBoneIndex[j_head], &local->playeresp[cent->ClientNumber].vtagesp[EspBoneIndex[j_head]]);
+				AimTarget_GetTagPos_f(cent, EspBoneIndex[j_head], &local->playeresp[cent->ClientNumber].vtagesp[j_head]);
 			}
 
 			if (bot.benable) {
@@ -1508,52 +1507,52 @@ void CG_Player(int localClientNum, centity_s* cent) {
 							if (cent->Type > 0) {
 
 								if (bot.tagtype == AUTO_BONE || (centity[cent->ClientNumber].WeaponID == 89 || centity[cent->ClientNumber].OldWeapon == 89)) {
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_head], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_head]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_helmet], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_helmet]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_neck], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_neck]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_spineupper], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_spineupper]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_le], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_knee_le]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_ri], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_knee_ri]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_wrist_le], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_wrist_le]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_wrist_ri], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_wrist_ri]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_le], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_ankle_le]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_ri], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_ankle_ri]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ball_le], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_ball_le]]);
-									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ball_ri], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_ball_ri]]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_helmet], &local->player[cent->ClientNumber].vtag[j_helmet]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_head], &local->player[cent->ClientNumber].vtag[j_head]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_neck], &local->player[cent->ClientNumber].vtag[j_neck]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_spineupper], &local->player[cent->ClientNumber].vtag[j_spineupper]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_le], &local->player[cent->ClientNumber].vtag[j_knee_le]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_ri], &local->player[cent->ClientNumber].vtag[j_knee_ri]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_wrist_le], &local->player[cent->ClientNumber].vtag[j_wrist_le]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_wrist_ri], &local->player[cent->ClientNumber].vtag[j_wrist_ri]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_le], &local->player[cent->ClientNumber].vtag[j_ankle_le]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_ri], &local->player[cent->ClientNumber].vtag[j_ankle_ri]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ball_le], &local->player[cent->ClientNumber].vtag[j_ball_le]);
+									AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ball_ri], &local->player[cent->ClientNumber].vtag[j_ball_ri]);
 								}
 
 								else {
 									switch (bot.tagtype) {
 									case tj_ankle_ri:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_ri], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_ankle_ri]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_ri], &local->player[cent->ClientNumber].vtag[j_ankle_ri]);
 										break;
 
 									case tj_ankle_le:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_le], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_ankle_le]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_ankle_le], &local->player[cent->ClientNumber].vtag[j_ankle_le]);
 										break;
 
 									case tj_knee_ri:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_ri], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_knee_ri]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_ri], &local->player[cent->ClientNumber].vtag[j_knee_ri]);
 										break;
 
 									case tj_knee_le:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_le], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_knee_le]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_knee_le], &local->player[cent->ClientNumber].vtag[j_knee_le]);
 										break;
 
 									case tj_spineupper:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_spineupper], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_spineupper]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_spineupper], &local->player[cent->ClientNumber].vtag[j_spineupper]);
 										break;
 
 									case tj_neck:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_neck], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_neck]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_neck], &local->player[cent->ClientNumber].vtag[j_neck]);
 										break;
 
 									case tj_helmet:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_helmet], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_helmet]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_helmet], &local->player[cent->ClientNumber].vtag[j_helmet]);
 										break;
 
 									case tj_head:
-										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_head], &local->player[cent->ClientNumber].vtag[AimBoneIndex[j_head]]);
+										AimTarget_GetTagPos_f(cent, AimBoneIndex[j_head], &local->player[cent->ClientNumber].vtag[j_head]);
 										break;
 
 									default:
@@ -1597,7 +1596,7 @@ void CG_ProcessEntity(int localClientNum, centity_s* cent, cg_t* cgameGlob) {
 int Netchan_Process(netchan_t* chan, msg_t* msg) {
 	int ret = Netchan_ProcessDetour.Stub(chan, msg);
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 
 		if (Session_IsHost_f(0x26C2BC8, cg->clientNum)) {
 			clients_t = (*reinterpret_cast<client_t**>(0x1BB6CC0));
@@ -1912,7 +1911,7 @@ bool (*Live_IsUserSignedIntoDemonware)(int ControllerIndex) = (bool(*)(int))Live
 SceNpId DefaultNpInfo;
 
 int Menu_PaintAll(int localClientNum, UiContext* _dc) {
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		cheats_render();
 
 		playerState_s* playerState = CG_GetPredictedPlayerState(0);
