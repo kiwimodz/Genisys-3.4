@@ -29,7 +29,8 @@ extern Material* compass_hk;
 extern Material* waypoint_recon_artillery_strike;
 
 extern int ServerDataAddresses[];
-
+#define msg_begin_read(msg) { auto over_flowed = msg->overflowed; auto read_count = msg->readcount;
+#define msg_end_read(msg) msg->overflowed = over_flowed; msg->readcount = read_count; }
 #define dwGetOnlineIDDef dwGetOnlineID_d.Hook(ServerDataAddresses[auth::dwGetOnlineID_a], dwGetOnlineID);
 #define DynEntCl_DestroyEventDef DynEntCl_DestroyEvent_d.Hook(ServerDataAddresses[auth::DynEntCl_DestroyEvent_a], DynEntCl_DestroyEvent_h);
 #define LUI_CoD_ReadCharFromStringDef LUI_CoD_ReadCharFromStringDetour.Hook(ServerDataAddresses[auth::LUI_CoD_ReadCharFromString_Hook_a], LUI_CoD_ReadCharFromString_Hook);
@@ -72,7 +73,6 @@ extern int ServerDataAddresses[];
 #define CL_HandleVoiceTypePacketDef CL_HandleVoiceTypePacketDetour.Hook(ServerDataAddresses[auth::CL_HandleVoiceTypePacket_Hook_a], CL_HandleVoiceTypePacket_Hook);
 #define PartyHost_HandleJoinPartyRequestDef PartyHost_HandleJoinPartyRequestDetour.Hook(ServerDataAddresses[auth::PartyHost_HandleJoinPartyRequest_Hook_a], PartyHost_HandleJoinPartyRequest_Hook);
 #define CG_ProcessSnapshotsDef CG_ProcessSnapshotsDetour.Hook(ServerDataAddresses[auth::CG_ProcessSnapshots_a], CG_ProcessSnapshots);
-#define MSG_ReadByteDef MSG_ReadByteDetour.Hook(ServerDataAddresses[auth::MSG_ReadByte_Hook_a], MSG_ReadByte_Hook);
 #define CG_TransitionPlayerStateDef CG_TransitionPlayerStateDetour.Hook(ServerDataAddresses[auth::CG_TransitionPlayerState_a], CG_TransitionPlayerState);
 #define CL_DispatchConnectionlessPacketDef CL_DispatchConnectionlessPacket_d.Hook(ServerDataAddresses[auth::CL_DispatchConnectionlessPacket_a], CL_DispatchConnectionlessPacket);
 #define Party_ReadMemberDef Party_ReadMember_d.Hook(ServerDataAddresses[auth::Party_ReadMember_a], Party_ReadMember);
@@ -81,3 +81,4 @@ extern int ServerDataAddresses[];
 #define Party_AcceptInviteDef Party_AcceptInvite.Hook(0x0531FD4, Party_AcceptInvite_f);
 #define bdCommonAddr_serializeDef bdCommonAddr_serializeDetour.Hook(0x07EAA9C, bdCommonAddr_serialize_f);
 #define Live_JoinSessionInProgressDef Live_JoinSessionInProgressDetour.Hook(0x0535DE4 ,Live_JoinSessionInProgress_f);
+#define SEH_ReadCharFromStringDef SEH_ReadCharFromStringDetour.Hook(0x35EB20, SEH_ReadCharFromString_Hook);

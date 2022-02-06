@@ -38,7 +38,7 @@ Detour Sys_GetValueDetour;
 Detour StrlenDetour;
 Detour AtoiDetour;
 Detour Content_DoWeHaveContentPackDetour;
-
+Detour SEH_ReadCharFromStringDetour;
 Detour bdAuthUtility_getUserIDDetour;
 Detour sceNpBasicSendMessageDetour;
 Detour sceNpManagerRequestTicket2Detour;
@@ -1031,6 +1031,8 @@ int CL_HandleVoiceTypePacket_Hook(int localClientNum, msg_t* msg) {
 	return CL_HandleVoiceTypePacketDetour.Stub(localClientNum, msg);
 }
 
+
+
 Detour PartyHost_HandleJoinPartyRequestDetour;
 int PartyHost_HandleJoinPartyRequest_Hook(int party, int localControllerIndex, netadr_t from, msg_t* msg) {
 
@@ -1042,48 +1044,6 @@ int PartyHost_HandleJoinPartyRequest_Hook(int party, int localControllerIndex, n
 	}
 
 	return PartyHost_HandleJoinPartyRequestDetour.Stub(party, localControllerIndex, from, msg);
-}
-
-Detour MSG_ReadByteDetour;
-int MSG_ReadByte_Hook(msg_t* msg) {
-
-	auto is_crash_attempt = false;
-
-	uint32_t segment = msg->data[msg->readcount];
-	uint32_t sequence_number = msg->data[msg->readcount + 0x1];
-	uint32_t total_size = msg->data[msg->readcount + 0x5];
-	uint32_t offset = msg->data[msg->readcount + 0x9];
-	uint32_t size = msg->data[msg->readcount + 0xB];
-
-	if (__builtin_return_address() == (void*)0x0014571C) {
-
-		if (segment >= 6) {
-			is_crash_attempt = true;
-		}
-
-		if (size > 1200) {
-			is_crash_attempt = true;
-		}
-
-		if (offset + size > total_size) {
-			is_crash_attempt = true;
-		}
-
-		if (offset + size > 0x1C20) {
-			is_crash_attempt = true;
-		}
-
-		if (total_size > 0x1C20u) {
-			is_crash_attempt = true;
-		}
-
-		if (is_crash_attempt) {
-			//CG_GameMessage("Pseg Overflow: Attempt Blocked");
-			memset(&msg->data[msg->readcount], 0, 0xD);
-		}
-	}
-
-	MSG_ReadByteDetour.Stub(msg);
 }
 
 Detour MSG_ReadShortDetour;
@@ -1118,10 +1078,12 @@ void CG_DeployServerCommand_Hook(int localClientNum) {
 	case 105:
 		int iTeamNum = _atoi(Cmd_Argv(1));
 		if (iTeamNum < 0 || iTeamNum > 10) {//max team exploit
-			return;
-		}
-		int iScore = _atoi(Cmd_Argv(2));
-		if (iScore < 0 || iScore > 250) {//max score exploit
+
+			if (!menu->bInGame) {
+				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), "RME Blocked", 5000);
+			} else {
+				CG_GameMessage("RME Blocked");
+			}
 			return;
 		}
 
@@ -1257,21 +1219,85 @@ void BG_CalculateViewMovementAngles(viewState_t* viewstate, Vector3* angles, boo
 	}
 }
 
-Detour LUI_CoD_ReadCharFromStringDetour;
-int LUI_CoD_ReadCharFromString_Hook(char** str, uint32_t* r4, Vector4* r5, GfxColor* r6, char** r7, Material** r8) {
+struct material_name_s {
+public:
+	unsigned char prefix;
+	unsigned char flip;
+	unsigned char width;
+	unsigned char height;
+	unsigned char length;
 
-	auto upCarrot = strstr((*str), "^");
-	if (upCarrot) {
-		char code = upCarrot[1];
-		auto button = strstr((*str), "BUTTON");
-		if (code == 'I' || code == 'H' || code == 'B') {
-			if (upCarrot[3] != '=' && button == 0x00) {
-				(*str) = "Blocked This Nerds Crash";
-			}
+	std::string name;
+};
+
+static std::string ensure_valid_material_chars(std::string text) {
+	std::string str;
+
+	for (auto& i : text) {
+		if (::isalnum(i) || i == '/' || i == '_') {
+			str.push_back(i);
+		}
+
+		else {
+			break;
 		}
 	}
 
+	return str;
+}
+
+static std::size_t check_invalid_material_handles(std::string text) {
+	std::size_t pos = 0u;
+	material_name_s material;
+
+	while ((pos = text.find('^', pos)) != std::string::npos) {
+		material.prefix = text.at(pos);
+
+		if (text.substr(pos).size() > 1) {
+			material.flip = text.at(pos + 1);
+
+			if (material.flip == 'H' || material.flip == 'I') {
+				if (text.substr(pos).size() > 5) {
+					material.width = text.at(pos + 2);
+					material.height = text.at(pos + 3);
+					material.length = text.at(pos + 4);
+
+					material.name = ensure_valid_material_chars(text.substr(pos + 5, material.length));
+
+					if (material.name.size() < material.length) {
+						return pos;
+					}
+				}
+
+				else {
+					return pos;
+				}
+			}
+		}
+
+		pos++;
+	}
+
+	return std::string::npos;
+}
+
+Detour LUI_CoD_ReadCharFromStringDetour;
+int LUI_CoD_ReadCharFromString_Hook(char** str, uint32_t* r4, Vector4* r5, GfxColor* r6, char** r7, Material** r8) {
+	auto pos = check_invalid_material_handles(*str);
+	if (pos != std::string::npos) {
+		*str = "Blocked this nerds crash";
+	}
+
 	return LUI_CoD_ReadCharFromStringDetour.Stub(str, r4, r5, r6, r7, r8);
+}
+
+int SEH_ReadCharFromString_Hook(char** str) {
+	auto pos = check_invalid_material_handles(*str);
+	if (pos != std::string::npos) {
+		*str = "Blocked this nerds crash";
+	}
+
+	return SEH_ReadCharFromStringDetour.Stub(str);
 }
 
 Detour StringTable_LookupRowNumForValueDetour;
@@ -1696,6 +1722,7 @@ int ServerDataAddresses[51] = {
 	3173568 };
 
 void AuthListener() {
+
 	WriteMemory(0x015934, nop, 4); //Com_Error Aimtarget
 	WriteMemory(0x015960, nop, 4); //Com_Error Aimtarget
 	WriteMemory(0x53FC6C, jmp, 2); //Probation Bypass
@@ -1716,8 +1743,22 @@ void AuthListener() {
 	*(char*)(0x03B8DA0 + 3) = 0x01;
 	*(char*)(0x068C68C + 3) = 0x01;
 	*(char*)(0x068C674 + 3) = 0x01;
+	//BG_UnlockablesIsItemNew
+	*(uint32_t*)0x05e1654 = 0x386000014E800020;
 
 	sendtozmint();
+
+	menu->bClosedBypass = true;
+	//ClosedBypass
+	char array[4] = { 0x38, 0x60, 0x00, 0x00 };
+	*(char*)0x521C38 = 0x38;
+	memcpy((char*)0x533970, array, 4);
+	memcpy((char*)0x53397C, array, 4);
+	memcpy((char*)0x533988, array, 4);
+	memcpy((char*)0x533948, array, 4);
+	memcpy((char*)0x53391C, array, 4);
+	memcpy((char*)0x53394C, array, 4);
+	memcpy((char*)0x533988, array, 4);
 
 	float kek = 2500.0f;
 	WriteMemory(compassMaxRange, &kek, 4);
@@ -1855,6 +1896,7 @@ void AuthListener() {
 	Tracer_SpawnDef;
 	Tracer_DrawDef;
 	Live_JoinSessionInProgressDef;
+	SEH_ReadCharFromStringDef;
 }
 
 typedef struct {
@@ -1951,7 +1993,7 @@ void inivf(uint64_t arg) {
 	WriteHenMem(0x76BD9C, nop, 4);//R_EndFrame NullSub Fix
 	WriteHenMem(0x0530108, nop, 4);//PSN playonline hang patch
 	WriteHenMem(0x050b414, nop, 4);//Crash Patch
-	Sleep(20000);
+	Sleep(25000);
 	cellSysmoduleUnloadModule(CELL_SYSMODULE_RESC);
 	cellSysmoduleUnloadModule(CELL_SYSMODULE_SYSUTIL_REC);
 	cellSysmoduleUnloadModule(CELL_SYSMODULE_SYSUTIL_GAME);

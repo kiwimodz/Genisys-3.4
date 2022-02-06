@@ -943,9 +943,47 @@ signed int(*NET_CompareAdr)(netadr_t a, netadr_t b) = (decltype(NET_CompareAdr))
 bool is_relay_overflow_attempt(string argv) {
 	auto is_crash_attempt = false;
 
-	uint32_t client_num = std::strtoul(argv.c_str(), nullptr, 10);
+	uint32_t client_num = _atoi(argv.c_str());
 
 	if (client_num > 17) {
+		is_crash_attempt = true;
+	}
+
+	return is_crash_attempt;
+}
+
+bool is_pseg_overflow_attempt(msg_t* msg) {
+	auto is_crash_attempt = false;
+
+	std::uint32_t segment, sequence_number, total_size, offset, size;
+
+	msg_begin_read(msg);
+
+	segment = MSG_ReadByte(msg);
+	sequence_number = MSG_ReadLong(msg);
+	total_size = MSG_ReadLong(msg);
+	offset = MSG_ReadShort(msg);
+	size = MSG_ReadShort(msg);
+
+	msg_end_read(msg);
+
+	if (segment >= 6) {
+		is_crash_attempt = true;
+	}
+
+	if (size > 1200) {
+		is_crash_attempt = true;
+	}
+
+	if (offset + size > total_size) {
+		is_crash_attempt = true;
+	}
+
+	if (offset + size > 0x1C20) {
+		is_crash_attempt = true;
+	}
+
+	if (total_size > 0x1C20u) {
 		is_crash_attempt = true;
 	}
 
@@ -955,20 +993,20 @@ bool is_relay_overflow_attempt(string argv) {
 bool is_joinparty_overflow_attempt(msg_t* msg) {
 	auto is_crash_attempt = false;
 
-	auto over_flowed = msg->overflowed;
-	auto read_count = msg->readcount;
+	std::uint32_t net_version, msg_check_sum, lan_chal_resp_key_4, xuid, play_list_id, lan_chal_resp_key, ping, party_count;
 
-	std::uint32_t net_version = MSG_ReadLong(msg);
-	std::uint32_t msg_check_sum = MSG_ReadLong(msg);
-	std::uint32_t lan_chal_resp_key_4 = MSG_ReadLong(msg);
-	std::uint64_t xuid = MSG_ReadInt64(msg);
-	std::uint32_t play_list_id = MSG_ReadByte(msg);
-	std::uint32_t lan_chal_resp_key = MSG_ReadShort(msg);
-	std::uint32_t ping = MSG_ReadLong(msg);
-	std::uint32_t party_count = MSG_ReadByte(msg);
+	msg_begin_read(msg);
 
-	msg->overflowed = over_flowed;
-	msg->readcount = read_count;
+	net_version = MSG_ReadLong(msg);
+	msg_check_sum = MSG_ReadLong(msg);
+	lan_chal_resp_key_4 = MSG_ReadLong(msg);
+	xuid = MSG_ReadInt64(msg);
+	play_list_id = MSG_ReadByte(msg);
+	lan_chal_resp_key = MSG_ReadShort(msg);
+	ping = MSG_ReadLong(msg);
+	party_count = MSG_ReadByte(msg);
+
+	msg_end_read(msg);
 
 	if (party_count > 17) {
 		is_crash_attempt = true;
@@ -977,26 +1015,58 @@ bool is_joinparty_overflow_attempt(msg_t* msg) {
 	return is_crash_attempt;
 }
 
+static int Stricmp(const char* s1, const char* s2) { int d; while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; } return d; }
+
 Detour CL_DispatchConnectionlessPacket_d;
 char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* msg, int time) {
+
 	char* Rep = (char*)Cmd_Argv(0);
-	if (strstr(Rep, "connectResponseMigration") && *(int*)0x0F0F88C == 0) {
+	if (!Stricmp(Rep, "connectResponseMigration") && *(int*)0x0F0F88C == 0) {
 		return 0;
 	}
 
-	if (strstr(Rep, "joinParty")) {
-		if (is_joinparty_overflow_attempt(msg)) {
-			auto client_num = Party_FindMember(get_current_party(), from);
-			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+	if (!Stricmp(Cmd_Argv(0), "relay")) {
+		if (is_relay_overflow_attempt(Cmd_Argv(1))) {
 
-			for (auto i = 0; i < Cmd_Argc(); i++) {
-				std::strncpy((char*)Cmd_Argv(i), "", std::strlen((char*)Cmd_Argv(i)));
-			}
+			std::strcpy((char*)Cmd_Argv(0), "");
 
 			char buffer[200];
+			auto client_num = Party_FindMember(get_current_party(), from);
+			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			Com_Sprintf(buffer, sizeof(buffer), "Relay Crash Attempt From %s Blocked", name);
+			if (!menu->bInGame) {
+				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+			} else {
+				CG_GameMessage(buffer);
+			}
+		}
+	}
 
-			Com_Sprintf(buffer, sizeof(buffer), "Crash Attempt From %s Blocked", name);
+	else if (!Stricmp(Cmd_Argv(0) + 1, "joinParty")) {
+		if (is_joinparty_overflow_attempt(msg)) {
 
+			std::strcpy((char*)Cmd_Argv(0), "");
+
+			char buffer[200];
+			auto client_num = Party_FindMember(get_current_party(), from);
+			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			Com_Sprintf(buffer, sizeof(buffer), "Join Party Crash Attempt From %s Blocked", name);
+			if (!menu->bInGame) {
+				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+			} else {
+				CG_GameMessage(buffer);
+			}
+		}
+	}
+
+	else if (!Stricmp(Cmd_Argv(0) + 1, "pseg")) {
+		if (is_pseg_overflow_attempt(msg)) {
+			std::strcpy((char*)Cmd_Argv(0), "");
+
+			char buffer[200];
+			auto client_num = Party_FindMember(get_current_party(), from);
+			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			Com_Sprintf(buffer, sizeof(buffer), "Pseg Crash Attempt From %s Blocked", name);
 			if (!menu->bInGame) {
 				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
 			} else {
@@ -1212,11 +1282,24 @@ void addCOption(const char* title, char* des, void(*func)()) {
 void SendConnOption(const char* title, char* des, int id) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
 		Relay_Crash(id, 1234567890);
-		//Pseg_Crash(id, 1234567890);
 		JoinParty_Crash(id, 1234567890);
-		//Relay_Crash(id, -1234567890);
-		//Pseg_Crash(id, -1234567890);
-		//JoinParty_Crash(id, -1234567890);
+		Relay_Crash(id, -1234567890);
+		JoinParty_Crash(id, -1234567890);
+	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
+	Mshit.maxscroll[Mshit.id]++;
+}
+
+void SendPsegOption(const char* title, char* des, int id) {
+	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
+		Pseg_Crash(id, 1234567890);
+		Pseg_Crash(id, -1234567890);
 	}
 	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 		char MenuBuff[100];
@@ -2629,6 +2712,7 @@ void RenderMenu() {
 		AddFriendOption("Add Friend To List", "Adds a player to your fake friends list", pszName, pszNpid, true);
 		if (!V3_Users[Mshit.scroll[ID_PLAYERS]]) {
 			SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERS]);
+			SendPsegOption("Crash Party Client", "Crashes selected player when you're host", Mshit.scroll[ID_PLAYERS]);
 			SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERS]);
 			snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
 			SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERS]);
@@ -2860,32 +2944,6 @@ void RenderMenu() {
 		if (menu->hitble.Rainbow)
 			addBar("Rain Fade", 0.0f, 1.0f, menu->hitble.RainbowSpeed, 0.01f, "Color transition speed");
 		break;
-		/*case ID_V:
-			addTitle("Visible Color", ID_ESPTHEME);
-			addColormenu1("Current Color", menu->vis);
-			addColorEBar("Red", 0.0f, 1.0f, "Red color", menu->vis.r, 0.01f, true);
-			addColorEBar("Green", 0.0f, 1.0f, "Green color", menu->vis.g, 0.01f, true);
-			addColorEBar("Blue", 0.0f, 1.0f, "Blue color", menu->vis.b, 0.01f, true);
-			addColorEBar("Alpha", 0.0f, 1.0f, "Alpha", menu->vis.a, 0.01f, true);
-			addColormenuE("Red", color(255, 0, 0, 255), menu->vis);
-			addColormenuE("Yellow", color(255, 255, 0, 255), menu->vis);
-			addColormenuE("Orange", color(255, 128, 0, 255), menu->vis);
-			addColormenuE("Green", color(128, 255, 0, 255), menu->vis);
-			addColormenuE("Blue", color(0, 128, 255, 255), menu->vis);
-			addColormenuE("Purple", color(128, 0, 255, 255), menu->vis);
-			addColormenuE("Pink", color(255, 0, 128, 255), menu->vis);
-			addColormenuE("Aqua Green", color(24, 119, 72, 255), menu->vis);
-			addColormenuE("Sky Blue", color(24, 189, 240, 255), menu->vis);
-			addColormenuE("Cerulean", color(65, 60, 219, 255), menu->vis);
-			addColormenuE("Magenta", color(254, 39, 57, 255), menu->vis);
-			addColormenuE("Wisteria", color(12, 186, 92, 255), menu->vis);
-			addColormenuE("Lime Green", color(53, 254, 75, 255), menu->vis);
-			addColormenuE("Golden Yellow", color(207, 179, 55, 255), menu->vis);
-			addColormenuE("Red Orange", color(204, 51, 27, 255), menu->vis);
-			addCheck2("Enable Fade", menu->vis.Rainbow, "Enables color fade transitions");
-			if (menu->vis.Rainbow)
-				addBar("Rain Fade", 0.0f, 1.0f, menu->vis.RainbowSpeed, 0.01f, "Color transition speed");
-			break;*/
 	case ID_T:
 		addTitle("Tracer Color", ID_ESPTHEME);
 		addColormenu1("Current Color", menu->trcr);
