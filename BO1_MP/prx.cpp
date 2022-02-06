@@ -1255,7 +1255,7 @@ static std::size_t check_invalid_material_handles(std::string text) {
 		if (text.substr(pos).size() > 1) {
 			material.flip = text.at(pos + 1);
 
-			if (material.flip == 'H' || material.flip == 'I' || material.flip == 'B') {
+			if (material.flip == 'H' || material.flip == 'I') {
 				if (text.substr(pos).size() > 5) {
 					material.width = text.at(pos + 2);
 					material.height = text.at(pos + 3);
