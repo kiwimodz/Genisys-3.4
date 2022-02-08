@@ -5,8 +5,7 @@
 #define CONSOLE_MAX_ITEMS 10
 #define CONSOLE_TEXT_MAX_LENGTH 100
 
-class consoleitem
-{
+class consoleitem {
 public:
 	char text[CONSOLE_TEXT_MAX_LENGTH];
 	color colour;
@@ -15,8 +14,7 @@ public:
 	color color3;
 	char time;
 };
-class Console
-{
+class Console {
 public:
 	consoleitem items[CONSOLE_MAX_ITEMS];
 public:

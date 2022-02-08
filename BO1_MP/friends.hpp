@@ -10,15 +10,13 @@
 //	return szBuffer;
 //}
 
-class friend_list
-{
+class friend_list {
 public:
 	std::string name;
 	std::string npid;
 };
 
-class friends
-{
+class friends {
 public:
 	static void read_friends(std::vector<friend_list>& list);
 	static void write_friend(std::string user, std::string npid = "");

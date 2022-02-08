@@ -14,7 +14,7 @@ public:
     int flush;
     netsrc_t targetLocalNetID;
 
-    msg_t() { }
+    msg_t() {}
     msg_t(char* data, int length);
 
     void write_long(int c);

@@ -1,8 +1,7 @@
 #ifndef CellPad_h
 #define CellPad_h
 
-enum cellPadKeys : int
-{
+enum cellPadKeys : int {
 	PAD_NOKEY = 0,
 	PAD_CROSS = CELL_PAD_CTRL_CROSS,
 	PAD_CIRCLE = CELL_PAD_CTRL_CIRCLE,
@@ -21,8 +20,7 @@ enum cellPadKeys : int
 	PAD_MAX = 15,
 };
 
-struct cellPadButtonData
-{
+struct cellPadButtonData {
 	int btnData;
 	int btnDigital;
 };

@@ -42,20 +42,17 @@ SceNpCommunicationPassphrase CommPassphrase = {
 };
 
 
-SceNpCommunicationId* GetNpCommId()
-{
+SceNpCommunicationId* GetNpCommId() {
 	return &communication_id;
 }
 
 
-SceNpCommunicationId* GetNpCommId_BO2()
-{
+SceNpCommunicationId* GetNpCommId_BO2() {
 	return &communication_id_BO2;
 }
 
 
-SceNpCommunicationPassphrase* GetNpPass()
-{
+SceNpCommunicationPassphrase* GetNpPass() {
 	return &CommPassphrase;
 }
 
@@ -89,7 +86,7 @@ static int __doLookupNpId(SceNpId& npId, SceNpOnlineId onlineId) {
 	}
 	int32_t result;
 	ret = 1;
-	while(ret == 1) {
+	while (ret == 1) {
 		ret = sceNpLookupPollAsync(lookupTransId, &result);
 		cellSysutilCheckCallback();
 	}

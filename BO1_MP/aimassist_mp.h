@@ -63,8 +63,7 @@ extern void setanglesMP();
 extern int Trace_GetEntityHitId_t[2];
 //extern void setanglesZM();
 
-enum CriticalSection
-{
+enum CriticalSection {
 	CRITSECT_ALLOC_MARK = 0x0,
 	CRITSECT_FX_VIS = 0x1,
 	CRITSECT_OCCLUSION_QUERY = 0x2,

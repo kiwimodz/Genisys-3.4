@@ -13,7 +13,7 @@ void flash(color* col) {
 	col->g = (Sin(menu->menufade * RainbowTimer + 2.f) * 127.f + 128.f) / 255.0f;
 	col->b = (Sin(menu->menufade * RainbowTimer + 4.f) * 127.f + 128.f) / 255.0f;
 	col->a = 1.0f;
-	if(RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
+	if (RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
 }
 
 void flash2(color* col) {
@@ -22,7 +22,7 @@ void flash2(color* col) {
 	col->g = (Sin(menu->menufade * RainbowTimer + 2.5f) * 127.f + 128.f) / 255.0f;
 	col->b = (Sin(menu->menufade * RainbowTimer + 4.5f) * 127.f + 128.f) / 255.0f;
 	col->a = 1.0f;
-	if(RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
+	if (RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
 }
 
 void flash3(color* col) {
@@ -31,7 +31,7 @@ void flash3(color* col) {
 	col->g = (Sin(menu->menufade * RainbowTimer + 2.f) * 127.f + 128.f) / 255.0f;
 	col->b = (Sin(menu->menufade * RainbowTimer + 4.f) * 127.f + 128.f) / 255.0f;
 	col->a = 1.0f;
-	if(RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
+	if (RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
 }
 
 void flash4(color* col) {
@@ -40,7 +40,7 @@ void flash4(color* col) {
 	col->g = (Sin(menu->menufade * RainbowTimer + 2.5f) * 127.f + 128.f) / 255.0f;
 	col->b = (Sin(menu->menufade * RainbowTimer + 4.5f) * 127.f + 128.f) / 255.0f;
 	col->a = 1.0f;
-	if(RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
+	if (RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
 }
 
 void flash5(color* col) {
@@ -49,7 +49,7 @@ void flash5(color* col) {
 	col->g = (Sin(menu->menufade * RainbowTimer + 3.f) * 127.f + 128.f) / 255.0f;
 	col->b = (Sin(menu->menufade * RainbowTimer + 5.f) * 127.f + 128.f) / 255.0f;
 	col->a = 1.0f;
-	if(RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
+	if (RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
 }
 
 void flash6(color* col) {
@@ -58,7 +58,7 @@ void flash6(color* col) {
 	col->g = (Sin(menu->menufade * RainbowTimer + 3.5f) * 127.f + 128.f) / 255.0f;
 	col->b = (Sin(menu->menufade * RainbowTimer + 5.5f) * 127.f + 128.f) / 255.0f;
 	col->a = 1.0f;
-	if(RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
+	if (RainbowTimer > 1000000.0f) RainbowTimer = 0.f;
 }
 
 void DrawFilledBox(int x, int y, int w, int h, float angle, color color) {
@@ -69,9 +69,9 @@ void DrawGradientBox(int x, int y, int w, int h, float angle, color A, color B) 
 	DrawFilledBox(x, y, w, h, angle, A);
 	color Grad;
 	B.copy(&Grad);
-	for(int i = 0; i < h; i++) {
+	for (int i = 0; i < h; i++) {
 		Grad.a = (float)i / 95;
-		if((y + h / 2 - h / 4) + i >= y + h) break;
+		if ((y + h / 2 - h / 4) + i >= y + h) break;
 		DrawFilledBox(x, (y + h / 2 - h / 4) + i, w, 2, angle, Grad);
 	}
 }
@@ -80,7 +80,7 @@ bool SLLR;
 void _Buttoninfo() {
 	if (menu->btrickmode) return;
 	if (!Mshit.Mopened) {
-		DrawTextWithBackground_UI("Press ^BPS3ButtonStickAnimatedR^ & ^BPS3ButtonDpadL^ to open the menu", 15, (dc.height > 720) ? dc.height / 2 - 25 : 880 , (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_left);
+		DrawTextWithBackground_UI("Press ^BPS3ButtonStickAnimatedR^ & ^BPS3ButtonDpadL^ to open the menu", 15, (dc.height > 720) ? dc.height / 2 - 25 : 880, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_left);
 	}
 
 	else if (Mshit.id > ID_MAIN) {
@@ -94,8 +94,8 @@ void _Buttoninfo() {
 
 size_t stringlength(const char* s) {
 	size_t s_len;
-	for(int i = 0; i < strlen(s) - 1; i++) {
-		if(s[i] != '\0')
+	for (int i = 0; i < strlen(s) - 1; i++) {
+		if (s[i] != '\0')
 			s_len++;
 	}
 	return s_len;
@@ -105,7 +105,7 @@ size_t stringlength(const char* s) {
 void local_command_complete(int localClientNum, const wchar_t* wstr, unsigned int length) {
 	char* buffer = (char*)_sys_malloc(length);
 	WideCharToMultibyte(wstr, length, buffer);
-	if(strlen(buffer) <= 0) return;
+	if (strlen(buffer) <= 0) return;
 	Cbuf_AddText(buffer);
 	Mshit.Mopened = true;
 }
@@ -114,9 +114,9 @@ void Change_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int 
 	char* buffer = (char*)_sys_malloc(length);
 	WideCharToMultibyte(wstr, length, buffer);
 
-	if(strlen(buffer) <= 0) return;
+	if (strlen(buffer) <= 0) return;
 
-	if(menu->bInGame) {
+	if (cl_ingame_()) {
 		char ingameflash[256];
 		_sys_sprintf(ingameflash, ";cmd userinfo \"\\clanAbbrev\\%s\\name\\%s\\xuid\\%s", "", buffer, 0x26C06E8);
 		WriteMemory(0x026C0658, buffer, 32);
@@ -129,7 +129,7 @@ void Change_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int 
 	Mshit.Mopened = true;
 }
 
-int getUserID_t[2] = {0x081e378, TOC};
+int getUserID_t[2] = { 0x081e378, TOC };
 int(*getUserID_f)(const char* localNum) = (int(*)(const char*))getUserID_t;
 
 int getUserID(const char* username) {
@@ -216,7 +216,7 @@ void Join_XName_complete(int localClientNum, const wchar_t* wstr, unsigned int l
 
 	char npid[9];
 	memcpy(npid, doLookupNpId(buffer).first.opt, 8);
-	
+
 	npid[4] = 'p';
 	npid[5] = 's';
 	npid[6] = '3';
@@ -251,15 +251,14 @@ void ChangeName() {
 	dokeyboard1();
 }
 
-void JoinByName(){
+void JoinByName() {
 	JoinKey();
 }
 void SendKey() {
-		XShowKeyboardUI(0, L"Enter Name to Send to Zombies", L"", 32, Send_Name_complete, 0);
+	XShowKeyboardUI(0, L"Enter Name to Send to Zombies", L"", 32, Send_Name_complete, 0);
 }
 void SendByName() {
-	if (messages.size() != 1)
-	{
+	if (messages.size() != 1) {
 		SendKey();
 	}
 }
@@ -271,14 +270,11 @@ void ResetName() {
 	sceNpManagerGetOnlineId(&onlineid);
 
 	menu->flshname = false;
-	if (menu->bInGame)
-	{
+	if (cl_ingame_()) {
 		char ingameflash[256];
 		_sys_sprintf(ingameflash, ";cmd userinfo \"\\clanAbbrev\\%s\\name\\%s\\xuid\\%s", "", onlineid.data, 0x26C06E8);
 		Cbuf_AddText(ingameflash);
-	}
-	else
-	{
+	} else {
 		WriteMemory(0x026C067F, &onlineid.data, 32);
 		WriteMemory(0x026C0658, &onlineid.data, 32);
 	}
@@ -291,12 +287,10 @@ void Change_Name_complete1(int localClientNum, const wchar_t* wstr, unsigned int
 
 	if (strlen(buffer) <= 0) return;
 
-	if (!strcmp(buffer, "Sieg Heil On"))
-	{
+	if (!strcmp(buffer, "Sieg Heil On")) {
 		bot.nazixh = true;
 	}
-	if (!strcmp(buffer, "Sieg Heil Off"))
-	{
+	if (!strcmp(buffer, "Sieg Heil Off")) {
 		bot.nazixh = false;
 	}
 	Mshit.Mopened = true;
@@ -324,10 +318,10 @@ int __cdecl GetUser(const char* user) {
 	int dest;
 	unsigned int offset;
 	unsigned int hashSize;
-	int tigerHash; 
+	int tigerHash;
 	char licenseHash[24];
 	int v2;
-	if(!user)
+	if (!user)
 		return 0;
 	bdHashTiger192_f(&tigerHash);
 	hashSize = 24;
@@ -350,16 +344,16 @@ void ProcessCamo() {
 	cellFsOpendir(dirName, &fd);
 	cellFsGetDirectoryEntries(fd, &entry, sizeof(CellFsDirectoryEntry), &data_count);
 	do {
-		for(int i = 0; i < data_count; i++) {
+		for (int i = 0; i < data_count; i++) {
 			cellFsGetDirectoryEntries(fd, &entry, sizeof(CellFsDirectoryEntry), &data_count);
-			if(strstr(entry.entry_name.d_name, ".dds") != NULL || strstr(entry.entry_name.d_name, ".DDS") != NULL) {
+			if (strstr(entry.entry_name.d_name, ".dds") != NULL || strstr(entry.entry_name.d_name, ".DDS") != NULL) {
 				size_t len = strlen(entry.entry_name.d_name) + dirLength;
 				char* fname = new char[len + 1];
 				sprintf(fname, "%s/%s", dirName, entry.entry_name.d_name);
 				CamoV.push_back(entry.entry_name.d_name);
 			}
 		}
-	} while(data_count);
+	} while (data_count);
 }
 
 void Join(std::string c) {
@@ -370,7 +364,7 @@ void Join(std::string c) {
 	Cbuf_AddText(out);
 }
 
-int StringToXUID_t[2] = {0x606F08, TOC};
+int StringToXUID_t[2] = { 0x606F08, TOC };
 void(*StringToXUID_f)(const char* str, unsigned __int64* xuid) = (void(*)(const char*, unsigned __int64*))StringToXUID_t;
 
 void __cdecl StringToXUID(const char* str, unsigned __int64* xuid) {
@@ -383,11 +377,13 @@ void movement_event() {
 	static int itick, iwait;
 	bool istate = ((Sys_Milliseconds() - itick) > iwait);
 	if (istate) {
-		menu->height < (Mshit.maxscroll[Mshit.id] * 30) ? menu->height += 30 : menu->height >(Mshit.maxscroll[Mshit.id] * 30) ? menu->height -= 30 : menu->height = (Mshit.maxscroll[Mshit.id] * 30);
+
+		auto size = Mshit.maxscroll[Mshit.id] > Mshit.max_options ? (Mshit.max_options * 30) : (Mshit.maxscroll[Mshit.id] * 30);
+		menu->height < (size) ? menu->height += 30 : menu->height >(size) ? menu->height -= 30 : menu->height = (size);
 
 		Mshit.Mopened ? ((menu->x > 640) ? menu->x -= 150 : menu->x = 640) : (menu->x < 1800) ? menu->x += 150 : menu->x = 1800;
 
-		menu->sypos1 < (Mshit.scroll[Mshit.id] * 30) ? menu->sypos1 += 30 : menu->sypos1 >(Mshit.scroll[Mshit.id] * 30) ? menu->sypos1 -= 30 : menu->sypos1 = (Mshit.scroll[Mshit.id] * 30);
+		menu->sypos1 < ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) ? menu->sypos1 += 30 : menu->sypos1 >((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) ? menu->sypos1 -= 30 : menu->sypos1 = ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30);
 
 		itick = Sys_Milliseconds(), iwait = (dc.fps < 55.0) ? (1.0 - 60.0 + dc.fps) : (1.0);
 	}
@@ -398,11 +394,11 @@ void Wait(float timeout) {
 	Mshit.wait = (dc.fps < 55.0) ? (timeout - 60.0 + dc.fps) : timeout;
 }
 
-int SND_Play_t[2] = {0x4FFA10, TOC};
+int SND_Play_t[2] = { 0x4FFA10, TOC };
 void(*SND_Play_f)(String alias, int fadeTimeMs, float attenuation, int r1, int r2, int r3, int r4) = (void(*)(String, int, float, int, int, int, int))SND_Play_t;
 
 void SND_Play(String alias, int fadeTimeMs, float attenuation) {
-	if(!menu->engnsounds) {
+	if (!menu->engnsounds) {
 		SND_Play_f(alias, fadeTimeMs, attenuation, 0, 0, 0, 0);
 	}
 }
@@ -413,7 +409,7 @@ char* get_ip_address() {
 	union CellNetCtlInfo info;
 
 	ret = cellNetCtlGetInfo(CELL_NET_CTL_INFO_IP_ADDRESS, &info);
-	if(ret < 0) {
+	if (ret < 0) {
 		/* Error handling */
 	}
 
@@ -422,10 +418,10 @@ char* get_ip_address() {
 	return ip_address;
 }
 
-int UI_SafeTranslateString_t[2] = {0x0370D9C, TOC};
+int UI_SafeTranslateString_t[2] = { 0x0370D9C, TOC };
 String(*UI_SafeTranslateString_f)(String s) = (String(*)(String))UI_SafeTranslateString_t;
 
-int SL_ConvertToString_t[2] = {0x048E2DC, TOC};
+int SL_ConvertToString_t[2] = { 0x048E2DC, TOC };
 String(*SL_ConvertToString_f)(short s) = (String(*)(short))SL_ConvertToString_t;
 
 using namespace std;
@@ -444,23 +440,23 @@ float fps;
 int tempd = 0;
 
 void Ui_interface() {
-	if(menu->btrickmode) return;
+	if (menu->btrickmode) return;
 	static int itick, iwait;
 	bool istate = ((Sys_Milliseconds() - itick) > iwait);
-	if(istate) {
+	if (istate) {
 		tempd = 30;
 		GetTemps(&t1, &t2, menu->fahrenheit);
 		itick = Sys_Milliseconds(), iwait = 30000;
 	}
 	static int itick1, iwait1;
 	bool istate1 = ((Sys_Milliseconds() - itick1) > iwait1);
-	if(istate1) {
+	if (istate1) {
 		fps = dc.fps;
 		itick1 = Sys_Milliseconds(), iwait1 = 200;
 	}
 	static int itick2, iwait2;
 	bool istate2 = ((Sys_Milliseconds() - itick2) > iwait2);
-	if(istate2) {
+	if (istate2) {
 		tempd -= 1;
 		itick2 = Sys_Milliseconds(), iwait2 = 1000;
 	}
@@ -468,9 +464,8 @@ void Ui_interface() {
 	static int itick3, iwait3;
 	bool istate3 = ((Sys_Milliseconds() - itick3) > iwait3);
 	if (istate3) {
-		
-		if (messages.size() != 1 && pullcooldown != 0)
-		{
+
+		if (messages.size() != 1 && pullcooldown != 0) {
 			pullcooldown -= 1;
 			itick3 = Sys_Milliseconds(), iwait3 = 1000;
 		}
@@ -479,10 +474,9 @@ void Ui_interface() {
 	char MenuBuff[200];
 	int size;
 
-	size =  10;
+	size = 10;
 
-	if (bot.snake_bot)
-	{
+	if (bot.snake_bot) {
 		Com_Sprintf(MenuBuff, sizeof(MenuBuff), bot.snake ? "Snake: ^2ON" : "Snake: ^1OFF");
 		DrawTextWithBackground_UI(MenuBuff, 14, dc.height / 4, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_left);
 	}
@@ -490,16 +484,16 @@ void Ui_interface() {
 	DrawTextWithBackground_UI(encryptDecrypt("FDOHRXR!CN3").c_str(), 14, size, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_left);
 	float height = DrawTextWithBackground_UI("Version 3.4", dc.width - 15, size, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 
-	if(!menu->temp1) {
-		if(menu->fahrenheit)
+	if (!menu->temp1) {
+		if (menu->fahrenheit)
 			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "CPU %i°C", t1);
 		else
 			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "CPU %i°F", t1);
 		height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 	}
 
-	if(!menu->temp2) {
-		if(menu->fahrenheit)
+	if (!menu->temp2) {
+		if (menu->fahrenheit)
 			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "RSX %i°C", t2);
 		else
 			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "RSX %i°F", t2);
@@ -507,7 +501,7 @@ void Ui_interface() {
 		height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 	}
 
-	if(!menu->fps) {
+	if (!menu->fps) {
 		Com_Sprintf(MenuBuff, sizeof(MenuBuff), "FPS: %.f", fps);
 		height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 	}
@@ -540,45 +534,45 @@ void Ui_interface() {
 			height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 		}
 
-		if (!menu->bInGame && menu->game && menu->host && menu->map) {
+		if (!cl_ingame_() && menu->game && menu->host && menu->map) {
 			menu->serverinfo = true;
 		}
 	}
 
-	if(menu->bInGame) {
-		if(!menu->serverinfo) {
-			if(!menu->ping) {
+	if (cl_ingame_()) {
+		if (!menu->serverinfo) {
+			if (!menu->ping) {
 				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Latency: %i", cg->ping);
 				height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 			}
-			if(!menu->ents) {
-				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Entitys: %i", bot.esp.getNumberOfEntities);
+			if (!menu->ents) {
+				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Entitys: %i", cg->snap->get<int>(0x2A20));
 				height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 			}
-			if(!menu->maxc) {
-				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Clients: %i", bot.esp.maxclients);
-				if(dc.height > 720) height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 25;
+			if (!menu->maxc) {
+				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Clients: %i", cg->snap->get<int>(0x2A24));
+				if (dc.height > 720) height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 25;
 				else height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 20;
 			}
-			if(menu->game && menu->host && menu->map && menu->maxc && menu->ents && menu->ping) {
+			if (menu->game && menu->host && menu->map && menu->maxc && menu->ents && menu->ping) {
 				menu->serverinfo = true;
 			}
 		}
 
-		if(bot.esp.btargetinfo) {
+		if (bot.esp.btargetinfo) {
 			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "%s", "Target Info:");
 			height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 
-			if(local->target_num != -1) {
+			if (local->target_num != -1) {
 				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Name: %s", cg->clients[local->target_num].PlayerName);
 				height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 				int GDistance = (centity[local->target_num].Origin.distance(centity[cg->clientNum].Origin) / 12 / 3.28);
 				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Distance: %im", GDistance);
 				height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 				int widd = centity[local->target_num].WeaponID;
-				if(!widd)return;
+				if (!widd)return;
 				WeaponVariantDef* weapVDef = BG_GetWeaponVariantDef(widd);
-				if(weapVDef) {
+				if (weapVDef) {
 					Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Weapon: %s", UI_SafeTranslateString_f(weapVDef->szDisplayName));
 					height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 				}
@@ -589,7 +583,7 @@ void Ui_interface() {
 				Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Hittable: %s", bot.bautowall_esp[local->target_num] ? "^2True" : "^1False");
 				height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 
-				if(bot.baimatfeet) {
+				if (bot.baimatfeet) {
 					Com_Sprintf(MenuBuff, sizeof(MenuBuff), "Has Shield: %s", bot.sc[local->target_num] ? "^2True" : "^1False");
 					height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 				}
@@ -600,13 +594,12 @@ void Ui_interface() {
 }
 
 Vector2 GetOptPos(int i, bool opt = false) {
-	if(!opt)
+	if (!opt)
 		i -= menu->Offset;
-	return{menu->OptPos.x, menu->OptPos.y + (i * 25)};
+	return{ menu->OptPos.x, menu->OptPos.y + (i * 25) };
 }
 
 void addTitle(String title, int ret_id) {
-
 	Mshit.active_option = (Mshit.scroll[Mshit.id] == Mshit.maxscroll[Mshit.id]);
 
 	DrawShader(menu->x - 1, 200, menu->msize + 2, 60 + menu->height, 0, color(0, 0, 0, 200), white, align_center);//back
@@ -623,10 +616,11 @@ void addTitle(String title, int ret_id) {
 
 	Mshit.prev[Mshit.id] = ret_id;
 
-	DrawShader(menu->x, 200 + 60 + (Mshit.scroll[Mshit.id] * 30) - 6, menu->msize, 1, 0, color(10, 10, 10, 255), white, align_center);//scroll
+	if (Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.scroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x, 200 + 60 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) - 6, menu->msize, 1, 0, color(10, 10, 10, 255), white, align_center);//scroll
 
-	DrawShader(menu->x, 200 + 60 + (Mshit.scroll[Mshit.id] * 30) + 27, menu->msize, 1, 0, color(10, 10, 10, 255), white, align_center);//scroll bottem
-
+		DrawShader(menu->x, 200 + 60 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) + 27, menu->msize, 1, 0, color(10, 10, 10, 255), white, align_center);//scroll bottem
+	}
 	DrawShader(menu->x, 200 + 60 + menu->height, menu->msize, 30, 0, color(42, 42, 42, 255), white, align_center);
 
 	DrawText(menu_number, Vector2(menu->x + (menu->msize / 2) - 10, 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_right, 1);
@@ -636,49 +630,64 @@ void addTitle(String title, int ret_id) {
 
 std::string iRecent;
 void addSubmenu(String title, int sub_id) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
-		SND_Play("cac_screen_fade", 1, 1),
-		Mshit.id = sub_id, iRecent = title, Wait(200);
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+		Mshit.menu_offsets[sub_id] = Mshit.scroll[sub_id] >= Mshit.max_options ? Mshit.scroll[sub_id] + 1 - Mshit.max_options : 0;
 
-	DrawShader(menu->x + (menu->msize / 2) - 13, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 15) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		SND_Play("cac_screen_fade", 1, 1),
+			Mshit.id = sub_id, iRecent = title, Wait(200);
+	}
+
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 15) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addFriendSubmenu(String title, int sub_id) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
-		SND_Play("cac_screen_fade", 1, 1),
-		Mshit.id = sub_id, friends::read_friends(friends::sorted_friends), iRecent = title, Wait(200);
-	
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+		Mshit.menu_offsets[sub_id] = Mshit.scroll[sub_id] >= Mshit.max_options ? Mshit.scroll[sub_id] + 1 - Mshit.max_options : 0;
+		SND_Play("cac_screen_fade", 1, 1);
+		Mshit.id = sub_id;
+		friends::read_friends(friends::sorted_friends);
+		iRecent = title;
+		Wait(200);
+	}
 	//printf("play");
-
-	DrawShader(menu->x + (menu->msize / 2) - 13, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addColorSubmenu(String title, int sub_id, color col) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+		Mshit.menu_offsets[sub_id] = Mshit.scroll[sub_id] >= Mshit.max_options ? Mshit.scroll[sub_id] + 1 - Mshit.max_options : 0;
 		SND_Play("cac_screen_fade", 1, 1),
-		Mshit.id = sub_id, Wait(200);
+			Mshit.id = sub_id, Wait(200);
+	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 0, col, white, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 0, col, white, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 static color interp, maincolor, col2;
 float colorstep, _1f = 1.0000f; bool usin = false;
 void addColormenu(String title, color col) {
-	if(!menu->fade) {
-		if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+	if (!menu->fade) {
+		if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
 			col2 = col;
 			maincolor = menu->skin;
 			SND_Play("cac_screen_fade", 1, 1);
 			usin = true;
 			colorstep = 0;
 		}
-		if(colorstep <= _1f && usin) {
+		if (colorstep <= _1f && usin) {
 			interp.LerpTo(maincolor, col2, colorstep);
 			colorstep += 0.008f;
 			menu->skin = interp;
@@ -692,9 +701,10 @@ void addColormenu(String title, color col) {
 		}
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 0, col, white, align_right);
-
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 0, col, white, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
 	Mshit.maxscroll[Mshit.id]++;
 }
@@ -702,14 +712,14 @@ void addColormenu(String title, color col) {
 static color interpE, maincolorE, col2E;
 float colorstepE, _1fE = 1.0000f; bool usinE = false;
 void addColormenuE(String title, color col, color& colf) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
 		col2E = col;
 		maincolorE = colf;
 		SND_Play("cac_screen_fade", 1, 1);
 		usinE = true;
 		colorstepE = 0;
 	}
-	if(colorstepE <= _1fE && usinE) {
+	if (colorstepE <= _1fE && usinE) {
 		interpE.LerpTo(maincolorE, col2E, colorstepE);
 		colorstepE += 0.008f;
 		colf = interpE;
@@ -717,9 +727,11 @@ void addColormenuE(String title, color col, color& colf) {
 		usinE = false;
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 0, col, white, align_right);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 0, col, white, align_right);
 
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
 	Mshit.maxscroll[Mshit.id]++;
 }
@@ -759,27 +771,26 @@ void ProcessConfig() {
 	cellFsOpendir(dirName, &fd);
 	cellFsGetDirectoryEntries(fd, &entry, sizeof(CellFsDirectoryEntry), &data_count);
 	do {
-		for(int i = 0; i < data_count; i++) {
+		for (int i = 0; i < data_count; i++) {
 			cellFsGetDirectoryEntries(fd, &entry, sizeof(CellFsDirectoryEntry), &data_count);
-			if(strstr(entry.entry_name.d_name, ".ini") != NULL) {
+			if (strstr(entry.entry_name.d_name, ".ini") != NULL) {
 				size_t len = strlen(entry.entry_name.d_name) + dirLength;
 				char* fname = new char[len + 1];
 				sprintf(fname, "%s/%s", dirName, entry.entry_name.d_name);
-				if(strlen(entry.entry_name.d_name) <= 30)
+				if (strlen(entry.entry_name.d_name) <= 30)
 					Ini.Inis.push_back(entry.entry_name.d_name);
 			}
 		}
-	} while(data_count);
+	} while (data_count);
 }
 
-PartyData_s* get_current_party()
-{
+PartyData_s* get_current_party() {
 	if (*reinterpret_cast<int32_t*>(0xFA7A00) == 1)
 		return (PartyData_s*)0xF9E450;
 
 	return (PartyData_s*)0xFA9758;
 }
-int Party_GetPartyData_t[2] = {0x00141C84, TOC};
+int Party_GetPartyData_t[2] = { 0x00141C84, TOC };
 int(*Party_GetPartyData)() = (int(*)())Party_GetPartyData_t;
 
 netadr_t GetClientAdr(int i) {
@@ -789,19 +800,19 @@ netadr_t GetClientAdr(int i) {
 	return pM.platformAddr.netAddr;
 }
 
-int Live_GetXuid_t[2] = {0x00532AE4, TOC};
+int Live_GetXuid_t[2] = { 0x00532AE4, TOC };
 unsigned __int64(*Live_GetXuid)(int index) = (unsigned __int64(*)(int index))Live_GetXuid_t;
 
 int Live_GetCurrentSession_t[2] = { 0x0052F38C, TOC };
 SessionData* (*Live_GetCurrentSession)() = (SessionData * (*)())Live_GetCurrentSession_t;
 
-int Com_ControllerIndex_GetNetworkID_t[2] = {0x00317560, TOC};
+int Com_ControllerIndex_GetNetworkID_t[2] = { 0x00317560, TOC };
 netsrc_t(*Com_ControllerIndex_GetNetworkID)(int index) = (netsrc_t(*)(int index))Com_ControllerIndex_GetNetworkID_t;
 
-int CL_SendPeerData_t[2] = {0x00131130, TOC};
+int CL_SendPeerData_t[2] = { 0x00131130, TOC };
 bool(*CL_SendPeerData)(int session, int localClientNum, netsrc_t sock, int clientNum, msg_t* msg, int dataType) = (bool(*)(int session, int localClientNum, netsrc_t sock, int clientNum, msg_t * msg, int dataType))CL_SendPeerData_t;
 
-int CL_CanWeConnectToClient_t[2] = {0x00130760, TOC};
+int CL_CanWeConnectToClient_t[2] = { 0x00130760, TOC };
 int(*CL_CanWeConnectToClient)(int session, int ourClientNum, int theirClientNum) = (int(*)(int session, int ourClientNum, int theirClientNum))CL_CanWeConnectToClient_t;
 
 int NET_OutOfBandData_t[2] = { 0x00333968, TOC };
@@ -878,14 +889,12 @@ int(*NET_SendPacket)(int, int, char*, netadr_t, unsigned long long, unsigned lon
 int NET_OutOfBandPrint_s[2] = { 0x033379C, TOC };
 int(*NET_OutOfBandPrint)(netsrc_t sock, netadr_t adr, const char* data) = (decltype(NET_OutOfBandPrint))NET_OutOfBandPrint_s;
 
-void send_client_kick(int clientnum)
-{
+void send_client_kick(int clientnum) {
 	PartyMember pM = GetPartyMemeber(clientnum);
 	NET_OutOfBandPrint(NS_SERVER, pM.platformAddr.netAddr, "connectResponseMigration");
 }
 
-void send_server_crash()
-{
+void send_server_crash() {
 	char buf[1264];
 	msg_t msg;
 
@@ -912,8 +921,7 @@ void V3User_Pinger() {
 	char buf[1024];
 	msg_t msg;
 
-	for (int i = 0; i < 18; i++)
-	{
+	for (int i = 0; i < 18; i++) {
 		V3_Users[i] = false;
 		PartyMember pM = GetPartyMemeber(i);
 		MSG_Init(&msg, buf, sizeof(buf));
@@ -931,77 +939,146 @@ signed int(*Party_FindMember)(PartyData_s* party, netadr_t playerAddr) = (declty
 int NET_CompareAdr_t[2] = { 0x333350, TOC };
 signed int(*NET_CompareAdr)(netadr_t a, netadr_t b) = (decltype(NET_CompareAdr))NET_CompareAdr_t;
 
-bool is_relay_overflow_attempt(string argv)
-{
+bool is_relay_overflow_attempt(string argv) {
 	auto is_crash_attempt = false;
 
-	uint32_t client_num = std::strtoul(argv.c_str(), nullptr, 10);
+	uint32_t client_num = _atoi(argv.c_str());
 
-	if (client_num > 17)
-	{
+	if (client_num > 17) {
 		is_crash_attempt = true;
 	}
 
 	return is_crash_attempt;
 }
 
-bool is_joinparty_overflow_attempt(msg_t* msg)
-{
+bool is_pseg_overflow_attempt(msg_t* msg) {
 	auto is_crash_attempt = false;
 
-	auto over_flowed = msg->overflowed;
-	auto read_count = msg->readcount;
+	std::uint32_t segment, sequence_number, total_size, offset, size;
 
-	std::uint32_t net_version = MSG_ReadLong(msg);
-	std::uint32_t msg_check_sum = MSG_ReadLong(msg);
-	std::uint32_t lan_chal_resp_key_4 = MSG_ReadLong(msg);
-	std::uint64_t xuid = MSG_ReadInt64(msg);
-	std::uint32_t play_list_id = MSG_ReadByte(msg);
-	std::uint32_t lan_chal_resp_key = MSG_ReadShort(msg);
-	std::uint32_t ping = MSG_ReadLong(msg);
-	std::uint32_t party_count = MSG_ReadByte(msg);
+	msg_begin_read(msg);
 
-	msg->overflowed = over_flowed;
-	msg->readcount = read_count;
+	segment = MSG_ReadByte(msg);
+	sequence_number = MSG_ReadLong(msg);
+	total_size = MSG_ReadLong(msg);
+	offset = MSG_ReadShort(msg);
+	size = MSG_ReadShort(msg);
 
-	if (party_count > 17)
-	{
+	msg_end_read(msg);
+
+	if (segment >= 6) {
+		is_crash_attempt = true;
+	}
+
+	if (size > 1200) {
+		is_crash_attempt = true;
+	}
+
+	if (offset + size > total_size) {
+		is_crash_attempt = true;
+	}
+
+	if (offset + size > 0x1C20) {
+		is_crash_attempt = true;
+	}
+
+	if (total_size > 0x1C20u) {
 		is_crash_attempt = true;
 	}
 
 	return is_crash_attempt;
 }
+
+bool is_joinparty_overflow_attempt(msg_t* msg) {
+	auto is_crash_attempt = false;
+
+	std::uint32_t net_version, msg_check_sum, lan_chal_resp_key_4, xuid, play_list_id, lan_chal_resp_key, ping, party_count;
+
+	msg_begin_read(msg);
+
+	net_version = MSG_ReadLong(msg);
+	msg_check_sum = MSG_ReadLong(msg);
+	lan_chal_resp_key_4 = MSG_ReadLong(msg);
+	xuid = MSG_ReadInt64(msg);
+	play_list_id = MSG_ReadByte(msg);
+	lan_chal_resp_key = MSG_ReadShort(msg);
+	ping = MSG_ReadLong(msg);
+	party_count = MSG_ReadByte(msg);
+
+	msg_end_read(msg);
+
+	if (party_count > 17) {
+		is_crash_attempt = true;
+	}
+
+	return is_crash_attempt;
+}
+
+static int Stricmp(const char* s1, const char* s2) { int d; while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; } return d; }
 
 Detour CL_DispatchConnectionlessPacket_d;
-char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* msg, int time)
-{
+char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* msg, int time) {
+
 	char* Rep = (char*)Cmd_Argv(0);
-	if (strstr(Rep, "connectResponseMigration") && *(int*)0x0F0F88C == 0) {
+	if (!Stricmp(Rep, "connectResponseMigration") && *(int*)0x0F0F88C == 0) {
+		char buffer[200];
+		auto client_num = Party_FindMember(get_current_party(), from);
+		auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+		Com_Sprintf(buffer, sizeof(buffer), "kick Attempt From %s Blocked", name);
+		if (!cl_ingame_()) {
+			UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+		} else {
+			CG_GameMessage(buffer);
+		}
 		return 0;
 	}
 
-	if (strstr(Rep, "joinParty"))
-	{
-		if (is_joinparty_overflow_attempt(msg))
-		{
-			auto client_num = Party_FindMember(get_current_party(), from);
-			auto name = menu->bInGame ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+	if (!Stricmp(Cmd_Argv(0), "relay")) {
+		if (is_relay_overflow_attempt(Cmd_Argv(1))) {
 
-			for (auto i = 0; i < Cmd_Argc(); i++)
-			{
-				std::strncpy((char*)Cmd_Argv(i), "", std::strlen((char*)Cmd_Argv(i)));
-			}
+			std::strcpy((char*)Cmd_Argv(0), "");
 
 			char buffer[200];
-
-			Com_Sprintf(buffer, sizeof(buffer), "Crash Attempt From %s Blocked", name);
-
-			if (!menu->bInGame)
-			{
+			auto client_num = Party_FindMember(get_current_party(), from);
+			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			Com_Sprintf(buffer, sizeof(buffer), "Relay Crash Attempt From %s Blocked", name);
+			if (!cl_ingame_()) {
 				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+			} else {
+				CG_GameMessage(buffer);
 			}
-			else
-			{
+		}
+	}
+
+	else if (!Stricmp(Cmd_Argv(0) + 1, "joinParty")) {
+		if (is_joinparty_overflow_attempt(msg)) {
+
+			std::strcpy((char*)Cmd_Argv(0), "");
+
+			char buffer[200];
+			auto client_num = Party_FindMember(get_current_party(), from);
+			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			Com_Sprintf(buffer, sizeof(buffer), "Join Party Crash Attempt From %s Blocked", name);
+			if (!cl_ingame_()) {
+				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+			} else {
+				CG_GameMessage(buffer);
+			}
+		}
+	}
+
+	else if (!Stricmp(Cmd_Argv(0) + 1, "pseg")) {
+		if (is_pseg_overflow_attempt(msg)) {
+
+			std::strcpy((char*)Cmd_Argv(0), "");
+
+			char buffer[200];
+			auto client_num = Party_FindMember(get_current_party(), from);
+			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
+			Com_Sprintf(buffer, sizeof(buffer), "Pseg Crash Attempt From %s Blocked", name);
+			if (!cl_ingame_()) {
+				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+			} else {
 				CG_GameMessage(buffer);
 			}
 		}
@@ -1011,14 +1088,17 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 }
 
 void AddConfigMenu(String title, int sub_id) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
 		ProcessConfig();
 		SND_Play("cac_screen_fade", 1, 1);
 		Mshit.id = sub_id;
 		Wait(280);
 	}
-	DrawShader(menu->x + (menu->msize / 2) - 13, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1029,42 +1109,50 @@ void AddSkyboxMenu(String title, int sub_id) {
 		Mshit.id = sub_id;
 		Wait(280);
 	}
-	DrawShader(menu->x + (menu->msize / 2) - 13, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void AddConfigSubmenu(String title, int sub_id) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
 		SND_Play("cac_screen_fade", 1, 1),
 		Mshit.scroll[ID_HVH] = 0,
 		Mshit.id = sub_id, Wait(200),
 		Ini.Name = title;
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void AddCamoMenu(String title, int sub_id) {
-	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
-	{
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
 		ProcessCamo();
 		SND_Play("cac_screen_fade", 1, 1);
-		Mshit.id = sub_id; 
+		Mshit.id = sub_id;
 		iRecent = title;
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 13, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 15) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 15) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 std::string Title;
 void addCamoOption(std::string title) {
-	if(active) {
-		if(ready) {
-			if(PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
+	if (active) {
+		if (ready) {
+			if (PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
 				SND_Play("cac_grid_equip_item", 1, 1);
 				Title = "/dev_hdd0/tmp/Genisys/Custom_Camos/" + title;
 				loadcamo(Title.c_str());
@@ -1073,7 +1161,10 @@ void addCamoOption(std::string title) {
 		}
 	} else {
 	}
-	DrawText(title.c_str(), Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title.c_str(), Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1087,51 +1178,49 @@ void addSkyOption(std::string title) {
 				Wait(150);
 			}
 		}
+	} else {
 	}
-	else {
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title.c_str(), Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	}
-	DrawText(title.c_str(), Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addColormenu1(String title, color col) {
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 0, col, white, align_right);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 0, col, white, align_right);
 
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
-
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addColorSubmenu1(String title, int sub_id, int i) {
-	if(active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
 		SND_Play("cac_screen_fade", 1, 1),
 		Mshit.id = sub_id, Wait(200);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 0, menu->skin2, white, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin2 : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 0, menu->skin2, white, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin2 : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addOption(String title) {
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
-	Mshit.maxscroll[Mshit.id]++;
-}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
-void addTOption(String title) {
-	Mshit.maxscrollT[Mshit.id] = Mshit.maxscroll[Mshit.id];
-	DrawText(title, Vector2(((menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscrollT[Mshit.id] * 25)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addKOption(const char* title, void(*func)() = nullptr, char* des = "") {
-	if (active)
-	{
-		if (ready)
-		{
-			if (PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
-			{
-				if (Mshit.Mopened)
-				{
+	if (active) {
+		if (ready) {
+			if (PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
+				if (Mshit.Mopened) {
 					func();
 					memset(&_pdPad, 0, sizeof(CellPadData));
 				}
@@ -1139,40 +1228,34 @@ void addKOption(const char* title, void(*func)() = nullptr, char* des = "") {
 			}
 		}
 	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addOption(const char* title, void(*func)()) {
-	if(active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
+	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		func(), Wait(150);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
-	Mshit.maxscroll[Mshit.id]++;
-}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
-void addJoinOption(const char* title, std::string name) {
-	if(active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
-		Join(name), Wait(150);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 float Speed;
 void addMOption(const char* title, void(*func)(), char(*menudescription)) {
 	char MenuBuff[12];
-	if (active)
-	{
-		if (PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
-		{
+	if (active) {
+		if (PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
 			if (PadDown(PAD_L1)) {
 				Speed = 0;
-			}
-			else
-			{
+			} else {
 				Speed = 25.0f;
 			}
 
@@ -1183,8 +1266,10 @@ void addMOption(const char* title, void(*func)(), char(*menudescription)) {
 		}
 	}
 
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
-	if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+	}
 
 	Mshit.maxscroll[Mshit.id]++;
 }
@@ -1192,26 +1277,46 @@ void addMOption(const char* title, void(*func)(), char(*menudescription)) {
 void addCOption(const char* title, char* des, void(*func)()) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		func(), Wait(200);
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void SendConnOption(const char* title, char* des, int id) {
-	if(active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
+	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
 		Relay_Crash(id, 1234567890);
-		//Pseg_Crash(id, 1234567890);
 		JoinParty_Crash(id, 1234567890);
-		//Relay_Crash(id, -1234567890);
-		//Pseg_Crash(id, -1234567890);
-		//JoinParty_Crash(id, -1234567890);
+		Relay_Crash(id, -1234567890);
+		JoinParty_Crash(id, -1234567890);
 	}
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if(active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
+	Mshit.maxscroll[Mshit.id]++;
+}
+
+void SendPsegOption(const char* title, char* des, int id) {
+	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
+		Pseg_Crash(id, 1234567890);
+		Pseg_Crash(id, -1234567890);
+	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1219,10 +1324,13 @@ void SendKickOption(const char* title, char* des, int id) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2)) {
 		send_client_kick(id);
 	}
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1233,15 +1341,18 @@ void SendZMOption(const char* title, char* des, int id) {
 			PartyMember pM = GetPartyMemeber(id);
 			SceNpId scnpid;
 			scnpid = doLookupNpId(pM.npid.handle).first;
-			
+
 			pull_client_to_lobby(scnpid, 0, 900, 15000);
 			pullcooldown = 15;
 		}
 	}
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1249,40 +1360,52 @@ template<typename... T>
 void addInfOption(const char* title, char* des, void (*Function)(T...), T... args) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		Function(args...), Wait(200);
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void AddFriendOption(const char* title, char* des, const char* name, const char* npid, bool swi = true) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		friends::write_friend(name, npid), Wait(200);
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void AddDelFriendOption(const char* title, char* des, const char* name) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		friends::delete_friend(name), Wait(200);
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void AddConfigOption(const char* title, char* des, void(*func)()) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		func(), Wait(200);
-	char MenuBuff[100];
-	snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[100];
+		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1295,10 +1418,12 @@ void addCamoOption(const char* title, const char* Camo) {
 				Wait(150);
 			}
 		}
+	} else {
 	}
-	else {
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	}
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1311,10 +1436,12 @@ void addChemCamoOption(const char* title, const char* Camo, int address, size_t 
 				Wait(150);
 			}
 		}
+	} else {
 	}
-	else {
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	}
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1337,8 +1464,7 @@ void addBarI(String title, int Min, int Max, int& value, int scale, char(*menude
 				value -= (PadDown(PAD_LEFT) && value > Min) ? scale : 0;
 				if (PadDown(PAD_L1)) {
 					Wait(5);
-				}
-				else {
+				} else {
 					Wait(30);
 				}
 			}
@@ -1349,11 +1475,14 @@ void addBarI(String title, int Min, int Max, int& value, int scale, char(*menude
 		SLLR = false;
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 270 + (Mshit.maxscroll[Mshit.id] * 30), 100, 3, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
-	DrawShader(menu->x + (menu->msize / 2) - 110, 270 + (Mshit.maxscroll[Mshit.id] * 30), (incrementValue), 3, 180, menu->skin, white, align_left); //bar ( full length )
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + (Mshit.maxscroll[Mshit.id] * 30), 2, 10, 180, color(255, 255, 255, 255), white, align_left);// slider bar
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 100, 3, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
+		DrawShader(menu->x + (menu->msize / 2) - 110, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), (incrementValue), 3, 180, menu->skin, white, align_left); //bar ( full length )
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 2, 10, 180, color(255, 255, 255, 255), white, align_left);// slider bar
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1377,8 +1506,7 @@ void addBar(String title, float Min, float Max, float& value, float scale, char(
 
 				if (PadDown(PAD_L1)) {
 					Wait(5);
-				}
-				else {
+				} else {
 					Wait(30);
 				}
 			}
@@ -1388,12 +1516,14 @@ void addBar(String title, float Min, float Max, float& value, float scale, char(
 	else {
 		SLLR = false;
 	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) - (menu->scrollbarsize / 2), 100, 3 + menu->scrollbarsize, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
+		DrawShader(menu->x + (menu->msize / 2) - 110, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) - (menu->scrollbarsize / 2), (incrementValue), 3 + menu->scrollbarsize, 180, menu->skin, white, align_left); //bar ( full length )
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) - (menu->scrollbarsize / 2), 2, 10 + menu->scrollbarsize, 180, color(255, 255, 255, 255), white, align_left);// slider bar
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 270 + (Mshit.maxscroll[Mshit.id] * 30) - (menu->scrollbarsize/ 2), 100, 3 + menu->scrollbarsize, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
-	DrawShader(menu->x + (menu->msize / 2) - 110, 270 + (Mshit.maxscroll[Mshit.id] * 30) - (menu->scrollbarsize / 2), (incrementValue), 3 + menu->scrollbarsize, 180, menu->skin, white, align_left); //bar ( full length )
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + (Mshit.maxscroll[Mshit.id] * 30) - (menu->scrollbarsize / 2), 2, 10 + menu->scrollbarsize, 180, color(255, 255, 255, 255), white, align_left);// slider bar
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1417,8 +1547,7 @@ void addColorEBar(String title, float Min, float Max, char(*menudescription), fl
 
 				if (PadDown(PAD_L1)) {
 					Wait(1);
-				}
-				else {
+				} else {
 					Wait(30);
 				}
 
@@ -1430,11 +1559,14 @@ void addColorEBar(String title, float Min, float Max, char(*menudescription), fl
 		SLLR = false;
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 270 + (Mshit.maxscroll[Mshit.id] * 30), 100, 3, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
-	DrawShader(menu->x + (menu->msize / 2) - 110, 270 + (Mshit.maxscroll[Mshit.id] * 30), (incrementValue), 3, 180, menu->skin, white, align_left); //bar ( full length )
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + (Mshit.maxscroll[Mshit.id] * 30), 2, 10, 180, color(255, 255, 255, 255), white, align_left);// slider bar
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 100, 3, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
+		DrawShader(menu->x + (menu->msize / 2) - 110, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), (incrementValue), 3, 180, menu->skin, white, align_left); //bar ( full length )
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 2, 10, 180, color(255, 255, 255, 255), white, align_left);// slider bar
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1459,8 +1591,7 @@ void addColorBar(String title, float Min, float Max, char(*menudescription), flo
 
 					if (PadDown(PAD_L1)) {
 						Wait(1);
-					}
-					else {
+					} else {
 						Wait(30);
 					}
 
@@ -1473,16 +1604,19 @@ void addColorBar(String title, float Min, float Max, char(*menudescription), flo
 		SLLR = false;
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 270 + (Mshit.maxscroll[Mshit.id] * 30), 100, 3, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
-	DrawShader(menu->x + (menu->msize / 2) - 110, 270 + (Mshit.maxscroll[Mshit.id] * 30), (incrementValue), 3, 180, menu->skin, white, align_left); //bar ( full length )
-	if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + (Mshit.maxscroll[Mshit.id] * 30), 2, 10, 180, color(255, 255, 255, 255), white, align_left);// slider bar
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 100, 3, 180, color(90, 90, 90, 255), white, align_right); //bar ( full length )
+		DrawShader(menu->x + (menu->msize / 2) - 110, 270 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), (incrementValue), 3, 180, menu->skin, white, align_left); //bar ( full length )
+		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawShader(menu->x + (menu->msize / 2) - 110 + (incrementValue - 1), 266 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 2, 10, 180, color(255, 255, 255, 255), white, align_left);// slider bar
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 
-void addInt1(String title, int Min, int Max, int step,  int& value, char(*menudescription)) {
+void addInt1(String title, int Min, int Max, int step, int& value, char(*menudescription)) {
 	if (value <= Min)
 		value = Min;
 	if (value >= Max)
@@ -1496,8 +1630,7 @@ void addInt1(String title, int Min, int Max, int step,  int& value, char(*menude
 				value -= (PadDown(PAD_LEFT) && value > Min) ? step : 0;
 				if (PadDown(PAD_L1)) {
 					Wait(5);
-				}
-				else {
+				} else {
 					Wait(60);
 				}
 			}
@@ -1508,12 +1641,15 @@ void addInt1(String title, int Min, int Max, int step,  int& value, char(*menude
 		//nothing
 	}
 
-	char psz_value[10];
-	_sys_sprintf(psz_value, "%i", value);
-	if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char psz_value[10];
+		_sys_sprintf(psz_value, "%i", value);
+		if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
 
-	DrawText(psz_value, Vector2(menu->x + (menu->msize / 2) - 10, 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		DrawText(psz_value, Vector2(menu->x + (menu->msize / 2) - 10, 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1533,8 +1669,7 @@ void addInt(String title, int Min, int Max, int step, void(*func_setbarvalue)(in
 				func_setbarvalue(Mshit.barslide[Mshit.id][Mshit.scroll[Mshit.id]] - 1);
 				if (PadDown(PAD_L1)) {
 					Wait(5);
-				}
-				else {
+				} else {
 					Wait(60);
 				}
 			}
@@ -1544,21 +1679,27 @@ void addInt(String title, int Min, int Max, int step, void(*func_setbarvalue)(in
 	else {
 		SLLR = false;
 	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 
-	char psz_value[10];
-	_sys_sprintf(psz_value, "%i", Mshit.barslide[Mshit.id][Mshit.maxscroll[Mshit.id]]);
-	if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		char psz_value[10];
+		_sys_sprintf(psz_value, "%i", Mshit.barslide[Mshit.id][Mshit.maxscroll[Mshit.id]]);
+		if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
 
-	DrawText(psz_value, Vector2(menu->x + (menu->msize / 2) - 10, 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		DrawText(psz_value, Vector2(menu->x + (menu->msize / 2) - 10, 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
 void addFPS(String title, float fps) {
-	char MenuBuff[10];
-	Com_Sprintf(MenuBuff, sizeof(MenuBuff), "%.f", fps);
-	DrawText(MenuBuff, Vector2(menu->x + (menu->msize / 2) - 10, 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		char MenuBuff[10];
+		Com_Sprintf(MenuBuff, sizeof(MenuBuff), "%.f", fps);
+		DrawText(MenuBuff, Vector2(menu->x + (menu->msize / 2) - 10, 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1570,8 +1711,7 @@ colorbyte Rainbow(int progression, colorbyte startColor, colorbyte endColor) {
 	return color;
 }
 
-void DrawOutlineCheck(float x, float y, float width, float height, color colorr, int thickness, alignment ali)
-{
+void DrawOutlineCheck(float x, float y, float width, float height, color colorr, int thickness, alignment ali) {
 	//Draw border
 	DrawShader(x, y + thickness, width + thickness, thickness, 0, colorr, white, ali); // Top<
 	DrawShader(x, y + height + thickness, width + thickness, thickness, 0, colorr, white, ali); // Bottom>
@@ -1584,24 +1724,26 @@ void addCheck2(String title, bool& check, char(*menudescription)) {
 
 	color checkmark;
 
-	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
-		SND_Play("cac_grid_equip_item", 1, 1),
-		check = !check, noshit(), Wait(200);
-	DrawOutlineCheck(menu->x + (menu->msize / 2) - 11, 259 + (Mshit.maxscroll[Mshit.id] * 30), 14, 20, color(255, 255, 255, 255), 1, align_right);//outline
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
+			SND_Play("cac_grid_equip_item", 1, 1),
+			check = !check, noshit(), Wait(200);
+		DrawOutlineCheck(menu->x + (menu->msize / 2) - 11, 259 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 14, 20, color(255, 255, 255, 255), 1, align_right);//outline
 
-	if (check)
-	{
+		if (check) {
 
-		checkmark = menu->skin;
+			checkmark = menu->skin;
 
-		checkmark.a = menu->skin.a / 2.4;
+			checkmark.a = menu->skin.a / 2.4;
+		}
+
+		DrawShader(menu->x + (menu->msize / 2) - 12, 262 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 10, 16, 0, check ? checkmark : color(0, 0, 0, 0), white, align_right);
+		DrawOutlineCheck(menu->x + (menu->msize / 2) - 12, 260 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 10, 18, check ? color(0, 0, 0, 255) : color(0, 0, 0, 0), 1, align_right);//outline
+		DrawOutlineCheck(menu->x + (menu->msize / 2) - 13, 261 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 10, 16, check ? menu->skin : color(0, 0, 0, 0), 1, align_right);//outline
+		if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	}
 
-	DrawShader(menu->x + (menu->msize / 2) - 12, 262 + (Mshit.maxscroll[Mshit.id] * 30), 10, 16, 0, check ? checkmark : color(0, 0, 0, 0), white, align_right);
-	DrawOutlineCheck(menu->x + (menu->msize / 2) - 12, 260 + (Mshit.maxscroll[Mshit.id] * 30), 10, 18, check ? color(0, 0, 0, 255) : color(0, 0, 0, 0), 1, align_right);//outline
-	DrawOutlineCheck(menu->x + (menu->msize / 2) - 13, 261 + (Mshit.maxscroll[Mshit.id] * 30), 10, 16, check ? menu->skin : color(0, 0, 0, 0), 1, align_right);//outline
-	if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1609,10 +1751,13 @@ void addCheck3(String title, bool& check, char(*menudescription)) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
 		SND_Play("cac_grid_equip_item", 1, 1),
 		check = !check, noshit(), Wait(200);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 
-	DrawShader(menu->x + (menu->msize / 2) - 10, 262 + (Mshit.maxscroll[Mshit.id] * 30), 18, 18, 0, check ? color(55, 255, 55, 255) : color(55, 55, 55, 200), menu_mp_killstreak_select, align_right);
-	if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		DrawShader(menu->x + (menu->msize / 2) - 10, 262 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 18, 18, 0, check ? color(55, 255, 55, 255) : color(55, 55, 55, 200), menu_mp_killstreak_select, align_right);
+		if (active)DrawText(menudescription, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
 
@@ -1638,13 +1783,15 @@ void addArray(String option, String items[], size_t size, void(*func)(int index)
 
 		SLLR = false;
 	}
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 
-	String psz_cur = items[Mshit.islide[Mshit.id][Mshit.maxscroll[Mshit.id]]];
-	DrawText(option, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
-	DrawText(items[Mshit.islide[Mshit.id][Mshit.maxscroll[Mshit.id]]], Vector2(menu->x + (menu->msize / 2) - 10, 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+		String psz_cur = items[Mshit.islide[Mshit.id][Mshit.maxscroll[Mshit.id]]];
+		DrawText(option, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+		DrawText(items[Mshit.islide[Mshit.id][Mshit.maxscroll[Mshit.id]]], Vector2(menu->x + (menu->msize / 2) - 10, 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
-
 
 #pragma region render combo
 int test;
@@ -1657,6 +1804,7 @@ void combo_render_ui() {
 			DrawText(data[i], Vector2(menu->x + (menu->msize / 2) - 57, 267 + 15 + ((Mshit.scroll[Mshit.id]) * 30) + (i * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].scroll == i) ? menu->skin : color(255, 255, 255, 255), align_center, 1);
 	}
 }
+
 #pragma endregion
 
 void addCombo(const char* option, const char* data[], int size, int tag, void(*func)(int info), const char(*menudescription[])) {
@@ -1701,22 +1849,28 @@ void addCombo(const char* option, const char* data[], int size, int tag, void(*f
 		menu->combo_active = true;
 		Wait(150);
 	}
-	if (!menu->combos[Mshit.id][Mshit.maxscroll[Mshit.id]].opened)
-		DrawShader(menu->x + (menu->msize / 2) - 10, 267 + 15 - 23 + (Mshit.maxscroll[Mshit.id] * 30), 100, 23, 0, color(42, 42, 42, 255), white, align_right),
-		DrawText(data[tag], Vector2(menu->x + (menu->msize / 2) - 57, 267 + 15 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_center, 1);
-	if (active)DrawText(menudescription[tag], Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
-	DrawText(option, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, 1);
+
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+
+		if (!menu->combos[Mshit.id][Mshit.maxscroll[Mshit.id]].opened)
+			DrawShader(menu->x + (menu->msize / 2) - 10, 267 + 15 - 23 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 100, 23, 0, color(42, 42, 42, 255), white, align_right),
+			DrawText(data[tag], Vector2(menu->x + (menu->msize / 2) - 57, 267 + 15 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_center, 1);
+		if (active)DrawText(menudescription[tag], Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		DrawText(option, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, 1);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
-
 
 void addPlayerSub(String playername, String playerip, String playernat, int id) {
 	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
 		SND_Play("cac_screen_fade", 1, 1),
 		Mshit.id = id, Wait(200);
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(playerip, Vector2(menu->x + (menu->msize / 2) - 150, 283 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
-	DrawText(playernat, Vector2(menu->x + (menu->msize / 2) - 15, 283 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(playerip, Vector2(menu->x + (menu->msize / 2) - 150, 283 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+		DrawText(playernat, Vector2(menu->x + (menu->msize / 2) - 15, 283 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_right, active ? 1 : 0);
+	}
 
 	addOption(playername);
 }
@@ -1725,7 +1879,10 @@ void addPlayerSubV1(String playername, int id) {
 	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
 		SND_Play("cac_screen_fade", 1, 1),
 		Mshit.id = id, Wait(200);
-	DrawShader(menu->x + (menu->msize / 2) - 10, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		DrawShader(menu->x + (menu->msize / 2) - 10, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+	}
+
 	addOption(playername);
 }
 
@@ -1777,10 +1934,9 @@ void Lookup_ConstTable(Material* Material, int index, Vector4 Modifier) {
 }
 
 void camo_render() {
-	if(bot.camotype == WEAPONIZED) {
+	if (bot.camotype == WEAPONIZED) {
 		Material* Toxic = Material_RegisterHandle("mc/mtl_weapon_camo_toxic", 7);
-		if (Toxic)
-		{
+		if (Toxic) {
 			Lookup_ConstTable(Toxic, 2, Vector4(menu->Reflection, 0, 0, 0));//Reflection
 			Lookup_ConstTable(Toxic, 3, Vector4(menu->Layer3Scroll, 0, 0, 0));//Layer3Scroll
 			Lookup_ConstTable(Toxic, 4, Vector4(menu->Emissive_Amo, 0, 0, 0));//Emissive_Amo
@@ -1795,8 +1951,7 @@ void camo_render() {
 	}
 }
 
-void ResetHost()
-{
+void ResetHost() {
 	bot.fspeed = 1.070f; bot.fweapmulti = 0.75f; bot.jheight = 78.0f;
 	*(float*)0x01cb3098 = 1.07f;
 	*(float*)0x01cb2af8 = 0.75f;
@@ -1823,7 +1978,7 @@ unsigned char InfectionAsset[0x3FF0];//readfile data here
 
 bool ronece = false;
 
-int CG_SetThirdPerson_t[2] = {0x61558, TOC};
+int CG_SetThirdPerson_t[2] = { 0x61558, TOC };
 void(*CG_SetThirdPerson_f)(int c, bool rs) = (void(*)(int, bool))CG_SetThirdPerson_t;
 
 bool runonce1 = false;
@@ -1843,49 +1998,41 @@ void cheats_render() {
 		WriteMemory(compassMaxRange, &local->zoommap, 4);
 		*(int*)0x1CD7B78 = menu->SMPing;//searchSessionDedicatedMaxPing
 
-		if (menu->frenderfovx != 65.0f)
-		{
+		if (menu->frenderfovx != 65.0f) {
 			//if (!zombiecheck())
-				*(float*)0x01cc5218 = menu->frenderfovx;
+			*(float*)0x01cc5218 = menu->frenderfovx;
 			///*else*/
 			//	*(float*)0x01cc52d8 = menu->frenderfovx;
 		}
 		if (local->ishost) {
-			if (bot.fspeed != 1.07f)
-			{
+			if (bot.fspeed != 1.07f) {
 				*(bool*)0x01DFE73 = true;//if statment bne == 0
 				*(bool*)0x01cb3095 = true;//enable dvar
 				*(float*)0x01cb3098 = bot.fspeed;
 			}
 
-			else if (*(bool*)0x01DFE70)
-			{
+			else if (*(bool*)0x01DFE70) {
 				*(bool*)0x01DFE73 = false;//if statment restore
 				*(bool*)0x01cb3095 = false;//disable dvar
 
 			}
 
-			if (bot.fweapmulti != 0.75f)
-			{
+			if (bot.fweapmulti != 0.75f) {
 				*(bool*)0x005f421b = true;//if statment bne == 0
 				*(bool*)0x01cb2af5 = true;//enable dvar
 				*(float*)0x01cb2af8 = bot.fweapmulti;
 			}
 
-			else if (*(bool*)0x005f421b)
-			{
+			else if (*(bool*)0x005f421b) {
 				*(bool*)0x005f421b = false;//if statment restore
 				*(bool*)0x01cb2af5 = false;//disable dvar
 
 			}
 
-			if (bot.jheight != 78.0f)
-			{
+			if (bot.jheight != 78.0f) {
 				*(float*)0x005be0b4 = pow(bot.jheight, 2);
 				*(bool*)0x01cb1298 = false;
-			}
-			else if (*(bool*)0x01cb1298 == false)
-			{
+			} else if (*(bool*)0x01cb1298 == false) {
 				*(bool*)0x01cb1298 = true;
 			}
 		}
@@ -1912,18 +2059,18 @@ void enableresettheme() {
 }
 
 void enableresetweaponized() {
-		menu->Reflection = 0.5f;
-		menu->Layer1ScrollX = 0.0f;
-		menu->Layer2ScrollX = 0.0f;
-		menu->Layer1ScrollY = 0.0f;
-		menu->Layer2ScrollY = 0.0f;
-		menu->Layer1Depth = 0.7f;
-		menu->Layer1Alpha = 1.1f;
-		menu->Layer1H = 1.0f;
-		menu->Layer1W = 1.0f;
-		menu->Layer3Scroll = 0.0f;
-		menu->Emissive_Amo = 3.5f;
-		menu->Gloss_Amount = 1.0f;
+	menu->Reflection = 0.5f;
+	menu->Layer1ScrollX = 0.0f;
+	menu->Layer2ScrollX = 0.0f;
+	menu->Layer1ScrollY = 0.0f;
+	menu->Layer2ScrollY = 0.0f;
+	menu->Layer1Depth = 0.7f;
+	menu->Layer1Alpha = 1.1f;
+	menu->Layer1H = 1.0f;
+	menu->Layer1W = 1.0f;
+	menu->Layer3Scroll = 0.0f;
+	menu->Emissive_Amo = 3.5f;
+	menu->Gloss_Amount = 1.0f;
 }
 
 void MoveUp() {
@@ -1963,17 +2110,15 @@ int Savedtagtype;
 bool ingameonce;
 
 void resetipflags() {
-	if (!menu->bInGame) {
+	if (!cl_ingame_()) {
 		if (!ingameonce) {
 			for (int i = 0; i <= 18; i++) {
 				local->iplayer[i] = false;
 				local->pplayer[i] = false;
-				//V3_Users[i] = false;
 			}
 			ingameonce = true;
 		}
-	}
-	else {
+	} else {
 		ingameonce = false;
 	}
 }
@@ -1989,15 +2134,22 @@ void addPSubmenu(String title, int sub_id) {
 	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
 		SND_Play("cac_screen_fade", 1, 1),
 		Mshit.id = sub_id, iRecent = title, Wait(200);
-	
-	DrawShader(menu->x + (menu->msize / 2) - 13, 264 + (Mshit.maxscroll[Mshit.id] * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
-	DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + (Mshit.maxscroll[Mshit.id] * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+
+		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
+		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
+	}
+
 	Mshit.maxscroll[Mshit.id]++;
 }
-bool hostaw;
+
+dvar_t* penetration_count;
+dvar_t* penetration_multiplier;
+dvar_t* penetration_min_fx_dist;
+
 void RenderMenu() {
 
-	if (menu->bInGame) {
+	if (cl_ingame_()) {
 		if (bot.cancelreload) {
 			if (cg->health > 0) {
 				Cancel_Reload();
@@ -2005,38 +2157,39 @@ void RenderMenu() {
 		}
 	}
 
-	if (menu->bInGame && menu->hostaw) {
+	if (cl_ingame_()) {
 
-		if (!hostaw)
-		{
-			auto penetration_count = Dvar_FindVar("penetrationCount");
-			auto penetration_multiplier = Dvar_FindVar("perk_bulletPenetrationMultiplier");
-			auto penetration_min_fx_dist = Dvar_FindVar("bullet_penetrationMinFxDist");
+		if (!penetration_count && !penetration_multiplier && !penetration_min_fx_dist) {
+			penetration_count = Dvar_FindVar("penetrationCount");
+			penetration_multiplier = Dvar_FindVar("perk_bulletPenetrationMultiplier");
+			penetration_min_fx_dist = Dvar_FindVar("bullet_penetrationMinFxDist");
+		}
 
-			if (cg->health > 0)
-			{
-				if (local->ishost)
-				{
+		if (menu->hostaw) {
+			if (cg->health > 0) {
+				if (local->ishost) {
 					penetration_count->current.integer = INT_MAX;
 					penetration_multiplier->current.value = FLT_MAX;
 					penetration_min_fx_dist->current.value = std::sqrtf(FLT_MAX);
-					hostaw = true;
-				}
-
-				else
-				{
+				} else {
 					penetration_count->current.integer = penetration_count->reset.integer;
 					penetration_multiplier->current.value = penetration_multiplier->reset.value;
 					penetration_min_fx_dist->current.value = penetration_min_fx_dist->reset.value;
-					hostaw = true;
 				}
 			}
 		}
-	}
-
-	else
-	{
-		hostaw = false;
+		else {
+			if (menu->hostawor && cg->health > 0) {
+				penetration_count->current.integer = INT_MAX;
+				penetration_multiplier->current.value = FLT_MAX;
+				penetration_min_fx_dist->current.value = std::sqrtf(FLT_MAX);
+			} else {
+				penetration_count->current.integer = penetration_count->reset.integer;
+				penetration_multiplier->current.value = penetration_multiplier->reset.value;
+				penetration_min_fx_dist->current.value = penetration_min_fx_dist->reset.value;
+			}
+		}
+		
 	}
 
 	resetipflags();
@@ -2162,7 +2315,7 @@ void RenderMenu() {
 		menu->skin6 = menu->skin3;
 	}
 
-	if (menu->camocolor && (menu->bInGame && cg->health > 0)) {
+	if (menu->camocolor && (cl_ingame_() && cg->health > 0)) {
 		uint8_t r = 255 * menu->rgbac.r;
 		uint8_t g = 255 * menu->rgbac.g;
 		uint8_t b = 255 * menu->rgbac.b;
@@ -2187,18 +2340,18 @@ void RenderMenu() {
 		addSubmenu("Aimbot", ID_AIMBOT);
 		addSubmenu("Esp", ID_ESP);
 		addSubmenu("Antiaim", ID_ANTIAIM);
-		addSubmenu("GamerTag", ID_GAMERTAG);
 		addSubmenu("Cheats", ID_CHEATS);
-		addPSubmenu("Players", ID_PLAYERS);
-		addFriendSubmenu("Fake Friends", ID_RECENTLIST);
+		addSubmenu("GamerTag", ID_GAMERTAG);
 		addSubmenu("Exploits", ID_EXPLOITS);
+		addPSubmenu("Players", ID_PLAYERS);
+		addFriendSubmenu("Friends", ID_RECENTLIST);
 		addSubmenu("Account", ID_ACCOUNT);
 		addSubmenu("Theme", ID_THEME);
 		AddConfigMenu("Configure", ID_HVH);
 		addSubmenu("Settings", ID_SETTINGS);
-		addSubmenu("Custom Assets", ID_CAMO);
+		addSubmenu("Assets", ID_CAMO);
 		if (local->ishost) {
-			addSubmenu("Host Menu", ID_HOST);
+			addSubmenu("Host", ID_HOST);
 		}
 		break;
 	case ID_EXPLOITS:
@@ -2305,8 +2458,7 @@ void RenderMenu() {
 				addBar("Fov Circle Scale", 0, 200, bot.fovs, 5.0f, "Fov circle");
 			}
 			addBar("Smooth Snap Scale", 1, 6.5f, bot.snaps, 0.1f, "Smooth snap");
-		}
-		else {
+		} else {
 			if (runoneces) {
 				bot.keytype = Savedkeytype;
 				bot.tagtype = Savedtagtype;
@@ -2315,12 +2467,14 @@ void RenderMenu() {
 			}
 		}
 		addCombo("Aim Key", keytypes, SizeOf(keytypes), bot.keytype, key_type, keytypesDec);
-		if (bot.keytype == KEY_L1) {
+		if (bot.keytype == KEY_L1) 
 			addBar("ADS Zoom Scale", 0, 0.90, bot.ads, 0.01f, "Aim down sights zoom");
-		}
+		addBar("Velocity Prediction", 0.0, 0.9316, bot.fprediction, 0.01f, "Predicts targets new velocity origin");
 		addCheck2("Visible", bot.bvisible, "Engages targets when visible");
 		addCheck2("Autowall", bot.bautowall, "Engages targets if bullets trace through walls");
 		addCheck2("FPS Saving", menu->fpssaving, "Toggles Fps saving");
+		if(menu->fpssaving)
+			addBarI("FPS Saving Strength", 0, 200, menu->fpsstrnth, 1, "High values will affect autowall ");
 		addCheck2("Aim Lock", bot.benablal, "Locks right analog when engaging");
 		addCheck2("Remove Spread", bot.bnospread, "Removes weapons spread");
 		addCheck2("Remove Flinch", bot.bnoflinch, "Removes flinch when hit");
@@ -2358,8 +2512,7 @@ void RenderMenu() {
 			addBar("Jitter Pitch Delay Scale", 0, 1000, bot.pitchscalex, 20.0f, "Jitter pitch delay");
 			addBar("Jitter Yaw Delay Scale", 0, 1000, bot.pitchscaley, 20.0f, "Jitter yaw delay");
 			addBar("Spin Yaw Scale", 0, 45, bot.spinscale, 0.5f, "360 spin");
-		}
-		else {
+		} else {
 			addCheck2("Riot Backwards", bot.breversebot, "Riot backwards");
 			addCheck2("Semi-Up", bot.blockup, "Locks pitch angles semi-up");
 			if (!bot.blockup) {
@@ -2385,8 +2538,7 @@ void RenderMenu() {
 		addCheck2("Health Bar", bot.esp.bhealthbar, "Draws your current health bar");
 		addCheck2("Sprint Meter", bot.esp.sprintmeter, "Draws sprint meter");
 		addCheck2("Crosshair", bot.esp.bdynamic, "Draws halo styled crosshair");
-		if (bot.esp.bdynamic)
-		{
+		if (bot.esp.bdynamic) {
 			addCheck2("Dynamic Crosshair", bot.customxhd, "Draws crosshair dynamic");
 			addSubmenu("Custom Crosshair", ID_XHC);
 		}
@@ -2396,8 +2548,7 @@ void RenderMenu() {
 		addSubmenu("Tracers", ID_TRACERS);
 		if (local->ishost) {
 			addCheck2("Client Health Bars", bot.esp.clienthealth, "Draws clients health");
-		}
-		else {
+		} else {
 			bot.esp.clienthealth = false;
 		}
 		addCheck2("Target Info", bot.esp.btargetinfo, "Draws targets information");
@@ -2418,8 +2569,7 @@ void RenderMenu() {
 	case ID_XHC:
 		addTitle("Custom Crosshair", ID_ESP);
 		addCheck2("Enable Custom Crosshair", bot.customxh, "Draws custom static crosshair");
-		if (bot.customxh)
-		{
+		if (bot.customxh) {
 			addCheck2("Dynamic Crosshair", bot.customxhd, "Draws custom dynamic crosshair");
 			addBar("Pattern x", -100.0f, 100.0f, bot.customw, 1.0f, "Pattern x");
 			addBar("Pattern y", -100.0f, 100.0f, bot.customh, 1.0f, "Pattern y");
@@ -2433,8 +2583,7 @@ void RenderMenu() {
 		addTitle("Chams", ID_ESP);
 		addCheck2("Enable Chams", bot.esp.bchams, "Color chameleon skin");
 		addCheck2("Enable Weapon Chams", bot.esp.bweaponchams, "Color weapons chameleon skin");
-		if (bot.esp.bchams)
-		{
+		if (bot.esp.bchams) {
 			addCheck2("Enable Local Player Chams", menu->renderchamsonme, "Renders chams on your player");
 			addBar("Chams Intensity", 0, 10, bot.chamsintensity, 0.5f, "Chams Intensity");
 		}
@@ -2527,23 +2676,20 @@ void RenderMenu() {
 				playerIP = "0.0.0.0";
 			}
 
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				if (*(bool*)0x0FA7A03)//Lobby or Party
 				{
 					nameip[i] = (char*)(0x0F9E698 + (i * 328));//Lobby
 					ReadMemory(0x0F9E72C + (i * 328), &nattype, 0x01);
-				}
-				else {
+				} else {
 					nameip[i] = (char*)0x0FA99A0 + (i * 328);//Party
 					ReadMemory(0x0FA9A34 + (i * 328), &nattype, 0x01);
 				}
-			}
-			else {
+			} else {
 				nameip[i] = cg->clients[i].PlayerName;
 				ReadMemory(0x0F9E72C + (i * 328), &nattype, 0x01);
 			}
-			if (strcmp(nameip[i], ""))
-			{
+			if (strcmp(nameip[i], "")) {
 				char v3[60];
 				snprintf(NatBufff, sizeof(NatBufff), "NatType: %s", V3_Users[i] ? "Hidden" : nattype == 1 ? "^2Open" : nattype == 2 ? "^3Moderate" : nattype == 0 ? "^1Strict" : "Null");
 				Com_Sprintf(MenuBufff, sizeof(MenuBufff), CG_IsEntityFriendlyNotEnemy(&centity[i]) ? "^2%s %s" : "^1%s %s", nameip[i], local->pplayer[i] ? "^2[Prioritized]" : local->iplayer[i] ? "^1[Ignored]" : "");
@@ -2557,18 +2703,16 @@ void RenderMenu() {
 		String pszNpid;
 		String pszPing;
 
-		if (!menu->bInGame) {
+		if (!cl_ingame_()) {
 			if (*(bool*)0x0FA7A03)//Lobby or Party
 			{
 				pszName = (char*)0x0F9E698 + (Mshit.scroll[ID_PLAYERS] * 328);//Lobby
 				pszNpid = (char*)0x00F9E6D4 + (Mshit.scroll[ID_PLAYERS] * 328);//Lobby
-			}
-			else {
+			} else {
 				pszName = (char*)0x0FA99A0 + (Mshit.scroll[ID_PLAYERS] * 328);//Party
 				pszNpid = (char*)0x0FA99DC + (Mshit.scroll[ID_PLAYERS] * 328);//Party
 			}
-		}
-		else {
+		} else {
 			pszName = cg->clients[Mshit.scroll[ID_PLAYERS]].PlayerName;
 			pszNpid = (char*)0x00F9E6D4 + (Mshit.scroll[ID_PLAYERS] * 328);//Lobby
 		}
@@ -2581,6 +2725,7 @@ void RenderMenu() {
 		AddFriendOption("Add Friend To List", "Adds a player to your fake friends list", pszName, pszNpid, true);
 		if (!V3_Users[Mshit.scroll[ID_PLAYERS]]) {
 			SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERS]);
+			SendPsegOption("Crash Party Client", "Crashes selected player when you're host", Mshit.scroll[ID_PLAYERS]);
 			SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERS]);
 			snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
 			SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERS]);
@@ -2591,23 +2736,20 @@ void RenderMenu() {
 
 		for (int i = 0; i < 18; i++) {
 
-			if (!menu->bInGame) {
+			if (!cl_ingame_()) {
 				if (*(bool*)0x0FA7A03)//Lobby or Party
 				{
 					nameip[i] = (char*)(0x0F9E698 + (i * 328));//Lobby
 					ReadMemory(0x0F9E72C + (i * 328), &nattype, 0x01);
-				}
-				else {
+				} else {
 					nameip[i] = (char*)0x0FA99A0 + (i * 328);//Party
 					ReadMemory(0x0FA9A34 + (i * 328), &nattype, 0x01);
 				}
-			}
-			else {
+			} else {
 				nameip[i] = cg->clients[i].PlayerName;
 				ReadMemory(0x0F9E72C + (i * 328), &nattype, 0x01);
 			}
-			if (strcmp(nameip[i], ""))
-			{
+			if (strcmp(nameip[i], "")) {
 				char v3[60];
 				Com_Sprintf(MenuBufff, sizeof(MenuBufff), CG_IsEntityFriendlyNotEnemy(&centity[i]) ? "^2%s %s" : "^1%s %s", nameip[i]);
 				Com_Sprintf(v3, sizeof(v3), "%s ^7V3 User", MenuBufff);
@@ -2616,18 +2758,16 @@ void RenderMenu() {
 		}
 		break;
 	case ID_PLAYERS_SUBV1:
-		if (!menu->bInGame) {
+		if (!cl_ingame_()) {
 			if (*(bool*)0x0FA7A03)//Lobby or Party
 			{
 				pszName = (char*)0x0F9E698 + (Mshit.scroll[ID_PLAYERSV1] * 328);//Lobby
 				pszNpid = (char*)0x00F9E6D4 + (Mshit.scroll[ID_PLAYERSV1] * 328);//Lobby
-			}
-			else {
+			} else {
 				pszName = (char*)0x0FA99A0 + (Mshit.scroll[ID_PLAYERSV1] * 328);//Party
 				pszNpid = (char*)0x0FA99DC + (Mshit.scroll[ID_PLAYERSV1] * 328);//Party
 			}
-		}
-		else {
+		} else {
 			pszName = cg->clients[Mshit.scroll[ID_PLAYERSV1]].PlayerName;
 			pszNpid = (char*)0x00F9E6D4 + (Mshit.scroll[ID_PLAYERSV1] * 328);//Lobby
 		}
@@ -2635,15 +2775,15 @@ void RenderMenu() {
 		addTitle(pszName, ID_PLAYERSV1);
 
 		AddFriendOption("Add Friend To List", "Adds a player to your fake friends list", pszName, pszNpid, true);
-			SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERSV1]);
-			SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERSV1]);
-			snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
-			SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERSV1]);
+		SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERSV1]);
+		SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERSV1]);
+		snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
+		SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERSV1]);
 		break;
 	case ID_RECENTLIST:
 		addTitle("Fake Friends", ID_MAIN);
 		for (int it = 0; it < friends::sorted_friends.size(); it++) {
-		
+
 			addFriendSubmenu(friends::sorted_friends[it].name.c_str(), ID_RECENTS_SUB);
 		}
 		break;
@@ -2664,22 +2804,23 @@ void RenderMenu() {
 	case ID_SETTINGS:
 		addTitle("Settings", ID_MAIN);
 		addSubmenu("Server Info", SERVER_INFO);
+		addBarI("Menu Option Count", 5, 25, Mshit.max_options, 1, "Adjust the max options to show on screen");
 		snprintf(tempdBufff, sizeof(tempdBufff), "Toggles celsius temps (^1%i ^7second delay)", tempd);
 		addCheck2("Toggle Celsius", menu->fahrenheit, tempdBufff);
 		addCheck2("Disable CPU", menu->temp1, "Toggles cpu temps info");
 		addCheck2("Disable RSX", menu->temp2, "Toggles rsx temps info");
 		addCheck2("Disable FPS", menu->fps, "Toggles fps info");
 		addCheck2("Disable Resolution", menu->res, "Toggles resolution info");
-		addCheck2("Disable FPS Saving", menu->fmpssaving, "Toggles Fps saving info");
+		addCheck2("Disable FPS Saving", menu->fmpssaving, "Toggles fps saving info");
 		addCheck2("Disable DLC", menu->disabledlc, "Toggles dlc");
 		addCheck2("Spinning Weapons", menu->sping, "Toggles spinning weapon animations");
 		addCheck2("Disable Menu Sounds", menu->engnsounds, "Toggles menu sounds");
 		addCheck2("Trickshot Mode", menu->btrickmode, "Disables the genisys hud");
 		addBar("Scroll Speed Delay", 50, 250, bot.scspeed, 10.0f, "Changes the scoller speed");
 		addBarI("Search Session Max Ping", 20, 420, menu->SMPing, 10, "Search session dedicated max ping");
-
 		addKOption("Local Command", local_command);
 		addOption("PS Button", Psbutn);
+		addCheck2("Host AutoWall Override", menu->hostawor, "Enable if host is suspected of host autowall");
 		break;
 	case SERVER_INFO:
 		addTitle("Server Info", ID_SETTINGS);
@@ -2816,32 +2957,6 @@ void RenderMenu() {
 		if (menu->hitble.Rainbow)
 			addBar("Rain Fade", 0.0f, 1.0f, menu->hitble.RainbowSpeed, 0.01f, "Color transition speed");
 		break;
-	/*case ID_V:
-		addTitle("Visible Color", ID_ESPTHEME);
-		addColormenu1("Current Color", menu->vis);
-		addColorEBar("Red", 0.0f, 1.0f, "Red color", menu->vis.r, 0.01f, true);
-		addColorEBar("Green", 0.0f, 1.0f, "Green color", menu->vis.g, 0.01f, true);
-		addColorEBar("Blue", 0.0f, 1.0f, "Blue color", menu->vis.b, 0.01f, true);
-		addColorEBar("Alpha", 0.0f, 1.0f, "Alpha", menu->vis.a, 0.01f, true);
-		addColormenuE("Red", color(255, 0, 0, 255), menu->vis);
-		addColormenuE("Yellow", color(255, 255, 0, 255), menu->vis);
-		addColormenuE("Orange", color(255, 128, 0, 255), menu->vis);
-		addColormenuE("Green", color(128, 255, 0, 255), menu->vis);
-		addColormenuE("Blue", color(0, 128, 255, 255), menu->vis);
-		addColormenuE("Purple", color(128, 0, 255, 255), menu->vis);
-		addColormenuE("Pink", color(255, 0, 128, 255), menu->vis);
-		addColormenuE("Aqua Green", color(24, 119, 72, 255), menu->vis);
-		addColormenuE("Sky Blue", color(24, 189, 240, 255), menu->vis);
-		addColormenuE("Cerulean", color(65, 60, 219, 255), menu->vis);
-		addColormenuE("Magenta", color(254, 39, 57, 255), menu->vis);
-		addColormenuE("Wisteria", color(12, 186, 92, 255), menu->vis);
-		addColormenuE("Lime Green", color(53, 254, 75, 255), menu->vis);
-		addColormenuE("Golden Yellow", color(207, 179, 55, 255), menu->vis);
-		addColormenuE("Red Orange", color(204, 51, 27, 255), menu->vis);
-		addCheck2("Enable Fade", menu->vis.Rainbow, "Enables color fade transitions");
-		if (menu->vis.Rainbow)
-			addBar("Rain Fade", 0.0f, 1.0f, menu->vis.RainbowSpeed, 0.01f, "Color transition speed");
-		break;*/
 	case ID_T:
 		addTitle("Tracer Color", ID_ESPTHEME);
 		addColormenu1("Current Color", menu->trcr);
@@ -3021,20 +3136,54 @@ void HandleMenu() {
 			int id = Mshit.id;
 
 			if (!menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].opened && !menu->combo_active) {
-				if (PadDown(PAD_UP))
-					Mshit.scroll[id] = (Mshit.scroll[id] <= 0) ? Mshit.maxscroll[id] - 1 : Mshit.scroll[id] - 1, Wait(bot.scspeed),
+				if (PadDown(PAD_UP)) {
+					short position = Mshit.scroll[id] - 1;
+					if (position < 0) {
+						position = Mshit.maxscroll[id] - 1;
+						Mshit.menu_offsets[id] = Mshit.maxscroll[id] - Mshit.max_options + 1;
+						if (Mshit.menu_offsets[id] < 0)
+							Mshit.menu_offsets[id] = 0;
+					}
+					if (Mshit.menu_offsets[id] > 0) {
+						Mshit.menu_offsets[id]--;
+					}
+
+					Mshit.scroll[id] = position;
+					Wait(bot.scspeed);
 					SND_Play("cac_grid_nav", 1, 1);
-				if (PadDown(PAD_DOWN))
-					Mshit.scroll[id] = (Mshit.scroll[id] >= Mshit.maxscroll[id] - 1) ? 0 : Mshit.scroll[id] + 1, Wait(bot.scspeed),
+
+					//Mshit.scroll[id] = (Mshit.scroll[id] <= 0) ? Mshit.maxscroll[id] - 1 : Mshit.scroll[id] - 1, Wait(bot.scspeed),
+				}
+
+				if (PadDown(PAD_DOWN)) {
+					short position = Mshit.scroll[id] + 1;
+					if (Mshit.maxscroll[id] > Mshit.max_options)
+						if (position >= Mshit.max_options)
+							Mshit.menu_offsets[id]++;
+					if (position > Mshit.maxscroll[id] - 1) {
+						position = 0;
+						if (Mshit.maxscroll[id] > Mshit.max_options) {
+							Mshit.menu_offsets[id] = 0;
+						}
+					}
+
+					Mshit.scroll[id] = position;
+					Wait(bot.scspeed);
 					SND_Play("cac_grid_nav", 1, 1);
+					//Mshit.scroll[id] = (Mshit.scroll[id] >= Mshit.maxscroll[id] - 1) ? 0 : Mshit.scroll[id] + 1, ,
+
+				}
 			}
 
 			if (ready) {
 				if (PadDown(PAD_CIRCLE, CELL_PAD_BTN_OFFSET_DIGITAL2) && !menu->combo_active) {
-					if (Mshit.id > ID_MAIN)
+					if (Mshit.id > ID_MAIN) {
+						Mshit.menu_offsets[Mshit.prev[Mshit.id]] = Mshit.scroll[Mshit.prev[Mshit.id]] >= Mshit.max_options ? Mshit.scroll[Mshit.prev[Mshit.id]] + 1 - Mshit.max_options : 0;
+						//Mshit.scroll[Mshit.prev[Mshit.id]] = 
+
 						Mshit.id = Mshit.prev[Mshit.id], Wait(200),
-						SND_Play("caC_main_exit_cac", 1, 1);
-					else
+							SND_Play("caC_main_exit_cac", 1, 1);
+					} else
 						Mshit.Mopened = false, Mshit.id = ID_MAIN, Wait(200),
 						SND_Play("cac_cmn_backout", 1, 1);
 				}

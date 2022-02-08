@@ -9,17 +9,17 @@ extern bool cl_ingame_();
 extern void sendtozmint();
 extern void pull_client_to_lobby(SceNpId npid, int requestCount, std::uint64_t interval, uint64_t timeout);
 std::vector<std::string> split(std::string s, std::string del);
-extern bool WorldPosToScreenPos(Vector3 worldPos, Vector2 * screenPos);
-extern void XShowKeyboardUI(int localClientNum, const wchar_t * title, const wchar_t * presetMsg, unsigned int length, void(*KB_COMPLETE)(int localClientNum, const wchar_t * wstring, unsigned int Length), unsigned int panel_mode);
-extern void WideCharToMultibyte(const wchar_t * wchar, int length, char * buffer);
+extern bool WorldPosToScreenPos(Vector3 worldPos, Vector2* screenPos);
+extern void XShowKeyboardUI(int localClientNum, const wchar_t* title, const wchar_t* presetMsg, unsigned int length, void(*KB_COMPLETE)(int localClientNum, const wchar_t* wstring, unsigned int Length), unsigned int panel_mode);
+extern void WideCharToMultibyte(const wchar_t* wchar, int length, char* buffer);
 extern void PosPrediction(int i, Vector3 BonePos, int Scale, bool NotAllowZ);
 extern void DrawHaxShader3(float x, float y, float w, float h, float angle, color col, Material* material, alignment align);
 extern void USleep(usecond_t time);
 extern void TeleportToPower();
 extern void TeleportToPaP();
 #pragma region cg
-extern bool CG_IsEntityFriendlyNotEnemy(centity_s * cent);
-extern void AimTarget_GetTagPos(centity_s * cent, short tagname, Vector3 *pos);
+extern bool CG_IsEntityFriendlyNotEnemy(centity_s* cent);
+extern void AimTarget_GetTagPos(centity_s* cent, short tagname, Vector3* pos);
 extern void VectoAngles(Vector3 vec, Vector3* angles);
 extern Vector3 AnglesToFoward(Vector3 Origin, Vector3 Angles, float diff);
 extern void GetTagPos(centity_s* cent, short tagName, Vector3* pos);
@@ -29,15 +29,15 @@ extern int getUserID(const char* username);
 #pragma region graphics
 extern int getFileSize(char* file);
 extern GfxImage* ReadAssetGFX(std::string str);
-extern int R_TextWidth(String text, const char * font, float scale);
+extern int R_TextWidth(String text, const char* font, float scale);
 extern int R_TextHeight(String font, float scale);
 Material* Material_RegisterHandle(String material, int ImageTrac);
 extern bool isHostMigrating();
 extern void Global_Ingame();
 extern String Dvar_GetString(String dvarName);
 extern float Dvar_GetFloat(String dvarName);
-extern bool(*AimTarget_GetTagPos_f)(centity_s * cent, short tagname, Vector3* r4);
-extern void R_AddCmdDrawText(String Text, int MaxChars, int Font, float X, float Y, float XScale, float YScale, float Rotation, float * Color, int Style);
+extern bool(*AimTarget_GetTagPos_f)(centity_s* cent, short tagname, Vector3* r4);
+extern void R_AddCmdDrawText(String Text, int MaxChars, int Font, float X, float Y, float XScale, float YScale, float Rotation, float* Color, int Style);
 extern void DrawTextWithEffects(String text, float x, float y, float scale, color col, alignment align);
 extern void DrawTextWithEffectsUI(String text, float x, float y, float scale, color col, alignment align);
 extern void DrawTextWithEffects1(String text, float x, float y, float scale, color col, alignment align);
@@ -52,11 +52,11 @@ extern bool CScr_GetInKillcam(cg_s* pcg);
 extern void readFile(char* file, char buf[], int size);
 extern void Cancel_Reload();
 extern String(*R_GetFontPathFromName)(String text);
-extern int(*Com_Sprintf)(char *dest, int size, const char *fmt, ...);
+extern int(*Com_Sprintf)(char* dest, int size, const char* fmt, ...);
 extern int(*Sys_Milliseconds)();
 extern int (*BG_GetAmmoInClip)(playerState_s* ps, int weapon);
-extern void CG_GameMessage(char * r2);
-extern void Cbuf_AddText(char * r2);
+extern void CG_GameMessage(char* r2);
+extern void Cbuf_AddText(char* r2);
 extern void isave();
 extern void iload();
 extern void Add_name_();
@@ -85,10 +85,10 @@ extern dvar_t* Dvar_FindVar(String dvarName);
 extern int Dvar_GeInt(String dvarName);
 extern void StealName(int clientNum);
 extern float DrawTextWithBackground(String text, float x, float y, float scale, color textColor, color backgroundColor, alignment align);
-extern void SmokeColor(bool * rs);
+extern void SmokeColor(bool* rs);
 extern void Smokehandle();
 extern float sky_rotate;
-extern void rssm(bool * rs);
+extern void rssm(bool* rs);
 extern void Psbutn();
 extern void test69();
 extern void GetTemps(uint8_t* CPU, uint8_t* RSX, bool C);
@@ -102,8 +102,7 @@ extern void loadchck();
 extern void ChangeClanTagPreGame(char* str);
 extern void* Memcp__(void* dst0, const void* src0, size_t len0);
 extern void CScr_VisionSetNaked();
-inline const char* decrypt(const char* str, float key)
-{
+inline const char* decrypt(const char* str, float key) {
 	int length = strlen(str);
 
 	char* decrypted = new char[0x400];
@@ -114,8 +113,7 @@ inline const char* decrypt(const char* str, float key)
 	}
 	return decrypted;
 }
-inline std::string VirtualXOR(const char* str, float key)
-{
+inline std::string VirtualXOR(const char* str, float key) {
 	const char* allocated = decrypt(str, key);
 	std::string decrypted_s = std::string(allocated);
 
@@ -145,7 +143,7 @@ extern int(*Sys_Milliseconds)();
 extern int bdHashTiger192_t[2];
 extern void(*bdHashTiger192_f)(int* localNum);
 
-extern int bdHashTiger192_hash_t[2] ;
+extern int bdHashTiger192_hash_t[2];
 extern void(*bdHashTiger192_hash_f)(const char* data, const unsigned int dataSize, char* result, unsigned int* resultSize);
 
 extern int bdHashTiger192_t_[2];

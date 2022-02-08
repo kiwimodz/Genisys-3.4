@@ -4,9 +4,8 @@ INI Ini;
 
 void INI::ReadFromFile(const char* FileName, int FileSize) {
 
-	auto permission = cellFsChmod(FileName,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(FileName, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 
@@ -267,9 +266,8 @@ void INI::ReadString(const char* section, std::string value, char* out) {
 }
 
 void INI::PrepareSave(const char* filename) {
-	auto permission = cellFsChmod(filename,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(filename, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 	rtn = cellFsTruncate(filename, 0);
@@ -439,7 +437,7 @@ void ReadFromIniFile(const char* fileName) {
 	bot.esp.bpickupweaponsworld = Ini.ReadBool("Visuals", "Weapon Items");
 	bot.esp.bnadesworld = Ini.ReadBool("Visuals", "Grenades");
 	bot.esp.bpickupscavsworld = Ini.ReadBool("Visuals", "Scavenger Bags");
-	bot.esp.benablenadefuse = Ini.ReadBool("Visuals" ,"Projectile Fuse Time");
+	bot.esp.benablenadefuse = Ini.ReadBool("Visuals", "Projectile Fuse Time");
 	bot.esp.bnadetracers = Ini.ReadBool("Visuals", "Projectile Tracers");
 	//Radar
 	bot.esp.bradar = Ini.ReadBool("Visuals", "Enable Radar");
@@ -568,12 +566,9 @@ void ReadFromIniFile(const char* fileName) {
 	_sys_sprintf(Filename, "%s Configuration File Loaded", fileName);
 	CG_GameMessage(Filename);
 
-	if (!menu->bInGame)
-	{
+	if (!cl_ingame_()) {
 		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
-	}
-	else
-	{
+	} else {
 		CG_GameMessage(Filename);
 	}
 }
@@ -787,12 +782,9 @@ void SaveToIniFile(const char* fileName) {
 	_sys_sprintf(Filename, "%s Configuration File Saved", fileName);
 	CG_GameMessage(Filename);
 
-	if (!menu->bInGame)
-	{
+	if (!cl_ingame_()) {
 		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
-	}
-	else
-	{
+	} else {
 		CG_GameMessage(Filename);
 	}
 

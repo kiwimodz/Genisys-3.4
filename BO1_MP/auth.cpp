@@ -33,8 +33,8 @@ std::string auth::version;
 
 bool is_thread_running;
 
-auth::auth() { }
-auth::~auth() { }
+auth::auth() {}
+auth::~auth() {}
 
 auth::auth_codes auth::code;
 
@@ -139,9 +139,7 @@ void auth::generateChecksum() {
 		char checksuma[30];
 		_sys_sprintf(checksuma, Pri01X Pri03X, checksum);
 		send_packet->write_string("7D1669C574000000");
-	}
-	else
-	{
+	} else {
 		send_packet->write_string("");
 	}
 }
@@ -206,11 +204,10 @@ void auth::recv_auth(msg_t* packet) {
 			Dialog::msgdialog_mode = Dialog::MODE_STRING_YESNO;
 			_sys_sprintf(MenuBuff, "%s\n    %s", VirtualXOR(succauth, 6.0f).c_str(), VirtualXOR(enablev3, 6.0f).c_str());
 			Dialog::ShowYESNO(MenuBuff);//v3 gets set to true in here
-			
+
 			packet->read_float();//menusize gets set in here
-			
-		}
-		else {
+
+		} else {
 			//Handle reauth here.
 		}
 		break;

@@ -1,8 +1,7 @@
 #ifndef visuals_mp_h
 #define visuals_mp_h
 
-enum meansOfDeath_t
-{
+enum meansOfDeath_t {
 	MOD_PISTOL_BULLET = 0x1,
 	MOD_RIFLE_BULLET = 0x2,
 	MOD_HEAD_SHOT = 0x9,
@@ -19,9 +18,9 @@ extern String mod_type[3];
 extern String mod_typedec[3];
 extern String pen_type[3];
 extern String pen_typedec[3];
-extern void __cdecl ScrPlace_ApplyRect(float *x, float *y, float *w, float *h, int horzAlign, int vertAlign);
+extern void __cdecl ScrPlace_ApplyRect(float* x, float* y, float* w, float* h, int horzAlign, int vertAlign);
 extern bool __cdecl CG_IsClientInOurParty(int localClientNum, int clientNum);
-extern void __cdecl R_AddCmdDrawStretchPicRotateSTInternal(float x, float y, float w, float h, float centerS, float centerT, float radiusST, float scaleFinalS, float scaleFinalT, float angle, const float * color, void * material);
+extern void __cdecl R_AddCmdDrawStretchPicRotateSTInternal(float x, float y, float w, float h, float centerS, float centerT, float radiusST, float scaleFinalS, float scaleFinalT, float angle, const float* color, void* material);
 #pragma region visual handles
 extern bool __cdecl Com_SessionMode_IsMode(eSessionModes_mode mode);
 extern float _mm_xor_ps(float v15, float _mask__NegFloat_);

@@ -12,8 +12,7 @@ int (*Cmd_Argc)() = (int (*)()) & Cmd_Argc_t;
 int CG_GetPredictedPlayerState_t[2] = { 0x6AD5C, TOC };
 playerState_s* (*CG_GetPredictedPlayerState_f)(int) = (playerState_s * (*)(int))CG_GetPredictedPlayerState_t;
 
-playerState_s* CG_GetPredictedPlayerState(int i)
-{
+playerState_s* CG_GetPredictedPlayerState(int i) {
 	return CG_GetPredictedPlayerState_f(i);
 }
 
@@ -38,8 +37,7 @@ struct sockaddr_in SocketAddress;
 char bufferReturn[10000];
 char RequestBuffer[2048];
 
-char* remove_http_header(char* request)
-{
+char* remove_http_header(char* request) {
 	Virtual::Call<int>(notouch_t);
 	request = strstr(request, "\r\n\r\n");
 	if (request)
@@ -65,8 +63,7 @@ char* SocketRequest(char* URL, char* Path) {
 	strcat(RequestBuffer, URL);
 	strcat(RequestBuffer, XOR(DOUBLEBREAK, 4));
 	Virtual::Call<int>(send_t, Socket, RequestBuffer, strlen(RequestBuffer), 0);
-	while (Virtual::Call<int>(recv_t, Socket, bufferReturn, 10000, 0) > 0)
-	{
+	while (Virtual::Call<int>(recv_t, Socket, bufferReturn, 10000, 0) > 0) {
 		return Virtual::Call<char*>(remove_http_header_t, bufferReturn);
 	}
 }
@@ -94,8 +91,7 @@ char* SocketRequest(char* URL, char* Path) {
 //	return s;
 //}
 
-static int connect_to_webman(void)
-{
+static int connect_to_webman(void) {
 	struct sockaddr_in sin;
 	int s;
 
@@ -104,31 +100,26 @@ static int connect_to_webman(void)
 	sin.sin_addr.s_addr = 0x7F000001;
 	sin.sin_port = htons(80);
 	s = socket(AF_INET, SOCK_STREAM, 0);
-	if (s < 0)
-	{
+	if (s < 0) {
 		return -1;
 	}
 
-	if (connect(s, (struct sockaddr*)&sin, sizeof(sin)) < 0)
-	{
+	if (connect(s, (struct sockaddr*)&sin, sizeof(sin)) < 0) {
 		return -1;
 	}
 
 	return s;
 }
 
-static void sclose(int* socket_e)
-{
-	if (*socket_e != -1)
-	{
+static void sclose(int* socket_e) {
+	if (*socket_e != -1) {
 		shutdown(*socket_e, SHUT_RDWR);
 		socketclose(*socket_e);
 		*socket_e = -1;
 	}
 }
 
-static char* send_wm_request(const char* cmd)
-{
+static char* send_wm_request(const char* cmd) {
 	int conn_s = -1;
 	conn_s = connect_to_webman();
 	char buffer[256];
@@ -138,13 +129,11 @@ static char* send_wm_request(const char* cmd)
 	setsockopt(conn_s, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
 	setsockopt(conn_s, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
-	if (conn_s >= 0)
-	{
+	if (conn_s >= 0) {
 		char wm_cmd[1048];
 		int cmd_len = sprintf(wm_cmd, "GET %s HTTP/1.0\r\n", cmd);
 		send(conn_s, wm_cmd, cmd_len, 0);
-		while (recv(conn_s, buffer, 10000, 0) > 0)
-		{
+		while (recv(conn_s, buffer, 10000, 0) > 0) {
 			return buffer;
 		}
 	}
@@ -163,9 +152,7 @@ void fixSpaces(char** szReturn) {
 		if (str[i] != 0x20) {
 			_returnStr[dwStrIndex] = str[i];
 			dwStrIndex++;
-		}
-		else
-		{
+		} else {
 			_returnStr[dwStrIndex] = '%';
 			_returnStr[dwStrIndex + 1] = '2';
 			_returnStr[dwStrIndex + 2] = '0';
@@ -187,29 +174,23 @@ void DoNotify(char* szFormat) {
 	send_wm_request(_notify_buffer);
 }
 
-static void get_temperature(uint32_t _dev, uint8_t* temp)
-{
+static void get_temperature(uint32_t _dev, uint8_t* temp) {
 	uint32_t _temp;
 	system_call_2(383, (uint64_t)(uint32_t)_dev, (uint64_t)(uint32_t)&_temp); *temp = _temp >> 24; // return �C
 }
 
-void Psbutn()
-{
+void Psbutn() {
 	send_wm_request("/pad.ps3?_psbtn_go");
 }
 
-void GetTemps(uint8_t* CPU, uint8_t* RSX, bool C)
-{
+void GetTemps(uint8_t* CPU, uint8_t* RSX, bool C) {
 	uint8_t t1 = 0, t2 = 0, t1f, t2f;
 	get_temperature(0, &t1);
 	get_temperature(1, &t2);
-	if (!C)
-	{
+	if (!C) {
 		*CPU = (1.8f * (float)t1 + 32.f);
 		*RSX = (1.8f * (float)t2 + 32.f);
-	}
-	else
-	{
+	} else {
 		*CPU = t1;
 		*RSX = t2;
 	}
@@ -219,16 +200,14 @@ int CG_GameMessage_t[2] = { 0x0006AD98, TOC };
 void(*CG_GameMessage_f)(int r1, char* r2) = (void(*)(int, char*))CG_GameMessage_t;
 
 
-void CG_GameMessage(char* r2)
-{
+void CG_GameMessage(char* r2) {
 	CG_GameMessage_f(0, r2);
 }
 
 int Cbuf_AddText_t[2] = { 0x313C18, TOC };
 void(*Cbuf_AddText_f)(int r1, char* r2) = (void(*)(int, char*))Cbuf_AddText_t;
 
-void Cbuf_AddText(char* r2)
-{
+void Cbuf_AddText(char* r2) {
 	Cbuf_AddText_f(0, r2);
 }
 
@@ -238,16 +217,14 @@ int(*BG_GetAmmoInClip)(playerState_s* ps, int weapon) = (int(*)(playerState_s*, 
 int WorldPosToScreenPos_t[2] = { 0x5A480, TOC };
 bool(*WorldPosToScreenPos_f)(int r1, Vector3 const& worldPos, Vector2* screenPos) = (bool(*)(int, Vector3 const&, Vector2*))WorldPosToScreenPos_t;
 
-bool WorldPosToScreenPos(Vector3 worldPos, Vector2* screenPos)
-{
+bool WorldPosToScreenPos(Vector3 worldPos, Vector2* screenPos) {
 	return WorldPosToScreenPos_f(0, worldPos, screenPos);
 }
 
 int CG_LocationalTrace_t[2] = { 0x100018, TOC };
 void(*CG_LocationalTrace_f)(trace_t* ptrace, Vector3* start, Vector3* end, int passEntityNum, int contentMask, bool checkRopes, col_context_t* context) = (void(*)(trace_t*, Vector3*, Vector3*, int, int, bool, col_context_t*))CG_LocationalTrace_t;
 
-void CG_LocationalTrace(trace_t* ptrace, Vector3* start, Vector3* end, int passEntityNum, int contentMask, bool checkRopes, col_context_t* context)
-{
+void CG_LocationalTrace(trace_t* ptrace, Vector3* start, Vector3* end, int passEntityNum, int contentMask, bool checkRopes, col_context_t* context) {
 	CG_LocationalTrace_f(ptrace, start, end, passEntityNum, contentMask, checkRopes, context);
 }
 
@@ -267,8 +244,7 @@ void PlayerCmd_disableinvulnerability(int client) {
 	PlayerCmd_disableinvulnerability_f(entref);
 }
 
-void TeleportToPower()
-{
+void TeleportToPower() {
 	Vector3 Buried_Res = { 682.165, -552.677, 144.125 };
 	*(Vector3*)(0x01780f50 + Mshit.scroll[ID_PLAYERS] * 0x5808) = Buried_Res;
 	char boolBuff[100];
@@ -276,8 +252,7 @@ void TeleportToPower()
 	//SV_GameSendServerCommand_f(Mshit.scroll[ID_PLAYERS], 0, boolBuff);
 }
 
-void TeleportToPaP()
-{
+void TeleportToPaP() {
 	Vector3 Buried_Res = { 6403.38, 779.031, -131.672 };
 	*(Vector3*)(0x01780f50 + Mshit.scroll[ID_PLAYERS] * 0x5808) = Buried_Res;
 	char boolBuff[100];
@@ -288,8 +263,7 @@ void TeleportToPaP()
 int XShowKeyboardUI_t[2] = { 0x46710C, TOC };
 void(*XShowKeyboardUI_f)(int localClientNum, const wchar_t* title, const wchar_t* presetMsg, unsigned int length, void(*KB_COMPLETE)(int localClientNum, const wchar_t* wstring, unsigned int Length), unsigned int panel_mode) = (void(*)(int, const wchar_t*, const wchar_t*, unsigned int, void(*)(int, const wchar_t*, unsigned int), unsigned int))XShowKeyboardUI_t;
 
-void XShowKeyboardUI(int localClientNum, const wchar_t* title, const wchar_t* presetMsg, unsigned int length, void(*KB_COMPLETE)(int localClientNum, const wchar_t* wstring, unsigned int Length), unsigned int panel_mode)
-{
+void XShowKeyboardUI(int localClientNum, const wchar_t* title, const wchar_t* presetMsg, unsigned int length, void(*KB_COMPLETE)(int localClientNum, const wchar_t* wstring, unsigned int Length), unsigned int panel_mode) {
 	*(char*)0xD82144 = 1;
 	XShowKeyboardUI_f(localClientNum, title, presetMsg, length, KB_COMPLETE, panel_mode);
 }
@@ -345,18 +319,14 @@ void* (*Sys_GetValue_f)(int valueIndex) = (void* (*)(int))Sys_GetValue_t;
 
 bool CScr_IsAlive(int i) {
 
-	if (centity[i].Type == ET_Player)
-	{
+	if (centity[i].Type == ET_Player) {
 		return (!cg->clients[i].Dead) && strcmp(cg->clients[i].PlayerModel, "") != 0;
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
 
-void PosPrediction(int i, Vector3 BonePos, int Scale, bool NotAllowZ)
-{
+void PosPrediction(int i, Vector3 BonePos, int Scale, bool NotAllowZ) {
 	Vector3 EnemyVelocityTemp;
 	Vector3 EnemyVelocity;
 	EnemyVelocityTemp = centity[i].NewOrigin - centity[i].OldOrigin;
@@ -402,8 +372,7 @@ float Dvar_GetFloat(String dvarName) {
 int irand_t[2] = { 0x3CE988, TOC };
 int(*irand_f)(int r1, int r2) = (int(*)(int, int))irand_t;
 
-int irand_(int min, int max_)
-{
+int irand_(int min, int max_) {
 	return irand_f(min, max_);
 }
 
@@ -411,9 +380,8 @@ int CG_IsEntityFriendlyNotEnemy_t[2] = { 0x049720, TOC };
 bool(*CG_IsEntityFriendlyNotEnemy_f)(int r1, centity_s* r2) = (bool(*)(int, centity_s*))CG_IsEntityFriendlyNotEnemy_t;
 
 #pragma region cg
-bool CG_IsEntityFriendlyNotEnemy(centity_s* cent)
-{
-	if (!menu->bInGame)return false;
+bool CG_IsEntityFriendlyNotEnemy(centity_s* cent) {
+	if (!cl_ingame_())return false;
 	return CG_IsEntityFriendlyNotEnemy_f(0, cent);
 }
 
@@ -423,8 +391,7 @@ int (*CG_DObjGetWorldTagPos_f)(centity_s* pose, int* objEA, unsigned int tagName
 int Com_GetClientDObj_t[2] = { 0x03275C0, TOC };
 int (*Com_GetClientDObj_f)(int handle, int localClientNum) = (int (*)(int, int))Com_GetClientDObj_t;
 
-int AimTarget_GetTagPosMP(centity_s* cent, short tagName, Vector3* pos)
-{
+int AimTarget_GetTagPosMP(centity_s* cent, short tagName, Vector3* pos) {
 	int DOBJ = Com_GetClientDObj_f(cent->ClientNumber, 0);
 	if (DOBJ)
 		return CG_DObjGetWorldTagPos_f(cent, &DOBJ, tagName, pos);
@@ -440,23 +407,20 @@ void GetTagPos(centity_s* cent, short tagName, Vector3* pos) {
 	AimTarget_GetTagPos_f(cent, tagName, pos);
 }
 
-void AimTarget_GetTagPos(centity_s* cent, short tagname, Vector3* pos)
-{
+void AimTarget_GetTagPos(centity_s* cent, short tagname, Vector3* pos) {
 	*(int*)0x461FB4 = 0x4E800020;
 	AimTarget_GetTagPos_f(cent, tagname, pos);
 	*(int*)0x461FB4 = 0xF821FB71;
 }
 
-float VectorLength2D(Vector3* pV)
-{
+float VectorLength2D(Vector3* pV) {
 	return	sqrtf(pV->x * pV->x + pV->z * pV->z);
 }
 
 int VectoAngles_t[2] = { 0x3CAB90, TOC };
 void(*VectoAngles_f)(Vector3* vec, Vector3* angles) = (void(*)(Vector3 * vec, Vector3 * angles))VectoAngles_t;
 
-void VectoAngles(Vector3 vec, Vector3* angles)
-{
+void VectoAngles(Vector3 vec, Vector3* angles) {
 	VectoAngles_f(&vec, angles);
 }
 
@@ -495,24 +459,21 @@ bool EnemyAimingAtMe(int enemy) {
 int R_RegisterFont_t[2] = { 0x75A2C0, TOC };
 int(*R_RegisterFont_f)(String font, int imageTrac) = (int(*)(String, int))R_RegisterFont_t;
 
-int R_RegisterFont(String font, int imageTrac)
-{
+int R_RegisterFont(String font, int imageTrac) {
 	return R_RegisterFont_f(font, imageTrac);
 }
 
 int R_TextWidth_t[2] = { 0x75A338, TOC };
 int(*R_TextWidth_f)(int localClientNum, const char* text, int maxChars, int font) = (int(*)(int, const char*, int, int))R_TextWidth_t;
 
-int R_TextWidth(String text, const char* font, float scale)
-{
+int R_TextWidth(String text, const char* font, float scale) {
 	return R_TextWidth_f(0, text, 0x7FFFFFFF, R_RegisterFont(font, 0)) * scale;
 }
 
 int R_TextHeight_t[2] = { 0x75A5D0, TOC };
 int(*R_TextHeight_f)(int font) = (int(*)(int))R_TextHeight_t;
 
-int R_TextHeight(String font, float scale)
-{
+int R_TextHeight(String font, float scale) {
 	return R_TextHeight_f(R_RegisterFont(R_GetFontPathFromName(font), 0)) * scale;
 }
 
@@ -530,19 +491,16 @@ color White1 = { 1, 1, 1, 1 };
 
 float sky_rotate;
 bool runoncexxx = true;
-void Smokehandle()
-{
-	if (strstr("Uplink", Dvar_GetString("party_mapname")))
-	{
-		if (!menu->nightmode && menu->bInGame) {
+void Smokehandle() {
+	if (strstr("Uplink", Dvar_GetString("party_mapname"))) {
+		if (!menu->nightmode && cl_ingame_()) {
 			//*(int*)0x07599D0 = 0x60000000;
 			*(int*)0x01cc1018 = 0x01000000;//0x2B28CC4 <-- pointer from r_exposureTweak
 			*(int*)0x01CC1078 = 0x40900000;//r_exposureValue
 			//*(int*)0x01CC19D8 = 0xffffffff;
 			*(int*)0x01cbc214 = 0x01000000;//r_lighttweaksuncolor
 			WriteMemory(0x01cbc218, &NavyBlue1, 16);//r_lighttweaksuncolor
-		}
-		else {
+		} else {
 			//*(int*)0x07599D0 = 0x04BC80D1;
 			*(int*)0x01cc1018 = 0x00000000;//r_exposureTweak
 			*(int*)0x01CC1078 = 0x40400000;//r_exposureValue
@@ -553,12 +511,10 @@ void Smokehandle()
 		}
 	}
 
-	if (menu->skyr)
-	{
+	if (menu->skyr) {
 		static int itick, iwait;
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
-		if (istate)
-		{
+		if (istate) {
 			if (sky_rotate >= 360)
 				sky_rotate - 360;
 			else
@@ -572,13 +528,10 @@ void Smokehandle()
 		}
 	}
 
-	if (menu->smokec)
-	{
+	if (menu->smokec) {
 		WriteMemory(0x009E50D0, &menu->skin, 16);
 		runoncexxx = true;
-	}
-	else if (!menu->smokec && runoncexxx)
-	{
+	} else if (!menu->smokec && runoncexxx) {
 		WriteMemory(0x009E50D0, &color(255, 255, 255, 255), 16);
 		runoncexxx = false;
 	}
@@ -587,13 +540,11 @@ void Smokehandle()
 int Material_RegisterHandle_t[2] = { 0x763220, TOC };
 Material* (*Material_RegisterHandle_f)(String material, int imageTrac, int r1) = (Material * (*)(String, int, int))Material_RegisterHandle_t;
 
-Material* Material_RegisterHandle(String material, int ImageTrac)
-{
+Material* Material_RegisterHandle(String material, int ImageTrac) {
 	return Material_RegisterHandle_f(material, ImageTrac, 0);
 }
 
-struct Glyph
-{
+struct Glyph {
 	unsigned __int16 letter;
 	char x0;
 	char y0;
@@ -607,16 +558,14 @@ struct Glyph
 };
 
 /* 1615 */
-struct KerningPairs
-{
+struct KerningPairs {
 	unsigned __int16 wFirst;
 	unsigned __int16 wSecond;
 	int iKernAmount;
 };
 
 /* 1616 */
-struct Font_s
-{
+struct Font_s {
 	const char* fontName;
 	int pixelHeight;
 	int isScalingAllowed;
@@ -704,8 +653,7 @@ void DrawShader(Vector2 Pos, float w, float h, float angle, color col, Material*
 	CG_DrawRotatedPic(menu->menux + Pos.x, menu->menuy + Pos.y, w, h, angle, col, material);
 }
 
-void DrawShader(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShader(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -715,8 +663,7 @@ void DrawShader(float x, float y, float w, float h, float angle, color col, Mate
 	CG_DrawRotatedPic(menu->menux + x, menu->menuy + y, w, h, angle, col, material);
 }
 
-void DrawShader3(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShader3(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -726,8 +673,7 @@ void DrawShader3(float x, float y, float w, float h, float angle, color col, Mat
 	CG_DrawRotatedPic(x, -99 + y, w, h, angle, col, material);
 }
 
-void DrawShaderUI(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShaderUI(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -737,8 +683,7 @@ void DrawShaderUI(float x, float y, float w, float h, float angle, color col, Ma
 	CG_DrawRotatedPicUI(x, y, w, h, angle, col, material);
 }
 
-void DrawShaderUI1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShaderUI1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -751,33 +696,28 @@ void DrawShaderUI1(float x, float y, float w, float h, float angle, color col, M
 int LiveStats_SetClanTagText_t[2] = { 0x5470D0, TOC };
 bool(*LiveStats_SetClanTagText_f)(int controllerIndex, char* clanTag) = (bool(*)(int, char*))LiveStats_SetClanTagText_t;
 
-bool LiveStats_SetClanTagText(int controllerIndex, char* clanTag)
-{
+bool LiveStats_SetClanTagText(int controllerIndex, char* clanTag) {
 	return LiveStats_SetClanTagText_f(controllerIndex, clanTag);
 }
 
-void ChangeClanTagPreGame(char* str)
-{
+void ChangeClanTagPreGame(char* str) {
 	LiveStats_SetClanTagText(0, str);
 }
 
-void I_ChangeClan()
-{
+void I_ChangeClan() {
 	char playerClan[50];
 	Com_Sprintf(playerClan, sizeof(playerClan), ";cmd userinfo \"\\clanAbbrev\\^%i\\name\\%s\\xuid\\%s", irand_(0, 8), 0x026C0658, 0x26C06E8);
 	Cbuf_AddText(playerClan);
 }
 
-void I_ChangeAdd()
-{
+void I_ChangeAdd() {
 	char playerClan1[50];
 	char str[] = "GenisysV3.4";
 	Com_Sprintf(playerClan1, sizeof(playerClan1), ";cmd userinfo \"\\clanAbbrev\\^%i\\name\\%s\\xuid\\%s", irand_(0, 8), str, 0x26C06E8);
 	Cbuf_AddText(playerClan1);
 }
 
-void I_ChangeAdd1()
-{
+void I_ChangeAdd1() {
 	char playerClan1[50];
 	char str[] = "discord.gg/r6WcW92g4h";
 	Com_Sprintf(playerClan1, sizeof(playerClan1), ";cmd userinfo \"\\clanAbbrev\\^%i\\name\\%s\\xuid\\%s", irand_(0, 8), str, 0x26C06E8);
@@ -785,22 +725,16 @@ void I_ChangeAdd1()
 }
 
 
-void Flash_name_()
-{
-	if (menu->flshname)
-	{
+void Flash_name_() {
+	if (menu->flshname) {
 		static int itick, iwait;
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
 		static bool runonce = false;
-		if (istate)
-		{
-			if (menu->bInGame)
-			{
+		if (istate) {
+			if (cl_ingame_()) {
 				runonce = false;
 				I_ChangeClan();
-			}
-			else
-			{
+			} else {
 				char Addver[100];
 
 				char* str;
@@ -810,9 +744,7 @@ void Flash_name_()
 					str = (char*)0x026C067F;
 					if (str[0] == '^')
 						str = (char*)(0x026C067F + 0x2);
-				}
-				else
-				{
+				} else {
 					str = (char*)0x026C0658;
 					if (str[0] == '^')
 						str = (char*)(0x026C0658 + 0x2);
@@ -823,8 +755,7 @@ void Flash_name_()
 				WriteMemory(0x026C0658, Addver, 32);
 				WriteMemory(0x026C067F, Addver, 32);
 
-				if (!runonce)
-				{
+				if (!runonce) {
 					ChangeClanTagPreGame("/0");
 					runonce = true;
 				}
@@ -835,21 +766,15 @@ void Flash_name_()
 	}
 }
 
-void Add_name_()
-{
-	if (menu->addname)
-	{
+void Add_name_() {
+	if (menu->addname) {
 		static int itick, iwait;
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
 
-		if (istate)
-		{
-			if (menu->bInGame)
-			{
+		if (istate) {
+			if (cl_ingame_()) {
 				I_ChangeAdd();
-			}
-			else
-			{
+			} else {
 				char Addver[32];
 				char str[] = "GenisysV3.4";
 				Com_Sprintf(Addver, sizeof(Addver), "^%i%s\0", irand_(0, 8), str);
@@ -861,21 +786,15 @@ void Add_name_()
 	}
 }
 
-void Add_name__()
-{
-	if (menu->addname1)
-	{
+void Add_name__() {
+	if (menu->addname1) {
 		static int itick, iwait;
 		bool istate = ((Sys_Milliseconds() - itick) > iwait);
 
-		if (istate)
-		{
-			if (menu->bInGame)
-			{
+		if (istate) {
+			if (cl_ingame_()) {
 				I_ChangeAdd1();
-			}
-			else
-			{
+			} else {
 				char Addver[256];
 				char str[] = "discord.gg/r6WcW92g4h";
 				Com_Sprintf(Addver, sizeof(Addver), "^%i%s\0", irand_(0, 8), str);
@@ -887,8 +806,7 @@ void Add_name__()
 	}
 }
 
-void DrawText(String text, Vector2 vec, float rotation, float scale, String font, color col, alignment align, bool active_)
-{
+void DrawText(String text, Vector2 vec, float rotation, float scale, String font, color col, alignment align, bool active_) {
 	String pszfont = R_GetFontPathFromName(font);
 	if (text == NULL) return;
 	int font_handle = R_RegisterFont(pszfont, 0);
@@ -905,8 +823,7 @@ void DrawText(String text, Vector2 vec, float rotation, float scale, String font
 		CL_DrawTextPhysicalWithEffects(text, 0x7FFFFFFF, font_handle, menu->menux + vec.x, menu->menuy + vec.y, 0, scale * 1.3, scale * 1.6, col, 3, color(0, 0, 0, 0), 0, 0, 0, 0, 0, 0);
 }
 
-void DrawTextWithEffects1(String text, float x, float y, float scale, color col, alignment align)
-{
+void DrawTextWithEffects1(String text, float x, float y, float scale, color col, alignment align) {
 	String Font = "extraSmallFont";
 	String pszfont = R_GetFontPathFromName(Font);
 
@@ -924,8 +841,7 @@ void DrawTextWithEffects1(String text, float x, float y, float scale, color col,
 	CL_DrawTextPhysicalWithEffects1(text, 0x7FFFFFFF, font_handle, menu->menux + x, menu->menuy + y, 0, scale * 1.3, scale * 1.6, col, 3, color(0, 0, 0, 0), 0, 0, 0, 0, 0, 0);
 }
 
-void DrawTextWithEffects(String text, float x, float y, float scale, color col, alignment align)
-{
+void DrawTextWithEffects(String text, float x, float y, float scale, color col, alignment align) {
 	String Font = "extraSmallFont";
 	String pszfont = R_GetFontPathFromName(Font);
 
@@ -943,8 +859,7 @@ void DrawTextWithEffects(String text, float x, float y, float scale, color col, 
 	CL_DrawTextPhysicalWithEffects(text, 0x7FFFFFFF, font_handle, menu->menux + x, menu->menuy + y, 0, scale * 1.3, scale * 1.6, col, 3, color(0, 0, 0, 0), 0, 0, 0, 0, 0, 0);
 }
 
-void DrawTextWithEffectsUI(String text, float x, float y, float scale, color col, alignment align)
-{
+void DrawTextWithEffectsUI(String text, float x, float y, float scale, color col, alignment align) {
 	String Font = "extraSmallFont";
 	String pszfont = R_GetFontPathFromName(Font);
 
@@ -962,8 +877,7 @@ void DrawTextWithEffectsUI(String text, float x, float y, float scale, color col
 	CL_DrawTextPhysicalWithEffectsUI(text, 0x7FFFFFFF, font_handle, x, y, 0, scale * 1.3, scale * 1.6, col, 3, color(0, 0, 0, 0), 0, 0, 0, 0, 0, 0);
 }
 
-void DrawTextWithEffectsUI1(String text, float x, float y, float scale, color col, alignment align)
-{
+void DrawTextWithEffectsUI1(String text, float x, float y, float scale, color col, alignment align) {
 	String Font = "extraSmallFont";
 	String pszfont = R_GetFontPathFromName(Font);
 
@@ -981,8 +895,7 @@ void DrawTextWithEffectsUI1(String text, float x, float y, float scale, color co
 	CL_DrawTextPhysicalWithEffectsUI1(text, 0x7FFFFFFF, font_handle, x, y, 0, scale * 1.3, scale * 1.6, col, 3, color(0, 0, 0, 0), 0, 0, 0, 0, 0, 0);
 }
 
-void DrawTextUI(String text, float x, float y, float rotation, float scale, String font, color col, alignment align)
-{
+void DrawTextUI(String text, float x, float y, float rotation, float scale, String font, color col, alignment align) {
 	String pszfont = R_GetFontPathFromName(font);
 	if (text == NULL) return;
 	int font_handle = R_RegisterFont(pszfont, 0);
@@ -996,8 +909,7 @@ void DrawTextUI(String text, float x, float y, float rotation, float scale, Stri
 	DrawTextWithEffectsUI(text, x, y, scale, col, align);
 }
 
-void DrawTextUI1(String text, float x, float y, float rotation, float scale, String font, color col, alignment align)
-{
+void DrawTextUI1(String text, float x, float y, float rotation, float scale, String font, color col, alignment align) {
 	String pszfont = R_GetFontPathFromName(font);
 	if (text == NULL) return;
 	int font_handle = R_RegisterFont(pszfont, 0);
@@ -1011,8 +923,7 @@ void DrawTextUI1(String text, float x, float y, float rotation, float scale, Str
 	DrawTextWithEffectsUI1(text, x, y, scale, col, align);
 }
 
-void DrawShader1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShader1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1024,8 +935,7 @@ void DrawShader1(float x, float y, float w, float h, float angle, color col, Mat
 	//CG_DrawRotatedPicPhysical(x, y, w, h, col, angle, material, imagetrac);
 }
 
-void DrawShaderEsp(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShaderEsp(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1037,8 +947,7 @@ void DrawShaderEsp(float x, float y, float w, float h, float angle, color col, M
 
 }
 
-void DrawShaderEsp1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawShaderEsp1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1051,8 +960,7 @@ void DrawShaderEsp1(float x, float y, float w, float h, float angle, color col, 
 }
 
 
-void DrawShaderP(float x, float y, float w, float h, float angle, color col, pvoid material, alignment align)
-{
+void DrawShaderP(float x, float y, float w, float h, float angle, color col, pvoid material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1064,8 +972,7 @@ void DrawShaderP(float x, float y, float w, float h, float angle, color col, pvo
 	//CG_DrawRotatedPicPhysical(x, y, w, h, col, angle, material, imagetrac);
 }
 
-void DrawShaderPP(float x, float y, float w, float h, float angle, color col, pvoid material, alignment align)
-{
+void DrawShaderPP(float x, float y, float w, float h, float angle, color col, pvoid material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1077,8 +984,7 @@ void DrawShaderPP(float x, float y, float w, float h, float angle, color col, pv
 	//CG_DrawRotatedPicPhysical(x, y, w, h, col, angle, material, imagetrac);
 }
 
-void DrawBorderBox(float x, float y, float w, float h, color bboxcolor, color bbordercolor, drawTypes drawtype)
-{
+void DrawBorderBox(float x, float y, float w, float h, color bboxcolor, color bbordercolor, drawTypes drawtype) {
 	/// background
 	DrawShader(x, y, w, h, 0, bboxcolor, white, align_left);
 	/// sides ( L / R )
@@ -1091,8 +997,7 @@ void DrawBorderBox(float x, float y, float w, float h, color bboxcolor, color bb
 		DrawShader(x - 1, y + h, w + 2, 1, 0, bbordercolor, white, align_left);
 }
 
-void DrawShader(float x, float y, float w, float h, color bg, color bd, int drawtype)
-{
+void DrawShader(float x, float y, float w, float h, color bg, color bd, int drawtype) {
 	// main background
 	DrawShader(x, y, w, h, 0, bg, white, align_left);
 	// Left / Right
@@ -1106,41 +1011,35 @@ void DrawShader(float x, float y, float w, float h, color bg, color bd, int draw
 		DrawShader(x - 1, y + h - 1, w + 2, 2, 0, bd, white, align_left);
 }
 
-float DrawTextWithBackground(String text, float x, float y, float scale, color textColor, color backgroundColor, alignment align)
-{
+float DrawTextWithBackground(String text, float x, float y, float scale, color textColor, color backgroundColor, alignment align) {
 	float start_w = 10, start_h = 20;
 	String pszfont = R_GetFontPathFromName("extraSmallFont");
 
 	int text_w = R_TextWidth(text, pszfont, scale * 1.4) + start_w;
 	int text_h = R_TextHeight(pszfont, scale * 1.4) + start_h;
 
-	if (align == align_left)
-	{
+	if (align == align_left) {
 		DrawShader(x, y, text_w, text_h, 0, backgroundColor, white, align_left);
 		DrawText(text, Vector2(x + (start_w / 2), y - (start_h / 4) + text_h), 0, scale, "extraSmallFont", textColor, align_left, 1);
 	}
-	if (align == align_center)
-	{
+	if (align == align_center) {
 		DrawShader(x - (text_w / 2), y, text_w, text_h, 0, backgroundColor, white, align_left);
 		DrawText(text, Vector2(x - (text_w / 2) + (start_w / 2), y - (start_h / 2) + text_h), 0, scale, "extraSmallFont", textColor, align_left, 1);
 	}
-	if (align == align_right)
-	{
+	if (align == align_right) {
 		DrawShader(x - (text_w), y, text_w, text_h, 0, backgroundColor, white, align_left);
 		DrawText(text, Vector2(x - (text_w)+(start_w / 2), y - (start_h / 2) + text_h), 0, scale, "extraSmallFont", textColor, align_left, 1);
 	}
 	return text_h;	// height of everything
 }
 
-void DrawBorderBox(float x, float y, float w, float h, color bboxcolor, color bbordercolor, color bbordercolor2)
-{
+void DrawBorderBox(float x, float y, float w, float h, color bboxcolor, color bbordercolor, color bbordercolor2) {
 	DrawShaderUI(x - 1, y - 2, w + 2, h + 4, 0, bbordercolor, gradient_fadein, align_left);
 	DrawShaderUI(x - 1, y - 2, w + 2, h + 4, 180, bbordercolor2, gradient_fadein, align_left);
 	DrawShaderUI(x, y, w, h, 0, bboxcolor, white, align_left);
 }
 
-void DrawHaxShader(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawHaxShader(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1150,8 +1049,7 @@ void DrawHaxShader(float x, float y, float w, float h, float angle, color col, M
 	R_AddCmdDrawStretchPicRotateSTInternal1(menu->menux + x, (dc.height > 720) ? menu->menuy + dc.height - dc.height + y : (menu->menuy / 1.27f) + y / (dc.aspect - menu->menusize), w, (dc.height > 720) ? h : h / (dc.aspect - menu->menusize), 1, 1, 1, 1, 1, angle, (float*)&col, material);
 }
 
-void DrawHaxShader3(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawHaxShader3(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1161,8 +1059,7 @@ void DrawHaxShader3(float x, float y, float w, float h, float angle, color col, 
 	R_AddCmdDrawStretchPicRotateSTInternal1(x, (dc.height > 720) ? -99 + dc.height - dc.height + y : (-99 / 1.27f) + y / (dc.aspect - menu->menusize), w, (dc.height > 720) ? h : h / (dc.aspect - menu->menusize), 1, 1, 1, 1, 1, angle, (float*)&col, material);
 }
 
-void DrawHaxStaticShader(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawHaxStaticShader(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1172,8 +1069,7 @@ void DrawHaxStaticShader(float x, float y, float w, float h, float angle, color 
 	R_AddCmdDrawStretchPicRotateSTInternal(x, y, w, h, 1, 1, 1, 1, 1, angle, (float*)&col, material);
 }
 
-void DrawHaxStaticShader2(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawHaxStaticShader2(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1184,8 +1080,7 @@ void DrawHaxStaticShader2(float x, float y, float w, float h, float angle, color
 }
 
 float spin1, spin2;
-void DrawOutline(float x, float y, float width, float height, color colorr, int thickness, alignment ali)
-{
+void DrawOutline(float x, float y, float width, float height, color colorr, int thickness, alignment ali) {
 	DrawShader(x, y - thickness + 4, width + (thickness * 2.1) - 2, 1.5, 0, color(10, 10, 10, 255), white, ali); // Top
 	DrawShader(x, y + height - 2, width + (thickness * 2.1) - 2, 1.5, 0, color(10, 10, 10, 255), white, ali); // Bottem
 
@@ -1194,11 +1089,13 @@ void DrawOutline(float x, float y, float width, float height, color colorr, int 
 	DrawShader((x + width - 1) - (menu->msize / 2), y - thickness + 2, thickness - 1, menu->sypos1 + 55, 0, color(10, 10, 10, 255), white, ali); // Right top down
 	DrawShader((x + width - 1) - (menu->msize / 2), y + menu->sypos1 + 85, thickness - 1, height - menu->sypos1 - 86, 0, color(10, 10, 10, 255), white, ali); // Right bottem up
 
-	//Draw scrollbar
-	DrawShader(x - 1, y + 60 + (Mshit.scroll[Mshit.id] * 30) - 5, width + 1, 2.1, 0, menu->skin4, gradient_fadein, ali);// Scroll top
-	DrawShader(x - 1, y + 60 + (Mshit.scroll[Mshit.id] * 30) - 5, width + 1, 2.1, 180, menu->skin6, gradient_fadein, ali); // Scroll top
-	DrawShader(x - 1, y + 60 + (Mshit.scroll[Mshit.id] * 30) + 24, width + 2, 2.1, 180, menu->skin5, gradient_fadein, ali); // Scroll bottem
-	DrawShader(x - 1, y + 60 + (Mshit.scroll[Mshit.id] * 30) + 24, width + 2, 2.1, 0, menu->skin3, gradient_fadein, ali); // Scroll bottem
+	if (Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.scroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		//Draw scrollbar
+		DrawShader(x - 1, y + 60 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) - 5, width + 1, 2.1, 0, menu->skin4, gradient_fadein, ali);// Scroll top
+		DrawShader(x - 1, y + 60 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) - 5, width + 1, 2.1, 180, menu->skin6, gradient_fadein, ali); // Scroll top
+		DrawShader(x - 1, y + 60 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) + 24, width + 2, 2.1, 180, menu->skin5, gradient_fadein, ali); // Scroll bottem
+		DrawShader(x - 1, y + 60 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) + 24, width + 2, 2.1, 0, menu->skin3, gradient_fadein, ali); // Scroll bottem
+	}
 
 	//Draw border
 	DrawShader(x, y - thickness, width + (thickness * 2.1) - 2, thickness + 1, 180, menu->skin6, gradient_fadein, ali); // Top>
@@ -1213,8 +1110,7 @@ void DrawOutline(float x, float y, float width, float height, color colorr, int 
 	DrawHaxShader((x + width) - (menu->msize / 2) + 1, y - thickness, thickness, height + (thickness * 2) - 2 / 2, -90, menu->skin3, gradient_fadein, ali); // Right<
 }
 
-void DrawStaticOutline(float x, float y, float width, float height, color color1, color color2, float thickness)
-{
+void DrawStaticOutline(float x, float y, float width, float height, color color1, color color2, float thickness) {
 	DrawShaderUI1(x - thickness, y - thickness, width + (thickness * 2), thickness, 180, menu->skin6, gradient_fadein, align_left); // Top>
 	DrawShaderUI1(x - thickness, y - thickness, width + (thickness * 2), thickness, 0, menu->skin4, gradient_fadein, align_left); // Top<
 	DrawShaderUI1(x - thickness - 1, y + height, width + (thickness * 2) + 1, thickness, 0, menu->skin3, gradient_fadein, align_left); // Bottom>
@@ -1225,8 +1121,7 @@ void DrawStaticOutline(float x, float y, float width, float height, color color1
 	DrawHaxStaticShader(x + width, y - thickness, thickness + 1, height + (thickness * 2), -90, menu->skin3, gradient_fadein, align_left); // Right<
 }
 
-void DrawHaxStaticShader1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align)
-{
+void DrawHaxStaticShader1(float x, float y, float w, float h, float angle, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1236,8 +1131,7 @@ void DrawHaxStaticShader1(float x, float y, float w, float h, float angle, color
 	R_AddCmdDrawStretchPicRotateSTInternal(menu->menux + x, menu->menuy + y, w, h, 1, 1, 1, 1, 1, angle, (float*)&col, material);
 }
 
-void DrawHaxStaticShaderSpin(float x, float y, float w, float h, float angle, float s, color col, Material* material, alignment align)
-{
+void DrawHaxStaticShaderSpin(float x, float y, float w, float h, float angle, float s, color col, Material* material, alignment align) {
 	if (align & align_left)
 		x = x;
 	if (align & align_right)
@@ -1247,8 +1141,7 @@ void DrawHaxStaticShaderSpin(float x, float y, float w, float h, float angle, fl
 	R_AddCmdDrawStretchPicRotateSTInternal(x, y, w, h, 1, 1, 1, 1, 1, angle, (float*)&col, material);
 }
 
-void DrawStaticOutline1(float x, float y, float width, float height, color color1, int thickness)
-{
+void DrawStaticOutline1(float x, float y, float width, float height, color color1, int thickness) {
 	DrawShader3(x - thickness, y - thickness - 2, width + (thickness * 2.1), thickness, 180, menu->skin6, gradient_fadein, align_left); // Top>
 	DrawShader3(x - thickness, y - thickness - 2, width + (thickness * 2.1), thickness, 0, menu->skin4, gradient_fadein, align_left); // Top<
 	DrawShader3(x - thickness, y + height - 1, width + (thickness * 2.1), thickness, 0, menu->skin3, gradient_fadein, align_left); // Bottom>
@@ -1259,27 +1152,23 @@ void DrawStaticOutline1(float x, float y, float width, float height, color color
 	DrawHaxShader3(x + width, y - thickness, thickness, height + (thickness * 2) - 2 / 2, -90, menu->skin3, gradient_fadein, align_left); // Right<
 }
 
-float DrawTextWithBackground_UI(String text, float x, float y, float scale, color textColor, color backgroundColor, color backgroundColor1, alignment align)
-{
+float DrawTextWithBackground_UI(String text, float x, float y, float scale, color textColor, color backgroundColor, color backgroundColor1, alignment align) {
 	float start_w = 10, start_h = (dc.height > 720) ? 20 : 10;
 	String pszfont = R_GetFontPathFromName("extraSmallFont");
 	int text_w = R_TextWidth(text, pszfont, scale * 1.3) + start_w;
 	int text_h = R_TextHeight(pszfont, scale) + start_h;
 
-	if (align == align_left)
-	{
+	if (align == align_left) {
 		DrawStaticOutline(x, y, text_w, (dc.height > 720) ? start_h - 5 : start_h + 16, backgroundColor, menu->skin2, 2);
 		DrawShaderUI1(x, y, text_w, (dc.height > 720) ? start_h - 5 : start_h + 16, 0, backgroundColor1, white, align_left);
 		DrawTextUI1(text, x + (start_w / 2), (dc.height > 720) ? y - (start_h)+text_h + 5 : y - (start_h / 4) + text_h + 6, 0, scale, "extraSmallFont", textColor, align_left);
 	}
-	if (align == align_center)
-	{
+	if (align == align_center) {
 		DrawStaticOutline(x - (text_w / 2), y, text_w, (dc.height > 720) ? start_h - 5 : start_h + 16, backgroundColor, menu->skin2, 2);
 		DrawShaderUI1(x - (text_w / 2), y, text_w, (dc.height > 720) ? start_h - 5 : start_h + 16, 0, backgroundColor1, white, align_left);
 		DrawTextUI1(text, x - (text_w / 2) + (start_w / 2), (dc.height > 720) ? y - (start_h) : y - (start_h / 2) + text_h, 0, scale, "extraSmallFont", textColor, align_left);
 	}
-	if (align == align_right)
-	{
+	if (align == align_right) {
 		DrawStaticOutline(x - (text_w), y, text_w, (dc.height > 720) ? start_h - 5 : start_h + 16, backgroundColor, menu->skin2, 2);
 		DrawShaderUI1(x - (text_w), y, text_w, (dc.height > 720) ? start_h - 5 : start_h + 16, 0, backgroundColor1, white, align_left);
 		DrawTextUI1(text, x - (text_w)+(start_w / 2), (dc.height > 720) ? y - (start_h)+text_h + 5 : y - (start_h / 4) + text_h + 6, 0, scale, "extraSmallFont", textColor, align_left);
@@ -1287,8 +1176,7 @@ float DrawTextWithBackground_UI(String text, float x, float y, float scale, colo
 	return (dc.height > 720) ? start_h - 9 : start_h + 15;	// height of everything
 }
 
-void StealName(int clientNum)
-{
+void StealName(int clientNum) {
 	char playerName[256];
 	if (clientNum == cg->clientNum)
 		snprintf(playerName, sizeof(playerName), ";cmd userinfo \"\\name\\%s\\xuid\\%s", 0x1F504DC, 0x26C06E8);
@@ -1310,20 +1198,18 @@ void closedpartybypass(bool toggle) {
 		WriteMemory(0x533948, closeoff, 2);
 		WriteMemory(0x53391C, closeoff, 2);
 		WriteMemory(0x53394C, closeoff, 2);
-	}
-	else {
+	} else {
 		WriteMemory(0x521C38, closeon, 1);
 	}
 }
 
 CellFsErrno ReadAsset(const char* path, void* data, size_t size) {
-	
+
 	auto permission = cellFsChmod(path, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
-	
+
 	int fd = 0;
 	CellFsErrno error = cellFsOpen(path, CELL_FS_O_RDONLY, &fd, NULL, 0);
 
@@ -1354,9 +1240,8 @@ GfxImage* ReadAssetGFX(std::string str) {
 }
 
 CellFsErrno WriteAsset(const char* path, void* data, size_t size) {
-	auto permission = cellFsChmod(path,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(path, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 
@@ -1388,19 +1273,16 @@ void local_command_config(int localClientNum, const wchar_t* wstr, unsigned int 
 		SaveToIniFile(FileName);
 		ProcessConfig();
 		Mshit.ch = "Status: ^2Config Created";
-	}
-	else {
+	} else {
 		Mshit.ch = "Status: ^1Config Already Exists";
 	}
 }
 
-void CreateConfig()
-{
+void CreateConfig() {
 	XShowKeyboardUI(0, L"Name Your Custom Config", L"Custom Config #1", 30, local_command_config, 0);
 }
 
-void DelConfig()
-{
+void DelConfig() {
 	char FileName[100];
 	const char* FilePath = "/dev_hdd0/tmp/Genisys/";
 	Com_Sprintf(FileName, sizeof(FileName), "%s%s", FilePath, Ini.Name);
@@ -1431,8 +1313,7 @@ void iload() {
 	noshit();
 }
 
-void* Memcp__(void* dst0, const void* src0, size_t len0)
-{
+void* Memcp__(void* dst0, const void* src0, size_t len0) {
 	char* dst = (char*)dst0;
 	char* src = (char*)src0;
 	void* save = dst0;
@@ -1443,27 +1324,23 @@ void* Memcp__(void* dst0, const void* src0, size_t len0)
 
 asset assets;
 char array_[0x8] = { 0x62, 0x1E, 0xF4, 0xEF, 0x25, 0x21, 0x93, 0x23 };
-void loadcamo(String camo)
-{
+void loadcamo(String camo) {
 	ReadAsset(camo, &assets.Weaponized_asset, 0x155E0);
 }
 
-void loadgp()
-{
+void loadgp() {
 	char boolBuff[255];
 	snprintf(boolBuff, sizeof(boolBuff), "/dev_hdd0/tmp/Genisys/Custom_Camos/Gp.gen");
 	ReadAsset(boolBuff, &assets.gp, 2048);
 }
 
-void loadchck()
-{
+void loadchck() {
 	char boolBuff[255];
 	snprintf(boolBuff, sizeof(boolBuff), "/dev_hdd0/tmp/Genisys/Custom_Camos/loadchck.gen");
 	//ReadAsset(boolBuff, &assets.Chck, 1024);
 }
 
-void load_Asset(String camo, int address, void* data)
-{
+void load_Asset(String camo, int address, void* data) {
 	char boolBuff[255];
 	snprintf(boolBuff, sizeof(boolBuff), "/dev_hdd0/tmp/Genisys/Custom_Camos/%s.gen", camo);
 	ReadAsset(boolBuff, data, sizeof(data));
@@ -1471,9 +1348,8 @@ void load_Asset(String camo, int address, void* data)
 
 int getFileSize(char* file) {
 
-	auto permission = cellFsChmod(file,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(file, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 
@@ -1495,9 +1371,8 @@ int getFileSize(char* file) {
 void readFile(char* file, char buf[], int size) {
 
 
-	auto permission = cellFsChmod(file,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(file, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 
@@ -1507,19 +1382,16 @@ void readFile(char* file, char buf[], int size) {
 	uint64_t pos;
 	uint64_t nread;
 	ret = cellFsOpen(file, 0, &fd, NULL, 0);
-	if (!ret)
-	{
+	if (!ret) {
 		cellFsLseek(fd, 0, CELL_FS_SEEK_SET, &pos);
 		ret = cellFsRead(fd, buf, size, &nread);
-		if (!ret)
-		{
+		if (!ret) {
 			cellFsClose(fd);
 		}
 	}
 }
 
-bool CScr_GetInKillcam(cg_s* pcg)
-{
+bool CScr_GetInKillcam(cg_s* pcg) {
 	if (cg != NULL)
 		return (*(int*)(&cg + 0x69C68) == 1);
 	else
@@ -1530,8 +1402,7 @@ int __cdecl DB_FindXAssetHeader(XAssetType type, String name, bool errorIfMissin
 	//Invoke<int>(0x18ac04, type, name, errorIfMissing, waitTime);
 }
 
-struct ScriptParseTree
-{
+struct ScriptParseTree {
 	const char* name;
 	int len;
 	char* buffer;
@@ -1549,17 +1420,14 @@ void InjectCustomGSC() {
 		int filePointer = (int)&scriptFile->buffer;
 
 		WriteMemory(filePointer, (char*)0x10040000, 4);
-	}
-	else {
+	} else {
 	}
 }
 
-bool isHostMigrating()
-{
+bool isHostMigrating() {
 	if ((ClientUIActive_s->migrationState == CMSTATE_INACTIVE || ClientUIActive_s->migrationState == CMSTATE_OLDHOSTLEAVING || ClientUIActive_s->migrationState == CMSTATE_LIMBO || ClientUIActive_s->migrationState == CMSTATE_NEWHOSTCONNECT)) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
@@ -1567,27 +1435,22 @@ bool isHostMigrating()
 int CL_AllLocalClientsDisconnected_t[2] = { 0x6C2488, TOC };
 bool (*CL_AllLocalClientsDisconnected)() = (decltype(CL_AllLocalClientsDisconnected))CL_AllLocalClientsDisconnected_t;
 
-bool InGame()
-{
+bool InGame() {
 	return CL_AllLocalClientsDisconnected() == 0;
 }
 
 int SV_IsMigrating_t[2] = { 0x03514f8, TOC };
 bool (*SV_IsMigrating)() = (decltype(SV_IsMigrating))SV_IsMigrating_t;
 
-int CL_GetLocalClientMigrationState(int localClientNum)
-{
+int CL_GetLocalClientMigrationState(int localClientNum) {
 	return *reinterpret_cast<int*>(0xF0F88C + (localClientNum * 0x458));
 }
 
-bool cl_ingame_()
-{
-	if (CL_AllLocalClientsDisconnected() == 0 && !SV_IsMigrating() && CL_GetLocalClientMigrationState(0) == CMSTATE_INACTIVE)
-	{
-		if (*(int*)0x06c2488 == false) {
+bool cl_ingame_() {
+	if (CL_AllLocalClientsDisconnected() == 0 && !SV_IsMigrating() && CL_GetLocalClientMigrationState(0) == CMSTATE_INACTIVE) {
+		if (*(int*)0x0F0F88C != 0)
 			return false;
-		}
-
+		
 		if (menu->bdisconnect) {
 			menu->fpssaving = false;
 			return false;
@@ -1602,8 +1465,7 @@ bool cl_ingame_()
 			return false;
 		}
 
-		if ((*(bool*)(0x01cb68d8) && (*(int*)(0xE22F18) > 0 && *(int*)(0xE22F1C) > 0 && *(int*)(0xE22F20) && *(int*)(0xD689D8) > 0) && centity != NULL) && cg->serverTime > 0 && cg->playerstate.commandTime > 0)
-		{
+		if ((*(bool*)(0x01cb68d8) && (*(int*)(0xE22F18) > 0 && *(int*)(0xE22F1C) > 0 && *(int*)(0xE22F20) && *(int*)(0xD689D8) > 0) && centity != NULL) && cg->serverTime > 0 && cg->playerstate.commandTime > 0) {
 			return true;
 		}
 	}
@@ -1612,9 +1474,6 @@ bool cl_ingame_()
 }
 
 void Global_Ingame() {
-
-	menu->bInGame = cl_ingame_();
-
 	if (*(bool*)(0x01cb68d8) == false) {
 
 		menu->bdisconnect = false;
@@ -1625,8 +1484,7 @@ void Global_Ingame() {
 int CG_CycleWeapon_t[2] = { 0xF6D34, TOC };
 void(*CG_CycleWeapon_f)(int localClientNum, int cycleForward) = (void(*)(int localClientNum, int cycleForward))CG_CycleWeapon_t;
 
-void CG_CycleWeapon(int localClientNum, int cycleForward)
-{
+void CG_CycleWeapon(int localClientNum, int cycleForward) {
 	CG_CycleWeapon_f(localClientNum, cycleForward);
 }
 
@@ -1637,13 +1495,11 @@ int BG_GetClipSize(int Weapon) {
 	return BG_GetClipSize_f(Weapon);
 }
 
-void Cancel_Reload()
-{
+void Cancel_Reload() {
 	playerState_s* playerState = CG_GetPredictedPlayerState(0);
 	if (playerState->weaponDelay != 0 && playerState->weaponTime != 0) {
 		bot.reload.bReloading = true;
-	}
-	else {
+	} else {
 
 		if (bot.reload.bReloading) {
 			int ammo = BG_GetAmmoInClip(playerState, playerState->weapon);
@@ -1658,19 +1514,16 @@ void Cancel_Reload()
 }
 
 
-bool CG_VisionSetStartLerp_To(int localClientNum, visionSetMode_t mode, visionSetLerpStyle_t style, const char* nameTo, int duration)
-{
+bool CG_VisionSetStartLerp_To(int localClientNum, visionSetMode_t mode, visionSetLerpStyle_t style, const char* nameTo, int duration) {
 	//return Invoke<bool>(0xDB698, localClientNum, mode, style, nameTo, duration);
 }
 
-void CScr_VisionSetNaked()
-{
+void CScr_VisionSetNaked() {
 	int dur = floorf((1 * 1000) + .5);
 	//CG_VisionSetStartLerp_To(0, VISIONSETMODE_FLARE, VISIONSETLERP_TO_SMOOTH, "remote_mortar_enhanced", dur);
 }
 
-void disableDLC(bool* rs)
-{
+void disableDLC(bool* rs) {
 	*rs = !*rs;
 	//*(int*)0x01aadab8 = *rs ? 0x00 : 0x04;//dlc0 : NukeTown
 	*(int*)0x01aadbd8 = *rs ? 0x00 : 0x20;//dlc1 : Revolution
@@ -1709,8 +1562,7 @@ void WriteAsset(String Replace, String Image, int Delay) {
 int BG_UsingVehicleWeapon_t[2] = { 0x5F24AC, TOC };
 int(*BG_UsingVehicleWeapon_f)(playerState_s* ps) = (int(*)(playerState_s*))BG_UsingVehicleWeapon_t;
 
-int BG_UsingVehicleWeapon(playerState_s* ps)
-{
+int BG_UsingVehicleWeapon(playerState_s* ps) {
 	return BG_UsingVehicleWeapon_f(ps);
 }
 
@@ -1724,8 +1576,7 @@ void PartyTime() {
 		*(char*)0x5359FC = 0x60;
 		strcpy((char*)0x96EC34, "Accept to Join...");
 		strcpy((char*)0x096ec4c, "Accept invite to join the user");
-	}
-	else {
+	} else {
 		*(char*)0x535CEB = 0x80;
 		*(char*)0x535D67 = 0x90;
 		*(char*)0x5359FC = 0x90;
@@ -1743,8 +1594,7 @@ void PartyTime() {
 		memcpy((char*)0x53391C, array, 4);
 		memcpy((char*)0x53394C, array, 4);
 		memcpy((char*)0x533988, array, 4);
-	}
-	else {
+	} else {
 		*(char*)0x521C38 = 0x88;
 	}
 }
@@ -1777,9 +1627,8 @@ GfxImage* ReadAsset(std::string str) {
 
 char* ReadAssetFromFile(const char* path) {
 
-	auto permission = cellFsChmod(path,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(path, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 
@@ -1821,9 +1670,8 @@ void WriteAsset(std::string Replace, std::string Image, int Delay) {
 
 char* ReadAssetFromFile1(const char* path) {
 
-	auto permission = cellFsChmod(path,CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-	if (permission != 0)
-	{
+	auto permission = cellFsChmod(path, CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+	if (permission != 0) {
 		printf("perm: 0x%X\n", permission);
 	}
 
@@ -1879,8 +1727,7 @@ int Scr_FreeThread_t[2] = { 0x004A2FCC, TOC };
 void (*Scr_FreeThread)(int inst, unsigned short handle) = (decltype(Scr_FreeThread))&Scr_FreeThread_t;
 
 uint32_t nuke_det_script = Scr_GetFunctionHandle(0, "maps/mp/mp_nuketown_2020", "nuke_detonation", 0, true);
-void execThread(int32_t handle, uint32_t paramCount)
-{
+void execThread(int32_t handle, uint32_t paramCount) {
 	uint16_t tid = Scr_ExecThread(0, handle, paramCount);
 	Scr_FreeThread(0, tid);
 }
@@ -1897,8 +1744,7 @@ std::vector<std::string> split(std::string s, std::string del) {
 	return splits;
 }
 
-void test69()
-{
+void test69() {
 	execThread(nuke_det_script, 0);
 }
 
@@ -1908,105 +1754,19 @@ bool(*zombiecheck)() = (bool(*)())zombiecheck_t;
 int SV_GameSendServerCommand_t[2] = { 0x349F6C, TOC };
 void(*SV_GameSendServerCommand_f)(int r1, int r2, char* r3) = (void(*)(int, int, char*))SV_GameSendServerCommand_t;
 
-void SV_GameSendServerCommand(char* bufferd)
-{
+void SV_GameSendServerCommand(char* bufferd) {
 	char buffer[100];
 	Com_Sprintf(buffer, sizeof(buffer), "; \"%s\"", bufferd);
 	SV_GameSendServerCommand_f(-1, 1, buffer);
 }
 
-//void GiveGmod()
-//{
-//	char boolBuff[100];
-//	snprintf(boolBuff, sizeof(boolBuff), "%c \"%s\"", 79, !local->clientszm[Mshit.scroll[ID_PLAYERS]] ? "GodMode ^2ON" : "GodMode ^1OFF");
-//	SV_GameSendServerCommand_f(Mshit.scroll[ID_PLAYERS], 0, boolBuff);//SV_GameSendServerCommand
-//
-//	if (!local->clientszm[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		PlayerCmd_EnableInvulnerability(Mshit.scroll[ID_PLAYERS]);
-//		local->clientszm[Mshit.scroll[ID_PLAYERS]] = true;
-//	}
-//
-//	else if (local->clientszm[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		PlayerCmd_disableinvulnerability(Mshit.scroll[ID_PLAYERS]);
-//		local->clientszm[Mshit.scroll[ID_PLAYERS]] = false;
-//	}
-//}
-//
-//void Toggle_Infammo()
-//{
-//	local->infammo[Mshit.scroll[ID_PLAYERS]] = !local->infammo[Mshit.scroll[ID_PLAYERS]];
-//	char boolBuff[100];
-//	snprintf(boolBuff, sizeof(boolBuff), "%c \"%s\"", 79, local->infammo[Mshit.scroll[ID_PLAYERS]] ? "Unlimited Ammo ^2ON" : "Unlimited Ammo ^1OFF");
-//	SV_GameSendServerCommand_f(Mshit.scroll[ID_PLAYERS], 0, boolBuff);//SV_GameSendServerCommand
-//}
-//
-//int G_InitializeAmmo_t[2] = { 0x1E6698, TOC };
-//void(*G_InitializeAmmo_f)(gentity_s* pSelf, __int32 weapon, char weaponModel, int hadWeapon) = (void(*)(gentity_s*, __int32, char, int hadWeapon))G_InitializeAmmo_t;
-//
-//void G_InitializeAmmo(gentity_s* pSelf, __int32 weapon, char weaponModel, int hadWeapon)
-//{
-//	G_InitializeAmmo_f(pSelf, weapon, weaponModel, hadWeapon);
-//}
-//
-//void GiveInfammo()
-//{
-//	if (local->infammo[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		*(int*)(0x01781350 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 999;
-//		*(int*)(0x01781354 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 999;
-//		*(int*)(0x01781358 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 999;
-//		*(int*)(0x0178135c + Mshit.scroll[ID_PLAYERS] * 0x5808) = 999;
-//		*(int*)(0x01781360 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 999;
-//	}
-//}
-//
-//void GiveAllPerks()
-//{
-//	if (!local->allperks[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		*(int64_t*)(0x1781470 + Mshit.scroll[ID_PLAYERS] * 0x5808) = -1;
-//		local->allperks[Mshit.scroll[ID_PLAYERS]] = true;
-//	}
-//	else if (local->allperks[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		*(int64_t*)(0x1781470 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 1;
-//		local->allperks[Mshit.scroll[ID_PLAYERS]] = false;
-//	}
-//	char boolBuff[100];
-//	snprintf(boolBuff, sizeof(boolBuff), "%c \"%s\"", 79, local->allperks[Mshit.scroll[ID_PLAYERS]] ? "All Perks ^2ON" : "All Perks ^1OFF");
-//	SV_GameSendServerCommand_f(Mshit.scroll[ID_PLAYERS], 0, boolBuff);//SV_GameSendServerCommand
-//}
-//
-//void Givemaxpoints()
-//{
-//	if (!local->maxpoints[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		*(int*)(0x01786500 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 1000000;
-//		local->maxpoints[Mshit.scroll[ID_PLAYERS]] = true;
-//	}
-//	else if (local->maxpoints[Mshit.scroll[ID_PLAYERS]])
-//	{
-//		*(int*)(0x1786501 + Mshit.scroll[ID_PLAYERS] * 0x5808) = 1;
-//		local->maxpoints[Mshit.scroll[ID_PLAYERS]] = false;
-//	}
-//	char boolBuff[100];
-//	snprintf(boolBuff, sizeof(boolBuff), "%c \"%s\"", 79, local->maxpoints[Mshit.scroll[ID_PLAYERS]] ? "Max Points ^2ON" : "Max Points ^1OFF");
-//	SV_GameSendServerCommand_f(Mshit.scroll[ID_PLAYERS], 0, boolBuff);//SV_GameSendServerCommand
-//}
-//
-
-
 int UI_OpenToastPopup_t[2] = { 0x003779EC, TOC };
 
 void* (*UI_OpenToastPopup)(int localClientNum, const char* toastPopupIconName, const char* toastPopupTitle, const char* toastPopupDesc, int toastPopupDuration) = (void* (*)(int, const char*, const char*, const char*, int)) & UI_OpenToastPopup_t;
 
-
 bool isNumericChar(char x) {
 	return (x >= '0' && x <= '9') ? true : false;
 }
-
 
 int _atoi(const char* str) {
 	if (*str == NULL)
@@ -2022,8 +1782,7 @@ int _atoi(const char* str) {
 	}
 	for (; str[i] != '\0'; ++i) {
 		if (!isNumericChar(str[i] & 0xFFFFFFFFF)) {
-		}
-		else {
+		} else {
 			res = res * 10 + str[i] - '0';
 		}
 	}
@@ -2047,30 +1806,26 @@ float AngleNormalize180(float angle) {
 	return angle;
 }
 
-float EntityInterpolation(trajectory_t* trajectory, int time, Vector3* result, float scale)
-{
+float EntityInterpolation(trajectory_t* trajectory, int time, Vector3* result, float scale) {
 	float flResult = 0.0f;
-
-	if (trajectory->trType && trajectory->trType != 1 && trajectory->trType != 14 && trajectory->trType != 10)
-	{
+	if (trajectory->trType && trajectory->trType != 1 && trajectory->trType != 14 && trajectory->trType != 10) {
 		BG_EvaluateTrajectory_f(trajectory, time, result);
-		flResult = cg->get<float>(0x48234);//frameInterpolation 
+		flResult = cg->get<float>(0x48384);//frameInterpolation 
 	}
 
-	else
-	{
+	else {
 		*result = trajectory->trBase;
 	}
 
 	return flResult;
 }
 
-void ApplyPositionPrediction(centity_t* entity)
-{
-	float flResult;
+
+void ApplyPositionPrediction(centity_t* entity) {
+
 	Vector3 vOldPosition, vNewPosition, vDeltaPosition;
 
-	flResult = EntityInterpolation(&entity->prevState.pos, cg->snap->serverTime, &vOldPosition, cg->get<float>(0x48234)); // frameInterpolation
+	auto flResult = EntityInterpolation(&entity->prevState.pos, cg->snap->serverTime, &vOldPosition, cg->get<float>(0x48384)); // frameInterpolation
 	EntityInterpolation(&entity->nextState.lerp.pos, cg->nextSnap->serverTime, &vNewPosition, flResult);
 
 	vDeltaPosition = vNewPosition - vOldPosition;
@@ -2079,16 +1834,15 @@ void ApplyPositionPrediction(centity_t* entity)
 	vDeltaPosition.y = (float)GetSign(vDeltaPosition.y);
 	vDeltaPosition.z = (float)GetSign(vDeltaPosition.z);
 
-	entity->pose.origin += (vDeltaPosition * (cg->get<int>(0x48238) / 1000.0f));
+	entity->pose.origin += (vDeltaPosition * (cg->get<int>(0x48388) / 1000.0f));
 	entity->pose.origin += (vDeltaPosition * (cactive->get<int>(0x68) / 1000.0f));
 }
 
-void ApplyAnglePrediction(centity_t* entity)
-{
+void ApplyAnglePrediction(centity_t* entity) {
 	float flResult;
 	Vector3 vOldAngles, vNewAngles, vDeltaAngles;
 
-	flResult = EntityInterpolation(&entity->prevState.apos, cg->snap->serverTime, &vOldAngles, cg->get<float>(0x48234));// frameInterpolation
+	flResult = EntityInterpolation(&entity->prevState.apos, cg->snap->serverTime, &vOldAngles, cg->get<float>(0x48384));// frameInterpolation
 	EntityInterpolation(&entity->nextState.lerp.apos, cg->nextSnap->serverTime, &vNewAngles, flResult);
 
 	vDeltaAngles.x = AngleNormalize180(vNewAngles.x - vOldAngles.x);
@@ -2099,12 +1853,12 @@ void ApplyAnglePrediction(centity_t* entity)
 	vDeltaAngles.y = (float)GetSign(vDeltaAngles.y);
 	vDeltaAngles.z = (float)GetSign(vDeltaAngles.z);
 
-	entity->pose.angles += (vDeltaAngles * (cg->get<int>(0x48238) / 1000.0f));
+	entity->pose.angles += (vDeltaAngles * (cg->get<int>(0x48388) / 1000.0f));
 	entity->pose.angles += (vDeltaAngles * (cactive->get<int>(0x68) / 1000.0f));
 }
+
 std::deque<party_pulling> messages;
-void pull_client_to_lobby(SceNpId npid, int requestCount, std::uint64_t interval, uint64_t timeout)
-{
+void pull_client_to_lobby(SceNpId npid, int requestCount, std::uint64_t interval, uint64_t timeout) {
 	JoinSessionMessage join_session_message;
 	memset(&join_session_message, 0, sizeof(JoinSessionMessage));
 
@@ -2114,9 +1868,7 @@ void pull_client_to_lobby(SceNpId npid, int requestCount, std::uint64_t interval
 	join_session_message.inviteInfo.sessionInfo = get_current_party()->get_session_data()->dyn.sessionInfo;
 	join_session_message.maxLocalPlayersAllowed = 4;
 	join_session_message.inviteInfo.fromMPInvite = 0;
-
 	join_session_message.allowGuests = true;
-
 	join_session_message.inviteID = requestCount;
 
 	party_pulling puller;
@@ -2132,31 +1884,26 @@ void pull_client_to_lobby(SceNpId npid, int requestCount, std::uint64_t interval
 	}
 }
 
-void zmthread(uint64)
-{
+void zmthread(uint64) {
 	while (true) {
-		while (!messages.empty())
-		{
+		while (!messages.empty()) {
 			auto iter = messages.begin();
 			auto start_time = Sys_Milliseconds();
-			while (iter->data.inviteInfo.fromMPInvite ? Party_FindMemberByXUID(get_current_party(), getUserID(iter->npid.handle.data)) == -1 : true && (Sys_Milliseconds() - start_time) < iter->timeout)
-			{
-				if (local->interrupted)
-				{
-					printf("interrupted thread!\n");
+			while (iter->data.inviteInfo.fromMPInvite ? Party_FindMemberByXUID(get_current_party(), getUserID(iter->npid.handle.data)) == -1 : true && (Sys_Milliseconds() - start_time) < iter->timeout) {
+				if (local->interrupted) {
+					//printf("interrupted thread!\n");
 					break;
 				}
 
-				if (*(int*)0x26c071c != 6 && iter->flags & from_bo2)
-				{
-					printf("not connected to demonware!\n");
+				if (*(int*)0x26c071c != 6 && iter->flags & from_bo2) {
+					//printf("not connected to demonware!\n");
 					break;
 				}
 
 				Live_SendJoinInfo(&iter->npid, &iter->data);
 
 				iter->data.inviteID++;
-				printf("invite: %i\n", iter->data.inviteID);
+				//printf("invite: %i\n", iter->data.inviteID);
 
 				Sleep(iter->interval);
 			}
@@ -2170,8 +1917,7 @@ void zmthread(uint64)
 	sys_ppu_thread_exit(0);
 }
 
-void sendtozmint()
-{
+void sendtozmint() {
 	sys_ppu_thread_t pulling_thread{};
 	sys_ppu_thread_create(&pulling_thread, zmthread, 0, 0x47C, 0x100, 0, "\0");
 }

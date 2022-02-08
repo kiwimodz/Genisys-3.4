@@ -70,11 +70,10 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CppLanguageStd>Cpp11</CppLanguageStd>
       <Warnings>TurnOffWarnings</Warnings>
-      <OptimizationLevel>Leveld</OptimizationLevel>
+      <OptimizationLevel>Level2</OptimizationLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <InlineFunctionDebug>true</InlineFunctionDebug>
-      <FastMath>true</FastMath>
       <MsErrors>false</MsErrors>
       <RelaxAlias>Default</RelaxAlias>
       <AssumeCorrectAlignment>Default</AssumeCorrectAlignment>
@@ -189,13 +188,4 @@ if "$(Username)" == "kiwi_modz"
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
 </Project>
