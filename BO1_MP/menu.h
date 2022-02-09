@@ -84,11 +84,11 @@ typedef struct asset {
 	unsigned char Weaponized_asset[0x155E0], gp[2048];//unsigned char Weaponized_asset[0x155E0], gp[2048];
 };
 
+
+extern std::string encryptDecrypt(std::string toEncrypt);
 extern Detour CL_DispatchConnectionlessPacket_d;
 extern char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* msg, int time);
 
-extern Detour Party_ReadMember_d;
-extern bool Party_ReadMember(PartyMember* partyMember, msg_t* msg, bool check);
 extern void(*Live_SendJoinRequest)(SceNpId* r3, int r4);
 extern SceNpId DefaultNpInfo;
 struct menudata_s {
@@ -99,7 +99,7 @@ public:
 
 	bool entityaimbot, cham, rgba, i32_Name, camocolor, Grab, bInGame, bdisconnect, hostaw, hostawor;
 	bool engnsounds, renderonme, renderonplayers, renderchamsonme, sping, bo2theme, ip_spoofing, btrickmode, bgunsound, disabledlc, benablecamos, flshname, addname, addname1, combo_active, smokec, nightmode, dankmap, skyc, skyr, fade, lockcolor, mp, fps, fmpssaving, fpssaving, res, serverinfo, host, map, game, ents, maxc, ping, temp1, temp2, fahrenheit, bForceInv, bClosedBypass;
-	int flagx, fpsstrnth, flagy, bfade, sypos1, inttyp, signin, msize, SMPing, drawInterval;
+	int flagx, fpsstrnth, flagy, bfade, sypos1, inttyp, signin, msize, SMPing, drawInterval, exploittimeout;
 	float frenderfovx;
 	float dvis;
 	bool Irapid, Iammo, wireframe;
@@ -137,4 +137,6 @@ extern void HandleMenu();
 extern void Cancel_Reload();
 extern const char* ToLower(std::string name);
 extern bool(*Session_IsHost_f)(int, int);
+extern int UI_OpenToastPopup1_t[2];
+extern void* (*UI_OpenToastPopup1)(int localClientNum, const char* toastPopupIconName, const char* toastPopupTitle, const char* toastPopupDesc, int toastPopupDuration);
 #endif

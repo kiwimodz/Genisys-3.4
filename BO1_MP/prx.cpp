@@ -949,17 +949,28 @@ int sceNpBasicSendMessage_f(const SceNpId* to, const void* data, size_t size) {
 			return sceNpBasicSendMessageDetour.Stub(to, data, size);
 
 		join_message_data->inviteInfo.fromMPInvite = false;
-		join_message_data->inviteInfo.sessionInfo.sessionID.ab[0] = irand_f(0, 255);
+		join_message_data->inviteInfo.sessionInfo.sessionID.ab[0] = irand_f(0, 255);//bypasses error user already in you game
 		return sceNpBasicSendMessageDetour.Stub(to, join_message_data, size);
 	}
 	return sceNpBasicSendMessageDetour.Stub(to, data, size);
 }
 
-void Party_AcceptInvite_f(int ctx_index, InviteMessage* message) {
-	if (message->fromMPInvite == false || message->fromMPInvite > 1) {
-		return;
-	} else
-		Party_AcceptInvite.Stub(ctx_index, message);
+Detour sceNpBasicGetEvent_d;
+int sceNpBasicGetEvent_f(int* event, SceNpUserInfo* from, void* data, size_t* size) {
+
+	auto i = sceNpBasicGetEvent_d.Stub(event, from, data, size);
+	JoinSessionMessage* message = (JoinSessionMessage*)data;
+
+	if (*size == 88) {
+		if (message->inviteInfo.fromMPInvite == false || message->inviteInfo.fromMPInvite > 1) {
+			char buf[256];
+			Com_Sprintf(buf, sizeof(buf), "Send To Zombies from %s Blocked", from->userId.handle.data);
+			UI_OpenToastPopup1(0, "menu_mp_contract_expired", "Yeah Nah", buf, 5000);
+			*event = 0;
+			return 0x8002a66a;
+		}
+	}
+return i;
 }
 
 int sceNpManagerGetTicket_hook(void* buffer, size_t size) {
@@ -1040,7 +1051,7 @@ void CG_DeployServerCommand_Hook(int localClientNum) {
 		if (iTeamNum < 0 || iTeamNum > 10) {//max team exploit
 
 			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), "RME Blocked", 5000);
+				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), "RME Blocked", 5000);
 			} else {
 				CG_GameMessage("RME Blocked");
 			}
@@ -1195,7 +1206,7 @@ static std::size_t check_invalid_material_handles(std::string text) {
 	std::size_t pos = 0u;
 	material_name_s material;
 
-	if ((pos = text.find('^', pos)) != std::string::npos) {
+	while ((pos = text.find('^', pos)) != std::string::npos) {
 		material.prefix = text.at(pos);
 
 		if (text.substr(pos).size() > 1) {
@@ -1410,7 +1421,6 @@ void ThreadedAimbot(uint64_t arg) {
 					if (SetupThreadData()) {
 						sys_timer_sleep(4);
 					}
-					CG_GameMessage("ThreadDataSetUp");
 					iniTD = false;
 				}
 
@@ -1573,7 +1583,7 @@ void Live_JoinSessionInProgress_f(int local, uint64_t xuid) {
 		if (temp_npid.opt[0] != '\0')
 			Live_SendJoinRequest(&temp_npid, 1);
 		else {
-			//toast::show(Material_RegisterHandle("vac", 7, false, -1), "fuck", "couldn't", 5000);
+			UI_OpenToastPopup(0, "vac", "Fuck", "Couldn't", 5000);
 			Live_JoinSessionInProgressDetour.Stub(0, xuid);
 		}
 	} else {
@@ -1681,7 +1691,6 @@ void AuthListener() {
 	memcpy((char*)0x53391C, array, 4);
 	memcpy((char*)0x53394C, array, 4);
 	memcpy((char*)0x533988, array, 4);
-
 
 	menu->fpsstrnth = 50;
 	float kek = 2500.0f;
@@ -1811,7 +1820,7 @@ void AuthListener() {
 	CG_CalcNamePositionColorDef;
 	CL_DispatchConnectionlessPacketDef;
 	DynEntCl_DestroyEventDef;
-	Party_AcceptInviteDef;
+	sceNpBasicGetEventDef;
 	CG_TransitionPlayerStateDef;
 	CL_DisconnectDef;
 	CG_DeployServerCommandDef;

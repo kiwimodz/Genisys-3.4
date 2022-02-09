@@ -22,6 +22,8 @@ extern void anti_typeSY(int type);
 extern void anti_typeCY(int type);
 extern void anti_typeMY(int type);
 extern void anti_typeSTY(int type);
+extern void anti_typeSKX(int type);
+extern void anti_typeSKY(int type);
 extern void ShouldSimulateCheck();
 extern void ResetConfig();
 extern bool BulletTrace(int localClientNum, BulletFireParams* bulletFireParams, WeaponDef* weaponIndex, centity_s* centityAttacker, BulletTraceResults* btr, int surfacetype, bool simulate);

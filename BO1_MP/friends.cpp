@@ -314,19 +314,21 @@ void friends::write_friend(std::string user, std::string npid) {
 }
 
 void friends::parse_info(std::vector<std::string> info, friend_list& friends) {
-	friend_list _friend;
 	std::vector<std::string> values;
+
+	if (info.empty())
+		return;
 
 	for (const auto& data : info) {
 		if (data.empty())
 			continue;
 
 		auto seperator = data.find("=");
-		if (seperator == 0)
+		if (seperator == std::string::npos)
 			continue;
 
 		auto new_line = data.find(";");
-		if (new_line == 0)
+		if (new_line == std::string::npos)
 			continue;
 
 		auto value = data.substr(seperator + 1, (new_line - seperator) - 1);
@@ -337,9 +339,14 @@ void friends::parse_info(std::vector<std::string> info, friend_list& friends) {
 		}
 	}
 
-	if (values[0].c_str()[0] != '\0' && values[0].c_str()[1] != '\0') {
+	if (!values[0].empty()) {
 		friends.name = values[0];
-		friends.npid = values[1];
+	}
+
+	if (values.size() > 1) {
+		if (!values[1].empty()) {
+			friends.npid = values[1];
+		}
 	}
 }
 

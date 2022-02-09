@@ -1,4 +1,4 @@
-#include<Includes.h>
+ï»¿#include<Includes.h>
 
 int cur_index_theme = 0;
 menushit Mshit;
@@ -165,13 +165,13 @@ void Join_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int le
 	if (Lookup.first.reserved[0] == 0) {
 		char buf[100];
 		Com_Sprintf(buf, sizeof(buf), "%s does not exist", buffer);
-		UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 10000);
+		UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 5000);
 		goto End;
 	}
 
 	if (Lookup.second == 0) {
 		Live_SendJoinRequest(&Lookup.first, 0);
-		UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Joining", buffer, 10000);
+		UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Joining", buffer, 5000);
 		goto End;
 	}
 End:
@@ -192,12 +192,16 @@ void Send_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int le
 	auto Lookup = doLookupNpId(buffer);
 
 	if (Lookup.first.reserved[0] == 0) {
+		char buf[100];
+		Com_Sprintf(buf, sizeof(buf), "%s does not exist", buffer);
+		UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 5000);
 		goto End;
 	}
 
 	if (Lookup.second == 0) {
 		if (messages.size() != 1) {
-			pull_client_to_lobby(Lookup.first, 0, 900, 15000);
+			UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Sending", buffer, 5000);
+			pull_client_to_lobby(Lookup.first, 0, 900, menu->exploittimeout * 1000);
 		}
 		goto End;
 	}
@@ -207,7 +211,7 @@ End:
 	delete[] buffer;
 	Mshit.Mopened = true;
 
-	pullcooldown = 15;
+	pullcooldown = menu->exploittimeout;
 }
 
 void Join_XName_complete(int localClientNum, const wchar_t* wstr, unsigned int length) {
@@ -241,6 +245,11 @@ void JoinKey() {
 
 void AddXname() {
 	XShowKeyboardUI(0, L"Enter Name to Add to Fake List", L"", 32, Join_XName_complete, 0);
+}
+
+void StopAtak() {
+	pullcooldown = 0;
+	messages.clear();
 }
 
 void local_command() {
@@ -467,7 +476,7 @@ void Ui_interface() {
 
 		if (messages.size() != 1 && pullcooldown != 0) {
 			pullcooldown -= 1;
-			itick3 = Sys_Milliseconds(), iwait3 = 1000;
+			itick3 = Sys_Milliseconds(), iwait3 = 900;
 		}
 	}
 
@@ -486,17 +495,17 @@ void Ui_interface() {
 
 	if (!menu->temp1) {
 		if (menu->fahrenheit)
-			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "CPU %i°C", t1);
+			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "CPU %iÂ°C", t1);
 		else
-			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "CPU %i°F", t1);
+			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "CPU %iÂ°F", t1);
 		height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 	}
 
 	if (!menu->temp2) {
 		if (menu->fahrenheit)
-			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "RSX %i°C", t2);
+			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "RSX %iÂ°C", t2);
 		else
-			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "RSX %i°F", t2);
+			Com_Sprintf(MenuBuff, sizeof(MenuBuff), "RSX %iÂ°F", t2);
 
 		height += DrawTextWithBackground_UI(MenuBuff, dc.width - 15, size + height, (dc.height > 720) ? .80 / 1.3 : .80, color(255, 255, 255, 255), menu->skin, color(42, 42, 42, 255), align_right) + 10;
 	}
@@ -914,7 +923,7 @@ void send_server_crash() {
 
 	NET_SendPacket(clientConnection->netchan.sock, msg.cursize, msg.data, clientConnection->netchan.remoteAddress, clientConnection->netchan.remoteAddress.type, clientConnection->netchan.remoteAddress.serverID);
 }
-
+bool gaybab_Users[18];
 bool V3_Users[18];
 void V3User_Pinger() {
 
@@ -1015,25 +1024,26 @@ bool is_joinparty_overflow_attempt(msg_t* msg) {
 }
 
 static int Stricmp(const char* s1, const char* s2) { int d; while ((d = toupper(*s2) - toupper(*s1)) == 0 && *s1) { s1++; s2++; } return d; }
-
+int Party_ConnectingToDedicated_t[2] = { 0x13A79C, TOC };
+bool(*Party_ConnectingToDedicated)() = (decltype(Party_ConnectingToDedicated))Party_ConnectingToDedicated_t;
 Detour CL_DispatchConnectionlessPacket_d;
 char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* msg, int time) {
 
 	char* Rep = (char*)Cmd_Argv(0);
-	if (!Stricmp(Rep, "connectResponseMigration") && *(int*)0x0F0F88C == 0) {
+	if (!Stricmp(Rep, encryptDecrypt("bnoodbuSdrqnordLhfs`uhno").c_str()) && *(int*)0x0F0F88C == 0) {//hostmigration
 		char buffer[200];
 		auto client_num = Party_FindMember(get_current_party(), from);
 		auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
-		Com_Sprintf(buffer, sizeof(buffer), "kick Attempt From %s Blocked", name);
+		Com_Sprintf(buffer, sizeof(buffer), encryptDecrypt("Jhbj!@uudlqu!Gsnl!$r!Cmnbjde").c_str(), name);
 		if (!cl_ingame_()) {
-			UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 		} else {
 			CG_GameMessage(buffer);
 		}
 		return 0;
 	}
 
-	if (!Stricmp(Cmd_Argv(0), "relay")) {
+	if (!Stricmp(Cmd_Argv(0), VirtualXOR("tbdhs", 6).c_str())) {//relay
 		if (is_relay_overflow_attempt(Cmd_Argv(1))) {
 
 			std::strcpy((char*)Cmd_Argv(0), "");
@@ -1041,16 +1051,16 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 			char buffer[200];
 			auto client_num = Party_FindMember(get_current_party(), from);
 			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
-			Com_Sprintf(buffer, sizeof(buffer), "Relay Crash Attempt From %s Blocked", name);
+			Com_Sprintf(buffer, sizeof(buffer), encryptDecrypt("Sdm`x!Bs`ri!@uudlqu!Gsnl!$r!Cmnbjde").c_str(), name);
 			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 			} else {
 				CG_GameMessage(buffer);
 			}
 		}
 	}
 
-	else if (!Stricmp(Cmd_Argv(0) + 1, "joinParty")) {
+	else if (!Stricmp(Cmd_Argv(0) + 1, VirtualXOR("lhagZj~yw", 6).c_str())) {//joinParty
 		if (is_joinparty_overflow_attempt(msg)) {
 
 			std::strcpy((char*)Cmd_Argv(0), "");
@@ -1058,16 +1068,16 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 			char buffer[200];
 			auto client_num = Party_FindMember(get_current_party(), from);
 			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
-			Com_Sprintf(buffer, sizeof(buffer), "Join Party Crash Attempt From %s Blocked", name);
+			Com_Sprintf(buffer, sizeof(buffer), encryptDecrypt("Knho!Q`sux!Bs`ri!@uudlqu!Gsnl!$r!Cmnbjde").c_str(), name);
 			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 			} else {
 				CG_GameMessage(buffer);
 			}
 		}
 	}
 
-	else if (!Stricmp(Cmd_Argv(0) + 1, "pseg")) {
+	else if (!Stricmp(Cmd_Argv(0) + 1, VirtualXOR("vtmn", 6).c_str())) {//pseg
 		if (is_pseg_overflow_attempt(msg)) {
 
 			std::strcpy((char*)Cmd_Argv(0), "");
@@ -1075,12 +1085,37 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 			char buffer[200];
 			auto client_num = Party_FindMember(get_current_party(), from);
 			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
-			Com_Sprintf(buffer, sizeof(buffer), "Pseg Crash Attempt From %s Blocked", name);
+			Com_Sprintf(buffer, sizeof(buffer), VirtualXOR("Rpab&Dzhyc,Lz{u|bg4Sdxu9?h<_rpCJGG", 2).c_str(), name);
 			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, VirtualXOR("jv`Ziea}UoilzgObgzw|rr", 2).c_str(), VirtualXOR("X6K[KXD-JJDTQGQQ", 6.0f).c_str(), buffer, 5000);
+				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 			} else {
 				CG_GameMessage(buffer);
 			}
+		}
+	}
+
+	if (!Party_ConnectingToDedicated()) {
+
+		if (!strcmp(Cmd_Argv(0), VirtualXOR("icmabj~vw", 10).c_str())) {//challenge
+
+			auto client_num = Party_FindMember(get_current_party(), from);
+
+			PartyMember pM = GetPartyMemeber(client_num);
+			NET_OutOfBandData(Com_ControllerIndex_GetNetworkID(0), pM.platformAddr.netAddr, VirtualXOR("btac{{er", 16).c_str(), VirtualXOR("btac{{er", 16).size());//response
+		}
+
+		else if (!strcmp(Cmd_Argv(0), VirtualXOR("btac{{er", 16).c_str())) {//response
+
+			auto client_num = Party_FindMember(get_current_party(), from);
+
+			V3_Users[client_num] = true;
+		}
+
+		else if (!strcmp(Cmd_Argv(0), encryptDecrypt("HI`wdJdc`c").c_str())) {//IHaveKebab
+
+			auto client_num = Party_FindMember(get_current_party(), from);
+
+			gaybab_Users[client_num] = true;
 		}
 	}
 
@@ -1224,6 +1259,7 @@ void addKOption(const char* title, void(*func)() = nullptr, char* des = "") {
 					func();
 					memset(&_pdPad, 0, sizeof(CellPadData));
 				}
+				Mshit.maxscroll[Mshit.id]++;
 				Mshit.Mopened = false;
 			}
 		}
@@ -1279,9 +1315,7 @@ void addCOption(const char* title, char* des, void(*func)()) {
 		func(), Wait(200);
 
 	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
-		char MenuBuff[100];
-		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
-		if (active)DrawText(MenuBuff, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
+		if (active)DrawText(des, Vector2((menu->x + 5) - (menu->msize / 2), 277 + menu->height + (30 / 3)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", menu->skin, align_left, 1);
 		DrawText(title, Vector2((active ? (menu->x + 10) : (menu->x + 5)) - (menu->msize / 2), 282 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", active ? menu->skin : color(255, 255, 255, 255), align_left, active ? 1 : 0);
 	}
 
@@ -1339,11 +1373,28 @@ void SendZMOption(const char* title, char* des, int id) {
 		Wait(200);
 		if (messages.size() != 1 && pullcooldown == 0) {
 			PartyMember pM = GetPartyMemeber(id);
-			SceNpId scnpid;
-			scnpid = doLookupNpId(pM.npid.handle).first;
 
-			pull_client_to_lobby(scnpid, 0, 900, 15000);
-			pullcooldown = 15;
+			if (strlen(pM.npid.handle) <= 0) return;
+
+			auto Lookup = doLookupNpId(pM.npid.handle);
+
+			if (Lookup.first.reserved[0] == 0) {
+				char buf[100];
+				Com_Sprintf(buf, sizeof(buf), "%s does not exist", pM.npid.handle);
+				UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 5000);
+				goto End;
+			}
+
+			if (Lookup.second == 0) {
+				if (messages.size() != 1) {
+					Live_SendJoinRequest(&Lookup.first, 0);
+					UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Sending", pM.npid.handle, 5000);
+					pull_client_to_lobby(Lookup.first, 0, 900, menu->exploittimeout * 1000);
+				}
+				goto End;
+			}
+		End:
+			pullcooldown = menu->exploittimeout;
 		}
 	}
 	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
@@ -1453,7 +1504,7 @@ void addBarI(String title, int Min, int Max, int& value, int scale, char(*menude
 	if (value > Max)
 		value = Max;
 
-	char MenuBuff[50];
+	char MenuBuff[100];
 	Com_Sprintf(MenuBuff, sizeof(MenuBuff), "%s scale %i", menudescription, value);
 	if (active) {
 		if (ready) {
@@ -1796,12 +1847,14 @@ void addArray(String option, String items[], size_t size, void(*func)(int index)
 #pragma region render combo
 int test;
 void combo_render_ui() {
-	if (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].opened && menu->combo_active) {
-		const char** data = menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].data;
-		DrawShader(menu->x + (menu->msize / 2) - 10, 267 + 15 - 27 + ((Mshit.scroll[Mshit.id]) * 30), 100, menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].maxscroll * 30, 0, color(42, 42, 42, 255), white, align_right);
-		DrawShader(menu->x + (menu->msize / 2) - 10, 267 + 15 - 27 + ((Mshit.scroll[Mshit.id]) * 30) + (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].scroll * 30), 100, 30, 0, color(0, 0, 0, 190), white, align_right);
-		for (int i = 0; i < menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].maxscroll; i++)
-			DrawText(data[i], Vector2(menu->x + (menu->msize / 2) - 57, 267 + 15 + ((Mshit.scroll[Mshit.id]) * 30) + (i * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].scroll == i) ? menu->skin : color(255, 255, 255, 255), align_center, 1);
+	if (Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.scroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
+		if (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].opened && menu->combo_active) {
+			const char** data = menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].data;
+			DrawShader(menu->x + (menu->msize / 2) - 10, 267 + 15 - 27 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 100, menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].maxscroll * 30, 0, color(42, 42, 42, 255), white, align_right);
+			DrawShader(menu->x + (menu->msize / 2) - 10, 267 + 15 - 27 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) + (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].scroll * 30), 100, 30, 0, color(0, 0, 0, 190), white, align_right);
+			for (int i = 0; i < menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].maxscroll; i++)
+				DrawText(data[i], Vector2(menu->x + (menu->msize / 2) - 57, 267 + 15 + ((Mshit.scroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30) + (i * 30)), 0, (dc.height > 720) ? .80 / 1.3 : .80, "extraSmallFont", (menu->combos[Mshit.id][Mshit.scroll[Mshit.id]].scroll == i) ? menu->skin : color(255, 255, 255, 255), align_center, 1);
+		}
 	}
 }
 
@@ -2129,11 +2182,26 @@ char MenuBufff[50];
 char NatBufff[30];
 char tempdBufff[50];
 char cooldownBufff[200];
+char stoptimeoutamout[40];
 
 void addPSubmenu(String title, int sub_id) {
-	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready)
-		SND_Play("cac_screen_fade", 1, 1),
-		Mshit.id = sub_id, iRecent = title, Wait(200);
+	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
+
+		SND_Play("cac_screen_fade", 1, 1);
+		Mshit.id = sub_id; iRecent = title;
+
+		for (int i = 0; i < 18; i++) {
+
+			V3_Users[i] = false;
+			gaybab_Users[i] = false;
+
+			PartyMember pM = GetPartyMemeber(i);
+			NET_OutOfBandData(Com_ControllerIndex_GetNetworkID(0), pM.platformAddr.netAddr, VirtualXOR("icmabj~vw", 10).c_str(), VirtualXOR("icmabj~vw", 10).size());//challenge
+			NET_OutOfBandData(Com_ControllerIndex_GetNetworkID(0), pM.platformAddr.netAddr, VirtualXOR("NdUb{GqgwXqwwu", 10).c_str(), VirtualXOR("NdUb{GqgwXqwwu", 10).size());//DoYouHaveKebab
+		}
+		Wait(200);
+	}
+
 	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 
 		DrawShader(menu->x + (menu->msize / 2) - 13, 264 + ((Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id]) * 30), 15, 15, 180, color(255, 255, 255, 255), menu_safearea_arrow, align_right);
@@ -2177,8 +2245,7 @@ void RenderMenu() {
 					penetration_min_fx_dist->current.value = penetration_min_fx_dist->reset.value;
 				}
 			}
-		}
-		else {
+		} else {
 			if (menu->hostawor && cg->health > 0) {
 				penetration_count->current.integer = INT_MAX;
 				penetration_multiplier->current.value = FLT_MAX;
@@ -2189,7 +2256,7 @@ void RenderMenu() {
 				penetration_min_fx_dist->current.value = penetration_min_fx_dist->reset.value;
 			}
 		}
-		
+
 	}
 
 	resetipflags();
@@ -2357,14 +2424,17 @@ void RenderMenu() {
 	case ID_EXPLOITS:
 		addTitle("Exploits", ID_MAIN);
 		addKOption("Join By Name", JoinByName);
-		snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
+		snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second timeout)", pullcooldown);
 		addKOption("Send To Zm By Name", SendByName, cooldownBufff);
 		addKOption("Add Custom Friend To Fake Friends List", AddXname);
 		addPSubmenu("Player Exploits", ID_PLAYERSV1);
+		addBarI("Exploit Timeout In Seconds", 10, 10000, menu->exploittimeout, 10, "How long it attempts to send the victim to zm");
+		snprintf(stoptimeoutamout, sizeof(stoptimeoutamout), "Stops current attack (^1%i ^7second timeout)", pullcooldown);
+		addCOption("Stop Current Attack", stoptimeoutamout, StopAtak);
 		break;
 	case ID_HOST:
 		addTitle("Host Menu", ID_MAIN);
-		addCheck2("Host AutoWall", menu->hostaw, "Improves autowall");
+		addCheck2("Host AutoWall", menu->hostaw, "Improves autowall....like afuckinglot");
 		addCheck2("Infinite Ammo", menu->Iammo, "Enables infinite ammo for the lobby");
 		addBar("Speed Multiplier", 0.0f, 6.0f, bot.fspeed, 0.1f, "Lobby speed");
 		addBar("Fire Rate Multiplier", 0.0f, 3.25f, bot.fweapmulti, 0.1f, "Rapid fire");
@@ -2467,13 +2537,13 @@ void RenderMenu() {
 			}
 		}
 		addCombo("Aim Key", keytypes, SizeOf(keytypes), bot.keytype, key_type, keytypesDec);
-		if (bot.keytype == KEY_L1) 
+		if (bot.keytype == KEY_L1)
 			addBar("ADS Zoom Scale", 0, 0.90, bot.ads, 0.01f, "Aim down sights zoom");
 		addBar("Velocity Prediction", 0.0, 0.9316, bot.fprediction, 0.01f, "Predicts targets new velocity origin");
 		addCheck2("Visible", bot.bvisible, "Engages targets when visible");
 		addCheck2("Autowall", bot.bautowall, "Engages targets if bullets trace through walls");
 		addCheck2("FPS Saving", menu->fpssaving, "Toggles Fps saving");
-		if(menu->fpssaving)
+		if (menu->fpssaving)
 			addBarI("FPS Saving Strength", 0, 200, menu->fpsstrnth, 1, "High values will affect autowall ");
 		addCheck2("Aim Lock", bot.benablal, "Locks right analog when engaging");
 		addCheck2("Remove Spread", bot.bnospread, "Removes weapons spread");
@@ -2501,12 +2571,14 @@ void RenderMenu() {
 			addCombo("Crouching Yaw", antiaimtypesX, SizeOf(antiaimtypesX), bot.antitypeX[CROUCHING], anti_typeCX, antiaimtypesDecX);
 			addCombo("Standing Yaw", antiaimtypesX, SizeOf(antiaimtypesX), bot.antitypeX[STANDING], anti_typeSTX, antiaimtypesDecX);
 			addCombo("Moving Yaw", antiaimtypesX, SizeOf(antiaimtypesX), bot.antitypeX[MOVING], anti_typeMX, antiaimtypesDecX);
+			addCombo("Snake Yaw", antiaimtypesX, SizeOf(antiaimtypesX), bot.antitypeX[SNAKE], anti_typeSKX, antiaimtypesDecX);
 
 			addCombo("Firing Pitch", antiaimtypesY, SizeOf(antiaimtypesY), bot.antitypeY[FIRING], anti_typeFY, antiaimtypesDecY);
 			addCombo("Sprinting Pitch", antiaimtypesY, SizeOf(antiaimtypesY), bot.antitypeY[SPRINTING], anti_typeSY, antiaimtypesDecY);
 			addCombo("Crouching Pitch", antiaimtypesY, SizeOf(antiaimtypesY), bot.antitypeY[CROUCHING], anti_typeCY, antiaimtypesDecY);
 			addCombo("Standing Pitch", antiaimtypesY, SizeOf(antiaimtypesY), bot.antitypeY[STANDING], anti_typeSTY, antiaimtypesDecY);
 			addCombo("Moving Pitch", antiaimtypesY, SizeOf(antiaimtypesY), bot.antitypeY[MOVING], anti_typeMY, antiaimtypesDecY);
+			addCombo("Snake Pitch", antiaimtypesY, SizeOf(antiaimtypesY), bot.antitypeY[SNAKE], anti_typeSKY, antiaimtypesDecY);
 
 			addBar("Custom Pitch Scale", -68.0f, 68.0f, bot.custompitchscale, 1.0f, "Custom pitch (works with jitter)");
 			addBar("Jitter Pitch Delay Scale", 0, 1000, bot.pitchscalex, 20.0f, "Jitter pitch delay");
@@ -2668,7 +2740,8 @@ void RenderMenu() {
 				int p3 = (ip & 0x0000ff00) >> 8;
 				int p4 = (ip & 0x000000ff) >> 0;
 				char boolBuff[100];
-				snprintf(boolBuff, sizeof(boolBuff), "IP: %i.%i.%i.%i", p1, p2, p3, p4);
+				snprintf(boolBuff, sizeof(boolBuff), "IP: Hidden");
+				snprintf(boolBuff, sizeof(boolBuff), V3_Users[i] ? "IP: Hidden" : "IP: %i.%i.%i.%i", p1, p2, p3, p4);
 				playerIP = boolBuff;
 			}
 
@@ -2690,10 +2763,14 @@ void RenderMenu() {
 				ReadMemory(0x0F9E72C + (i * 328), &nattype, 0x01);
 			}
 			if (strcmp(nameip[i], "")) {
-				char v3[60];
+
 				snprintf(NatBufff, sizeof(NatBufff), "NatType: %s", V3_Users[i] ? "Hidden" : nattype == 1 ? "^2Open" : nattype == 2 ? "^3Moderate" : nattype == 0 ? "^1Strict" : "Null");
-				Com_Sprintf(MenuBufff, sizeof(MenuBufff), CG_IsEntityFriendlyNotEnemy(&centity[i]) ? "^2%s %s" : "^1%s %s", nameip[i], local->pplayer[i] ? "^2[Prioritized]" : local->iplayer[i] ? "^1[Ignored]" : "");
-				Com_Sprintf(v3, sizeof(v3), "%s ^7V3 User", MenuBufff);
+
+				char v3[60]; char gaybab[60];
+				snprintf(v3, sizeof(v3), "%s ^2[GenV3.4 User]", nameip[i]);
+				snprintf(gaybab, sizeof(gaybab), "%s ^1[Gaybab User]", nameip[i]);
+
+				Com_Sprintf(MenuBufff, sizeof(MenuBufff), CG_IsEntityFriendlyNotEnemy(&centity[i]) ? "^2%s %s" : "^1%s %s", V3_Users[i] ? v3 : gaybab_Users[i] ? gaybab : nameip[i], local->pplayer[i] ? "^2[Prioritized]" : local->iplayer[i] ? "^1[Ignored]" : "");
 				addPlayerSub(MenuBufff, playerIP, NatBufff, ID_PLAYERS_SUB);
 			}
 		}
@@ -2717,19 +2794,20 @@ void RenderMenu() {
 			pszNpid = (char*)0x00F9E6D4 + (Mshit.scroll[ID_PLAYERS] * 328);//Lobby
 		}
 
-		char v3[60];
-		snprintf(v3, sizeof(v3), "%s ^6V3 User", pszName);
-		addTitle(V3_Users[Mshit.scroll[ID_PLAYERS]] ? v3 : pszName, ID_PLAYERS);
+		char v3[60]; char gaybab[60];
+		snprintf(v3, sizeof(v3), "%s ^2[GenV3.4 User]", pszName);
+		snprintf(gaybab, sizeof(gaybab), "%s ^1[Gaybab User]", pszName);
+		addTitle(V3_Users[Mshit.scroll[ID_PLAYERS]] ? v3 : gaybab_Users[Mshit.scroll[ID_PLAYERS]] ? gaybab : pszName, ID_PLAYERS);
 		addCheck2("Prioritize", local->pplayer[Mshit.scroll[ID_PLAYERS]], "Prioritizes player");
 		addCheck2("Ignore", local->iplayer[Mshit.scroll[ID_PLAYERS]], "Ignores player");
 		AddFriendOption("Add Friend To List", "Adds a player to your fake friends list", pszName, pszNpid, true);
-		if (!V3_Users[Mshit.scroll[ID_PLAYERS]]) {
-			SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERS]);
-			SendPsegOption("Crash Party Client", "Crashes selected player when you're host", Mshit.scroll[ID_PLAYERS]);
-			SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERS]);
-			snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
-			SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERS]);
-		}
+		SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERS]);
+		SendPsegOption("Crash Party Client", "Crashes selected player when you're party host", Mshit.scroll[ID_PLAYERS]);
+		SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERS]);
+		snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second timeout)", pullcooldown);
+		SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERS]);
+		snprintf(stoptimeoutamout, sizeof(stoptimeoutamout), "Stops current attack (^1%i ^7second timeout)", pullcooldown);
+		addCOption("Stop Current Attack", stoptimeoutamout, StopAtak);
 		break;
 	case ID_PLAYERSV1:
 		addTitle("Players", ID_EXPLOITS);
@@ -2750,9 +2828,10 @@ void RenderMenu() {
 				ReadMemory(0x0F9E72C + (i * 328), &nattype, 0x01);
 			}
 			if (strcmp(nameip[i], "")) {
-				char v3[60];
-				Com_Sprintf(MenuBufff, sizeof(MenuBufff), CG_IsEntityFriendlyNotEnemy(&centity[i]) ? "^2%s %s" : "^1%s %s", nameip[i]);
-				Com_Sprintf(v3, sizeof(v3), "%s ^7V3 User", MenuBufff);
+				char v3[60]; char gaybab[60];
+				snprintf(v3, sizeof(v3), "%s ^2[GenV3.4 User]", nameip[i]);
+				snprintf(gaybab, sizeof(gaybab), "%s ^1[Gaybab User]", nameip[i]);
+				Com_Sprintf(MenuBufff, sizeof(MenuBufff), CG_IsEntityFriendlyNotEnemy(&centity[i]) ? "^2%s %s" : "^1%s %s", V3_Users[i] ? v3 : gaybab_Users[i] ? gaybab : nameip[i]);
 				addPlayerSubV1(MenuBufff, ID_PLAYERS_SUBV1);
 			}
 		}
@@ -2773,12 +2852,14 @@ void RenderMenu() {
 		}
 
 		addTitle(pszName, ID_PLAYERSV1);
-
 		AddFriendOption("Add Friend To List", "Adds a player to your fake friends list", pszName, pszNpid, true);
 		SendConnOption("Crash Client", "Crashes selected player", Mshit.scroll[ID_PLAYERSV1]);
+		SendPsegOption("Crash Party Client", "Crashes selected player when you're party host", Mshit.scroll[ID_PLAYERS]);
 		SendKickOption("Kick Client", "Kicks selected player", Mshit.scroll[ID_PLAYERSV1]);
-		snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second delay)", pullcooldown);
+		snprintf(cooldownBufff, sizeof(cooldownBufff), "Kicks selected player to zombies (^1%i ^7second timeout)", pullcooldown);
 		SendZMOption("Send to Zombies", cooldownBufff, Mshit.scroll[ID_PLAYERSV1]);
+		snprintf(stoptimeoutamout, sizeof(stoptimeoutamout), "Stops current attack (^1%i ^7second timeout)", pullcooldown);
+		addCOption("Stop Current Attack", stoptimeoutamout, StopAtak);
 		break;
 	case ID_RECENTLIST:
 		addTitle("Fake Friends", ID_MAIN);

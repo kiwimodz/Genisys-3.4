@@ -1268,6 +1268,7 @@ enum antitype_ts {
 	CROUCHING,
 	STANDING,
 	MOVING,
+	SNAKE,
 };
 
 enum antitype_tX {
@@ -1377,8 +1378,8 @@ typedef struct aimbot_s {
 		int surfacetype;
 		float scale, scalewh;
 	}esp;
-	int antitypeX[5];
-	int antitypeY[7];
+	int antitypeX[6];
+	int antitypeY[8];
 	antitype_ts antitype;
 	int camotype;
 	playertype_t playertype;
@@ -7951,7 +7952,7 @@ struct RegisteredUser {
 //=====================================================================================
 
 struct bdSecurityKey {
-	char ab[16];
+	char ab[18];
 };
 
 //=====================================================================================

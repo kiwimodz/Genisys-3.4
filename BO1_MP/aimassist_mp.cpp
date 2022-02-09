@@ -69,12 +69,14 @@ void anti_typeSX(int type) { bot.antitypeX[SPRINTING] = (antitype_tX)type; }
 void anti_typeCX(int type) { bot.antitypeX[CROUCHING] = (antitype_tX)type; }
 void anti_typeMX(int type) { bot.antitypeX[MOVING] = (antitype_tX)type; }
 void anti_typeSTX(int type) { bot.antitypeX[STANDING] = (antitype_tX)type; }
+void anti_typeSKX(int type) { bot.antitypeX[SNAKE] = (antitype_tX)type; }
 
 void anti_typeFY(int type) { bot.antitypeY[FIRING] = (antitype_tY)type; }
 void anti_typeSY(int type) { bot.antitypeY[SPRINTING] = (antitype_tY)type; }
 void anti_typeCY(int type) { bot.antitypeY[CROUCHING] = (antitype_tY)type; }
 void anti_typeMY(int type) { bot.antitypeY[MOVING] = (antitype_tY)type; }
 void anti_typeSTY(int type) { bot.antitypeY[STANDING] = (antitype_tY)type; }
+void anti_typeSKY(int type) { bot.antitypeY[SNAKE] = (antitype_tY)type; }
 
 void aim_type(int type) { bot.aimtype = (aimtype_t)type; }
 void tag_type(int type) { bot.tagtype = (tagtype_t)type; }
@@ -1384,7 +1386,7 @@ void pspin(usercmd_s* NewCmd) {
 				if (bot.block3dpaa) {
 					//X
 					//FIRING
-					if (cg->playerstate.weaponstate == WEAPON_FIRING) {
+					if (cg->playerstate.weaponstate == WEAPON_FIRING && !bot.snake) {
 						switch (bot.antitypeX[FIRING]) {
 						case 0://DISABLED
 							break;
@@ -1403,6 +1405,7 @@ void pspin(usercmd_s* NewCmd) {
 							break;
 						}
 					}
+
 					//SPRINTING
 					else if (cg->playerstate.weaponstate == WEAPON_SPRINT_LOOP || cg->playerstate.weaponstate == WEAPON_SPRINT_RAISE || cg->playerstate.weaponstate == WEAPON_SPRINT_DROP) {
 						switch (bot.antitypeX[SPRINTING]) {
@@ -1423,8 +1426,9 @@ void pspin(usercmd_s* NewCmd) {
 							break;
 						}
 					}
+
 					//CROUCHING
-					else if (centityt[cg->clientNum].nextState.lerp.eFlags & 4) {
+					else if (centityt[cg->clientNum].nextState.lerp.eFlags & 4 && !bot.snake) {
 						switch (bot.antitypeX[CROUCHING]) {
 						case 0://DISABLED
 							break;
@@ -1465,8 +1469,28 @@ void pspin(usercmd_s* NewCmd) {
 					}
 
 					//MOVING
-					else if (cg->playerstate.movementDir != 0) {
+					else if (cg->playerstate.movementDir != 0 && !bot.snake) {
 						switch (bot.antitypeX[MOVING]) {
+						case 0://DISABLED
+							break;
+						case 1://BACKWARDS
+							local->fakeAngles[1] = local->vangles.y - 180.0f - cg->playerstate.delta_angles.y;
+							NewCmd->viewAngles[1] += ANGLE2SHORT(local->fakeAngles[1]);
+							break;
+						case 2://JITTER
+							local->fakeAngles[1] = jittery ? 180.0f : 0.0f;
+							NewCmd->viewAngles[1] -= ANGLE2SHORT(local->fakeAngles[1]);
+							break;
+						case 3://SPIN
+							local->fakeAngles[1] = spinY;
+							spinY = (spinY > 360) ? (spinY - 360) : (spinY + bot.spinscale);
+							NewCmd->viewAngles[1] -= ANGLE2SHORT(local->fakeAngles[1]);
+							break;
+						}
+					}
+
+					else if (bot.snake) {
+						switch (bot.antitypeX[SNAKE]) {
 						case 0://DISABLED
 							break;
 						case 1://BACKWARDS
@@ -1489,7 +1513,7 @@ void pspin(usercmd_s* NewCmd) {
 				else {
 					//Y
 					//FIRING
-					if (cg->playerstate.weaponstate == WEAPON_FIRING) {
+					if (cg->playerstate.weaponstate == WEAPON_FIRING && !bot.snake) {
 						switch (bot.antitypeX[FIRING]) {
 						case 0://DISABLED
 							break;
@@ -1531,7 +1555,7 @@ void pspin(usercmd_s* NewCmd) {
 					}
 
 					//CROUCHING
-					else if (centityt[cg->clientNum].nextState.lerp.eFlags & 4) {
+					else if (centityt[cg->clientNum].nextState.lerp.eFlags & 4 && !bot.snake) {
 						switch (bot.antitypeX[CROUCHING]) {
 						case 0://DISABLED
 							break;
@@ -1552,7 +1576,7 @@ void pspin(usercmd_s* NewCmd) {
 					}
 
 					//STANDING
-					else if ((centityt[cg->clientNum].nextState.lerp.eFlags != 4) && cg->playerstate.movementDir == 0) {
+					else if ((centityt[cg->clientNum].nextState.lerp.eFlags != 4) && cg->playerstate.movementDir == 0 && !bot.snake) {
 						switch (bot.antitypeX[STANDING]) {
 						case 0://DISABLED
 							break;
@@ -1573,8 +1597,29 @@ void pspin(usercmd_s* NewCmd) {
 					}
 
 					//MOVING
-					else if (cg->playerstate.movementDir != 0) {
+					else if (cg->playerstate.movementDir != 0 && !bot.snake) {
 						switch (bot.antitypeX[MOVING]) {
+						case 0://DISABLED
+							break;
+						case 1://BACKWARDS
+							local->fakeAngles[1] = 0.0f - 180.0f;
+							NewCmd->viewAngles[1] -= ANGLE2SHORT(local->fakeAngles[1]);
+							break;
+						case 2://JITTER
+							local->fakeAngles[1] = jittery ? 180.0f : 0.0f;
+							NewCmd->viewAngles[1] -= ANGLE2SHORT(local->fakeAngles[1]);
+							break;
+						case 3://SPIN
+							local->fakeAngles[1] = spinY;
+							spinY = (spinY > 360) ? (spinY - 360) : (spinY + bot.spinscale);
+							NewCmd->viewAngles[1] -= ANGLE2SHORT(local->fakeAngles[1]);
+							break;
+						}
+					}
+
+					//SNAKE
+					else if (bot.snake) {
+						switch (bot.antitypeX[SNAKE]) {
 						case 0://DISABLED
 							break;
 						case 1://BACKWARDS
@@ -1596,7 +1641,7 @@ void pspin(usercmd_s* NewCmd) {
 
 				//X
 				//FIRING
-				if (cg->playerstate.weaponstate == WEAPON_FIRING) {
+				if (cg->playerstate.weaponstate == WEAPON_FIRING && !bot.snake) {
 
 					switch (bot.antitypeY[FIRING]) {
 					case 0://DISABLED
@@ -1660,8 +1705,9 @@ void pspin(usercmd_s* NewCmd) {
 						break;
 					}
 				}
+
 				//CROUCHING
-				else if (centityt[cg->clientNum].nextState.lerp.eFlags & 4) {
+				else if (centityt[cg->clientNum].nextState.lerp.eFlags & 4 && !bot.snake) {
 					switch (bot.antitypeY[CROUCHING]) {
 					case 0://DISABLED
 						break;
@@ -1693,7 +1739,7 @@ void pspin(usercmd_s* NewCmd) {
 				}
 
 				//STANDING
-				else if ((centityt[cg->clientNum].nextState.lerp.eFlags != 4) && cg->playerstate.movementDir == 0) {
+				else if ((centityt[cg->clientNum].nextState.lerp.eFlags != 4) && cg->playerstate.movementDir == 0 && !bot.snake) {
 					switch (bot.antitypeY[STANDING]) {
 					case 0://DISABLED
 						break;
@@ -1723,8 +1769,9 @@ void pspin(usercmd_s* NewCmd) {
 						break;
 					}
 				}
+
 				//MOVING
-				else if (cg->playerstate.movementDir != 0) {
+				else if (cg->playerstate.movementDir != 0 && !bot.snake) {
 					switch (bot.antitypeY[MOVING]) {
 					case 0://DISABLED
 						break;
@@ -1754,10 +1801,43 @@ void pspin(usercmd_s* NewCmd) {
 						break;
 					}
 				}
+
+				//SNAKE
+				else if (bot.snake) {
+					switch (bot.antitypeY[SNAKE]) {
+					case 0://DISABLED
+						break;
+					case 1://UP
+						local->fakeAngles[0] = 0.0f - 60.0f;
+						NewCmd->viewAngles[0] = ANGLE2SHORT(local->fakeAngles[0] - cg->playerstate.delta_angles.x);
+						break;
+					case 2://DOWN
+						local->fakeAngles[0] = 60.0f;
+						NewCmd->viewAngles[0] = ANGLE2SHORT(local->fakeAngles[0] - cg->playerstate.delta_angles.x);
+						break;
+					case 3://SEMI-UP
+						local->fakeAngles[0] = 0.0f - 50.0f;
+						NewCmd->viewAngles[0] = ANGLE2SHORT(local->fakeAngles[0] - cg->playerstate.delta_angles.x);
+						break;
+					case 4://JITTER
+						local->fakeAngles[0] = jitterx ? 0.0f - 60.0f : 60.0f;
+						NewCmd->viewAngles[0] = ANGLE2SHORT(local->fakeAngles[0] - cg->playerstate.delta_angles.x);
+						break;
+					case 5://JITTER-UP
+						local->fakeAngles[0] = jitterx ? 0.0f - 50.0f : 0.0f;
+						NewCmd->viewAngles[0] = ANGLE2SHORT(local->fakeAngles[0] - cg->playerstate.delta_angles.x);
+						break;
+					case 6://CUSTOM
+						local->fakeAngles[0] = 0.0f - bot.custompitchscale;
+						NewCmd->viewAngles[0] = ANGLE2SHORT(local->fakeAngles[0] - cg->playerstate.delta_angles.x);
+						break;
+					}
+				}
 			}
+
 		} else {
-			cactive->ViewAngles = cactive->BaseAngles;
-			cactive->ViewAngles.y = 0;
+		cactive->ViewAngles = cactive->BaseAngles;
+		cactive->ViewAngles.y = 0;
 		}
 	}
 }
@@ -1782,10 +1862,6 @@ void PredictPlayerState() {
 		}
 
 		if (bot.snake_bot) {
-			if (__builtin_return_address() == (void*)0x07F5FC && bot.snake) {
-				bot.snake = false;
-			}
-
 			if (ready && PadDown(PAD_DOWN) && !Mshit.Mopened) {
 				Wait(500);
 

@@ -209,6 +209,29 @@ color INI::ReadColor(const char* section, std::string value) {
 	return color(0, 0, 255);
 }
 
+float atof_a(char* str) {
+	float rez = 0, fact = 1;
+	if (*str == '-') {
+		str++;
+		fact = -1;
+	}
+
+	for (int32_t point_seen = 0; *str; str++) {
+		if (*str == '.') {
+			point_seen = 1;
+			continue;
+		}
+
+		int32_t d = *str - '0';
+		if (d >= 0 && d <= 9) {
+			if (point_seen) fact /= 10.0f;
+			rez = rez * 10.0f + (float)d;
+		}
+	}
+
+	return rez * fact;
+}
+
 float INI::ReadFloat(const char* section, std::string value) {
 	char* found = GetSection(section);
 
@@ -217,7 +240,7 @@ float INI::ReadFloat(const char* section, std::string value) {
 		if (v_found) {
 			char* val_buf = FillInValue(v_found);
 
-			float fReturn = my_atof(val_buf);
+			float fReturn = atof_a(val_buf);
 
 			delete[] val_buf;
 
@@ -310,9 +333,9 @@ void  INI::WriteColor(const char* option, color value) {
 }
 
 void  INI::WriteFloat(const char* option, float value) {
+	
 	char out[100] = { 0 };
-	sprintf(out, "%s = %i.%i\r\n", option, (int)value, (int)((float)(value - (int)value) * 100000.0f));
-
+	Com_Sprintf(out, sizeof(out), "%s = %.2f,\r\n", option, value);
 	int len = strlen(out);
 	cellFsWrite(fd, out, len, NULL);
 }
@@ -388,11 +411,13 @@ void ReadFromIniFile(const char* fileName) {
 	bot.antitypeX[CROUCHING] = Ini.ReadInt("Anti-Aim", "Crouching X");
 	bot.antitypeX[STANDING] = Ini.ReadInt("Anti-Aim", "Standing X");
 	bot.antitypeX[MOVING] = Ini.ReadInt("Anti-Aim", "Moving X");
+	bot.antitypeX[SNAKE] = Ini.ReadInt("Anti-Aim", "Snake X");
 	bot.antitypeY[FIRING] = Ini.ReadInt("Anti-Aim", "Firing Y");
 	bot.antitypeY[SPRINTING] = Ini.ReadInt("Anti-Aim", "Sprinting Y");
 	bot.antitypeY[CROUCHING] = Ini.ReadInt("Anti-Aim", "Crouching Y");
 	bot.antitypeY[STANDING] = Ini.ReadInt("Anti-Aim", "Standing Y");
 	bot.antitypeY[MOVING] = Ini.ReadInt("Anti-Aim", "Moving Y");
+	bot.antitypeY[SNAKE] = Ini.ReadInt("Anti-Aim", "Snake Y");
 	bot.custompitchscale = Ini.ReadFloat("Anti-Aim", "Custom Pitch");
 	bot.breversebot = Ini.ReadBool("Anti-Aim", "Riot Backwards");
 	bot.blockup = Ini.ReadBool("Anti-Aim", "Simi-Up");
@@ -613,11 +638,13 @@ void SaveToIniFile(const char* fileName) {
 	Ini.WriteInt("Crouching X", bot.antitypeX[CROUCHING]);
 	Ini.WriteInt("Standing X", bot.antitypeX[STANDING]);
 	Ini.WriteInt("Moving X", bot.antitypeX[MOVING]);
+	Ini.WriteInt("Snake X", bot.antitypeX[SNAKE]);
 	Ini.WriteInt("Firing Y", bot.antitypeY[FIRING]);
 	Ini.WriteInt("Sprinting Y", bot.antitypeY[SPRINTING]);
 	Ini.WriteInt("Crouching Y", bot.antitypeY[CROUCHING]);
 	Ini.WriteInt("Standing Y", bot.antitypeY[STANDING]);
 	Ini.WriteInt("Moving Y", bot.antitypeY[MOVING]);
+	Ini.WriteInt("Snake Y", bot.antitypeY[SNAKE]);
 	Ini.WriteFloat("Custom Pitch", bot.custompitchscale);
 	Ini.WriteBool("Riot Backwards", bot.breversebot);
 	Ini.WriteBool("Simi-Up", bot.blockup);
