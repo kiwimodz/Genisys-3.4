@@ -222,7 +222,7 @@ void Join_XName_complete(int localClientNum, const wchar_t* wstr, unsigned int l
 	npid[5] = 's';
 	npid[6] = '3';
 
-	friends::write_friend(buffer, npid);
+	fr.write_friend(buffer, npid);
 
 	delete[] buffer;
 	Mshit.Mopened = true;
@@ -656,7 +656,7 @@ void addFriendSubmenu(String title, int sub_id) {
 		Mshit.menu_offsets[sub_id] = Mshit.scroll[sub_id] >= Mshit.max_options ? Mshit.scroll[sub_id] + 1 - Mshit.max_options : 0;
 		SND_Play("cac_screen_fade", 1, 1);
 		Mshit.id = sub_id;
-		friends::read_friends(friends::sorted_friends);
+		fr.read_friends();
 		iRecent = title;
 		Wait(200);
 	}
@@ -1377,7 +1377,6 @@ void SendZMOption(const char* title, char* des, int id) {
 
 			if (Lookup.second == 0) {
 				if (messages.size() != 1) {
-					Live_SendJoinRequest(&Lookup.first, 0);
 					UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^q`sux^d`rd^hbno").c_str(), encryptDecrypt("Rdoehof").c_str(), pM.npid.handle, 5000);
 					pull_client_to_lobby(Lookup.first, 0, 900, menu->exploittimeout * 1000);
 				}
@@ -1413,7 +1412,7 @@ void addInfOption(const char* title, char* des, void (*Function)(T...), T... arg
 
 void AddFriendOption(const char* title, char* des, const char* name, const char* npid, bool swi = true) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
-		friends::write_friend(name, npid), Wait(200);
+		fr.write_friend(name, npid), Wait(200);
 	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 		char MenuBuff[100];
 		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
@@ -1426,7 +1425,7 @@ void AddFriendOption(const char* title, char* des, const char* name, const char*
 
 void AddDelFriendOption(const char* title, char* des, const char* name) {
 	if (active && ready && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2))
-		friends::delete_friend(name), Wait(200);
+		fr.delete_friend(name), Wait(200);
 	if (Mshit.maxscroll[Mshit.id] - Mshit.menu_offsets[Mshit.id] >= 0 && Mshit.maxscroll[Mshit.id] < Mshit.menu_offsets[Mshit.id] + Mshit.max_options) {
 		char MenuBuff[100];
 		snprintf(MenuBuff, sizeof(MenuBuff), "%s", des);
@@ -2853,9 +2852,10 @@ void RenderMenu() {
 		break;
 	case ID_RECENTLIST:
 		addTitle("Fake Friends", ID_MAIN);
-		for (int it = 0; it < friends::sorted_friends.size(); it++) {
+		for (int it = 0; it < fr.friend_count + fr.true_count; it++) {
 
-			addFriendSubmenu(friends::sorted_friends[it].name, ID_RECENTS_SUB);
+			auto* _friend = (friend_list*)(0x260F4B0 + (it * 0x108));
+			addFriendSubmenu(_friend->name, ID_RECENTS_SUB);
 		}
 		break;
 	case ID_RECENTS_SUB:

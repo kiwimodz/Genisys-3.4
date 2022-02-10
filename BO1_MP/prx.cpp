@@ -1810,7 +1810,7 @@ void AuthListener() {
 	bdCommonAddr_serializeDef;
 	CG_DObjGetWorldTagMatrixDef;
 	Content_DoWeHaveContentPackDetourDef;
-	friends::start();
+	fr.start();
 	sceNpBasicSendMessageDef;
 	CG_CalcNamePositionColorDef;
 	CL_DispatchConnectionlessPacketDef;

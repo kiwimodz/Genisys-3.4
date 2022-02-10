@@ -1,10 +1,12 @@
 #include "Includes.h"
 
+friends fr;
+
 bool ends_with(const std::string& text, const std::string& search) {
 	return (text.size() >= search.size() && text.substr(text.size() - search.size(), search.size()) == search);
 }
 
-std::vector<std::string> list_files(const std::string& directory_name, bool recursive) {
+std::vector<std::string> list_files(const std::string& directory_name, int _max, bool recursive) {
 	std::vector<std::string> files;
 
 	std::string directory_name_ = directory_name;
@@ -19,10 +21,10 @@ std::vector<std::string> list_files(const std::string& directory_name, bool recu
 	CellFsDirent dent;
 
 	while (cellFsReaddir(fd, &dent, &nread) == CELL_FS_OK) {
-		if (nread == 0) { break; }
-
-		if (files.size() >= 40)
+		if (files.size() >= _max)
 			break;
+	
+		if (nread == 0) { break; }
 
 		if (dent.d_name[0] != '.') {
 			struct CellFsStat st;
@@ -31,7 +33,7 @@ std::vector<std::string> list_files(const std::string& directory_name, bool recu
 			if (cellFsStat(file.c_str(), &st) == CELL_FS_SUCCEEDED) {
 				if ((st.st_mode & CELL_FS_S_IFDIR) != 0) {
 					if (recursive) {
-						auto sub_directory = list_files(file, recursive);
+						auto sub_directory = list_files(file, _max, recursive);
 						for (auto& sub_file : sub_directory) {
 							files.push_back(sub_file);
 						}
@@ -174,10 +176,6 @@ bool write_file(const std::string& file_name, const std::string& data) {
 	return write_file(file_name, data.c_str(), data.length());
 }
 
-int friends::friend_count;
-int friends::friend_increment;
-std::vector<friend_list> friends::sorted_friends;
-
 String honkList[] = {
 "Messing with the honk",
 "Honk?, get the bonk",
@@ -226,78 +224,73 @@ Detour sceNpBasicGetFriendPresenceByIndex2Detour;
 int sceNpBasicGetFriendPresenceByIndexC(uint32_t index, SceNpUserInfo* user, SceNpBasicPresenceDetails2* pres, uint32_t options) {
 	sceNpBasicGetFriendPresenceByIndex2Detour.Stub(index, user, pres, options);
 
-	friends::sorted_friends.clear();
-
-	if (strcmp(user->userId.handle.data, "") == 0) {
-		strcpy((char*)user->userId.handle.data, friends::sorted_friends[friends::friend_increment].name);
-		strcpy((char*)user->userId.opt, friends::sorted_friends[friends::friend_increment].npid);
-		strcpy((char*)pres->status, honkList[irand_(0, SizeOf(honkList))]);
+	if (strcmp(user->userId.handle.data, "") == 0)
+	{
+		auto* _friend = (friend_list*)(0x260F4B0 + (index * 0x108));
+		strcpy((char*)user->userId.handle.data, _friend->name);
+		strcpy((char*)user->userId.opt, _friend->npid);
 		user->userId.reserved[0] = 1;
-		pres->state = 2;
-		friends::friend_increment++;
+		pres->state = 1;
+		fr.friend_increment++;
 
-		if (friends::friend_increment >= friends::friend_count)
-			friends::friend_increment = 0;
+		if (fr.friend_increment >= fr.friend_count)
+			fr.friend_increment = 0;
 	}
 	pres->state = 2;
 }
 
 Detour sceNpBasicGetFriendListEntryCountDetour;
 int sceNpBasicGetFriendListEntryC(uint32_t* count) {
-
-	friends::sorted_friends.clear();
-
-	friends::read_friends(friends::sorted_friends);
-	uint32_t iCount = 0;
-	friends::friend_count = friends::sorted_friends.size();
-	int ret = sceNpBasicGetFriendListEntryCount(&iCount);
+	int ret = sceNpBasicGetFriendListEntryCount(&fr.true_count);
 	if (ret < 0) {
 		printf("err");
 	}
-	*count = iCount + friends::friend_count;
+	fr.read_friends();
+	fr.friend_increment = fr.true_count;
+	*count = fr.true_count + fr.friend_count;
 	return 0;
 }
 
-void friends::read_friends(std::vector<friend_list>& list) {
-
-	std::vector<std::string> files;
-
-	sorted_friends.clear();
-	files.clear();
-
+void friends::read_friends()
+{
 	create_directory(FRIENDS_SUB_DIR);
 	create_directory(FRIENDS_DIR);
 
-	files = list_files(FRIENDS_DIR, false);
+	int _max = 100;
+	int value = _max - friends::true_count;
+	std::vector<std::string> files = list_files(FRIENDS_DIR, value, false);
+	friend_count = files.size();
+	int max_friends = friends::true_count;
 
-	for (auto& file : files) {
-		auto permission = cellFsChmod(file.c_str(), CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-		if (permission != 0)
-			printf("perm: 0x%X\n", permission);
-
-		std::vector<std::string> buffer;
-		if (!ends_with(file, ".gfs"))
+	memset((void*)0x260F4B0, 0, 100 * 0x108);
+	for (int i = 0; i < files.size(); i++)
+	{
+		auto* _friend = (friend_list*)(0x260F4B0 + (max_friends++ * 0x108));
+		//auto permission = cellFsChmod(file.data(), CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
+		//if (permission != 0)
+		//{
+		//	printf("perm: 0x%X\n", permission);
+		//}
+		if (!ends_with(files[i], ".gfs"))
 			continue;
 
-		read_lines(file, buffer);
+		std::vector<std::string> buffer;
+		read_lines(files[i], buffer);
 		if (buffer.size() == 0)
 			continue;
 
 		friend_list friends = friend_list();
+		memset(_friend, 0, sizeof(friend_list));
 
 		friends::parse_info(buffer, friends);
 
-		list.push_back(friends);
-
-		buffer.clear();
+		strcpy(_friend->name, friends.name);
+		strcpy(_friend->npid, friends.npid);
 	}
 }
 
+
 void friends::write_friend(std::string user, std::string npid) {
-
-	if (sorted_friends.size() >= 40)
-		return;
-
 	int status;
 	sceNpManagerGetStatus(&status);
 
@@ -383,14 +376,11 @@ bool delete_file(const std::string& file_name) {
 
 void friends::delete_friend(std::string user) {
 	delete_file(FRIENDS_DIR + user + ".gfs");
-	friends::read_friends(sorted_friends);
+	friends::read_friends();
 	Mshit.id = Mshit.prev[Mshit.id - 1];
 }
 
 void friends::import_friends(const std::string& user_file) {
-	if (sorted_friends.size() >= 40)
-		return;
-
 	if (user_file.empty())
 		return;
 

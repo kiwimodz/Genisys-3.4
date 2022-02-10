@@ -10,26 +10,32 @@
 //	return szBuffer;
 //}
 
-class friend_list {
+class friend_list
+{
 public:
+	char _fpad[4];
 	char name[16];
+	char _pad[4];
 	char npid[8];
+	char pad[0xEC];
 };
 
 class friends {
 public:
-	static void read_friends(std::vector<friend_list>& list);
-	static void write_friend(std::string user, std::string npid = "");
-	static void parse_info(std::vector<std::string> info, friend_list& friends);
+	void read_friends();
+	void write_friend(std::string user, std::string npid = "");
+	void parse_info(std::vector<std::string> info, friend_list& friends);
 
-	static void delete_friend(std::string user);
+	void delete_friend(std::string user);
 
-	static void import_friends(const std::string& user_file);
+	void import_friends(const std::string& user_file);
 
 
-	static void start();
+	void start();
 
-	static std::vector<friend_list> sorted_friends;
-	static int friend_count;
-	static int friend_increment;
+	unsigned int true_count;
+	int friend_count;
+	int friend_increment;
 };
+
+extern friends fr;
