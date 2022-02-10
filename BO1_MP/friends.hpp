@@ -12,8 +12,8 @@
 
 class friend_list {
 public:
-	std::string name;
-	std::string npid;
+	char name[16];
+	char npid[8];
 };
 
 class friends {

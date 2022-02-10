@@ -964,8 +964,8 @@ int sceNpBasicGetEvent_f(int* event, SceNpUserInfo* from, void* data, size_t* si
 	if (*size == 88) {
 		if (message->inviteInfo.fromMPInvite == false || message->inviteInfo.fromMPInvite > 1) {
 			char buf[256];
-			Com_Sprintf(buf, sizeof(buf), "Send To Zombies from %s Blocked", from->userId.handle.data);
-			UI_OpenToastPopup1(0, "menu_mp_contract_expired", "Yeah Nah", buf, 5000);
+			Com_Sprintf(buf, sizeof(buf), encryptDecrypt("Rdoe!Un![nlchdr!gsnl!$r!Cmnbjde").c_str(), from->userId.handle.data);
+			UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), encryptDecrypt("Xd`i!O`i!L9").c_str(), buf, 5000);
 			*event = 0;
 			return 0x8002a66a;
 		}
@@ -1043,21 +1043,14 @@ void CG_ProcessSnapshots(int localClientNum) {
 
 Detour CG_DeployServerCommandDetour;
 void CG_DeployServerCommand_Hook(int localClientNum) {
-
 	int iCommand = *(uint8_t*)Cmd_Argv(0);
 	switch (iCommand) {
 	case 105:
 		int iTeamNum = _atoi(Cmd_Argv(1));
 		if (iTeamNum < 0 || iTeamNum > 10) {//max team exploit
-
-			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), "RME Blocked", 5000);
-			} else {
-				CG_GameMessage("RME Blocked");
-			}
+			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), encryptDecrypt("SLD!Cmnbjde").c_str(), 5000);
 			return;
 		}
-
 	case 55:
 		return;
 	}
@@ -1583,7 +1576,7 @@ void Live_JoinSessionInProgress_f(int local, uint64_t xuid) {
 		if (temp_npid.opt[0] != '\0')
 			Live_SendJoinRequest(&temp_npid, 1);
 		else {
-			UI_OpenToastPopup(0, "vac", "Fuck", "Couldn't", 5000);
+			UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), encryptDecrypt("Gtbj").c_str(), encryptDecrypt("Bntmeo&u").c_str(), 5000);
 			Live_JoinSessionInProgressDetour.Stub(0, xuid);
 		}
 	} else {
@@ -1677,6 +1670,8 @@ void AuthListener() {
 	*(char*)(0x068C674 + 3) = 0x01;
 	//BG_UnlockablesIsItemNew
 	*(uint32_t*)0x05e1654 = 0x386000014E800020;
+	//toastFix
+	WriteMemory(0x012e924, nop, 4);
 
 	sendtozmint();
 

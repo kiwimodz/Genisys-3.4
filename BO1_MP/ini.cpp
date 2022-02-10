@@ -588,19 +588,12 @@ void ReadFromIniFile(const char* fileName) {
 	//End
 	Ini.Free();
 	char Filename[30];
-	_sys_sprintf(Filename, "%s Configuration File Loaded", fileName);
-	CG_GameMessage(Filename);
-
-	if (!cl_ingame_()) {
-		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
-	} else {
-		CG_GameMessage(Filename);
-	}
+	_sys_sprintf(Filename, encryptDecrypt("$r!Bnoghfts`uhno!Ghmd!Mn`ede").c_str(), fileName);
+	UI_OpenToastPopup(0, encryptDecrypt("uitlcrtq").c_str(), encryptDecrypt("Bnoghfts`uhno").c_str(), Filename, 3000);
 }
 
 void SaveToIniFile(const char* fileName) {
 	Ini.PrepareSave(fileName);
-
 	Ini.WriteSection("Aimbot");
 	Ini.WriteBool("Player Aimbot", bot.benable);
 	Ini.WriteInt("Aim Type", bot.aimtype);
@@ -806,13 +799,6 @@ void SaveToIniFile(const char* fileName) {
 	Ini.WriteFloat("Camo Color Rainbow Speed", menu->rgbac.RainbowSpeed);
 	Ini.Save();
 	char Filename[30];
-	_sys_sprintf(Filename, "%s Configuration File Saved", fileName);
-	CG_GameMessage(Filename);
-
-	if (!cl_ingame_()) {
-		UI_OpenToastPopup(0, "thumbsup", "Configuration", Filename, 3000);
-	} else {
-		CG_GameMessage(Filename);
-	}
-
+	_sys_sprintf(Filename, encryptDecrypt("$r!Bnoghfts`uhno!Ghmd!R`wde").c_str(), fileName);
+	UI_OpenToastPopup(0, encryptDecrypt("uitlcrtq").c_str(), encryptDecrypt("Bnoghfts`uhno").c_str(), Filename, 3000);
 }

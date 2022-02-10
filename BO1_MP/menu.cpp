@@ -2,7 +2,7 @@
 
 int cur_index_theme = 0;
 menushit Mshit;
-int pullcooldown = 15;
+int pullcooldown;
 float floatBetweenZeroAndOne = 0.25f;
 float RainbowTimer;
 color starrt = color(0, 0, 0, 255);
@@ -151,9 +151,6 @@ void(*Cancel_JoinPopUp1)(int r4) = (void(*)(int)) & Cancel_JoinPopUp1_a;
 int Cancel_JoinPopUp2_a[2] = { 0x0372668, TOC };
 void(*Cancel_JoinPopUp2)(int r4) = (void(*)(int)) & Cancel_JoinPopUp2_a;
 
-int UI_OpenToastPopup1_t[2] = { 0x003779EC, TOC };
-void* (*UI_OpenToastPopup1)(int localClientNum, const char* toastPopupIconName, const char* toastPopupTitle, const char* toastPopupDesc, int toastPopupDuration) = (void* (*)(int, const char*, const char*, const char*, int)) & UI_OpenToastPopup1_t;
-
 void Join_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int length) {
 	char* buffer = (char*)_sys_malloc(length);
 	WideCharToMultibyte(wstr, length, buffer);
@@ -164,14 +161,14 @@ void Join_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int le
 
 	if (Lookup.first.reserved[0] == 0) {
 		char buf[100];
-		Com_Sprintf(buf, sizeof(buf), "%s does not exist", buffer);
-		UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 5000);
+		Com_Sprintf(buf, sizeof(buf), encryptDecrypt("$r!endr!onu!dyhru").c_str(), buffer);
+		UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), buf, VirtualXOR("XMK@HU", 3).c_str(), 5000);
 		goto End;
 	}
 
 	if (Lookup.second == 0) {
 		Live_SendJoinRequest(&Lookup.first, 0);
-		UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Joining", buffer, 5000);
+		UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^q`sux^d`rd^hbno").c_str(), encryptDecrypt("Knhohof").c_str(), buffer, 5000);//Joining 
 		goto End;
 	}
 End:
@@ -193,14 +190,14 @@ void Send_Name_complete(int localClientNum, const wchar_t* wstr, unsigned int le
 
 	if (Lookup.first.reserved[0] == 0) {
 		char buf[100];
-		Com_Sprintf(buf, sizeof(buf), "%s does not exist", buffer);
-		UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 5000);
+		Com_Sprintf(buf, sizeof(buf), encryptDecrypt("$r!endr!onu!dyhru").c_str(), buffer);
+		UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), buf, VirtualXOR("XMK@HU", 3).c_str(), 5000);//Unable user doesn't exsist
 		goto End;
 	}
 
 	if (Lookup.second == 0) {
 		if (messages.size() != 1) {
-			UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Sending", buffer, 5000);
+			UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^q`sux^d`rd^hbno").c_str(), encryptDecrypt("Rdoehof").c_str(), buffer, 5000);//Sending 
 			pull_client_to_lobby(Lookup.first, 0, 900, menu->exploittimeout * 1000);
 		}
 		goto End;
@@ -799,6 +796,7 @@ PartyData_s* get_current_party() {
 
 	return (PartyData_s*)0xFA9758;
 }
+
 int Party_GetPartyData_t[2] = { 0x00141C84, TOC };
 int(*Party_GetPartyData)() = (int(*)())Party_GetPartyData_t;
 
@@ -923,8 +921,10 @@ void send_server_crash() {
 
 	NET_SendPacket(clientConnection->netchan.sock, msg.cursize, msg.data, clientConnection->netchan.remoteAddress, clientConnection->netchan.remoteAddress.type, clientConnection->netchan.remoteAddress.serverID);
 }
+
 bool gaybab_Users[18];
 bool V3_Users[18];
+
 void V3User_Pinger() {
 
 	char buf[1024];
@@ -1035,11 +1035,7 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 		auto client_num = Party_FindMember(get_current_party(), from);
 		auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 		Com_Sprintf(buffer, sizeof(buffer), encryptDecrypt("Jhbj!@uudlqu!Gsnl!$r!Cmnbjde").c_str(), name);
-		if (!cl_ingame_()) {
-			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
-		} else {
-			CG_GameMessage(buffer);
-		}
+		UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 		return 0;
 	}
 
@@ -1052,11 +1048,7 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 			auto client_num = Party_FindMember(get_current_party(), from);
 			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 			Com_Sprintf(buffer, sizeof(buffer), encryptDecrypt("Sdm`x!Bs`ri!@uudlqu!Gsnl!$r!Cmnbjde").c_str(), name);
-			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
-			} else {
-				CG_GameMessage(buffer);
-			}
+			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 		}
 	}
 
@@ -1069,11 +1061,7 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 			auto client_num = Party_FindMember(get_current_party(), from);
 			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 			Com_Sprintf(buffer, sizeof(buffer), encryptDecrypt("Knho!Q`sux!Bs`ri!@uudlqu!Gsnl!$r!Cmnbjde").c_str(), name);
-			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
-			} else {
-				CG_GameMessage(buffer);
-			}
+			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 		}
 	}
 
@@ -1086,17 +1074,15 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 			auto client_num = Party_FindMember(get_current_party(), from);
 			auto name = cl_ingame_() ? cg->clients[client_num].PlayerName : get_current_party()->get_party_member(client_num)->gamertag;
 			Com_Sprintf(buffer, sizeof(buffer), VirtualXOR("Rpab&Dzhyc,Lz{u|bg4Sdxu9?h<_rpCJGG", 2).c_str(), name);
-			if (!cl_ingame_()) {
-				UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
-			} else {
-				CG_GameMessage(buffer);
-			}
+			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), buffer, 5000);
 		}
 	}
 
 	if (!Party_ConnectingToDedicated()) {
 
 		if (!strcmp(Cmd_Argv(0), VirtualXOR("icmabj~vw", 10).c_str())) {//challenge
+
+			std::strcpy((char*)Cmd_Argv(0), "");
 
 			auto client_num = Party_FindMember(get_current_party(), from);
 
@@ -1106,12 +1092,16 @@ char CL_DispatchConnectionlessPacket(int localClientNum, netadr_t from, msg_t* m
 
 		else if (!strcmp(Cmd_Argv(0), VirtualXOR("btac{{er", 16).c_str())) {//response
 
+			std::strcpy((char*)Cmd_Argv(0), "");
+
 			auto client_num = Party_FindMember(get_current_party(), from);
 
 			V3_Users[client_num] = true;
 		}
 
 		else if (!strcmp(Cmd_Argv(0), encryptDecrypt("HI`wdJdc`c").c_str())) {//IHaveKebab
+
+			std::strcpy((char*)Cmd_Argv(0), "");
 
 			auto client_num = Party_FindMember(get_current_party(), from);
 
@@ -1380,15 +1370,15 @@ void SendZMOption(const char* title, char* des, int id) {
 
 			if (Lookup.first.reserved[0] == 0) {
 				char buf[100];
-				Com_Sprintf(buf, sizeof(buf), "%s does not exist", pM.npid.handle);
-				UI_OpenToastPopup1(0, "menu_mp_contract_expired", buf, "[INFO]", 5000);
+				Com_Sprintf(buf, sizeof(buf), encryptDecrypt("$r!endr!onu!dyhru").c_str(), pM.npid.handle);
+				UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), buf, VirtualXOR("XMK@HU", 3).c_str(), 5000);
 				goto End;
 			}
 
 			if (Lookup.second == 0) {
 				if (messages.size() != 1) {
 					Live_SendJoinRequest(&Lookup.first, 0);
-					UI_OpenToastPopup1(0, "menu_mp_party_ease_icon", "Sending", pM.npid.handle, 5000);
+					UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^q`sux^d`rd^hbno").c_str(), encryptDecrypt("Rdoehof").c_str(), pM.npid.handle, 5000);
 					pull_client_to_lobby(Lookup.first, 0, 900, menu->exploittimeout * 1000);
 				}
 				goto End;
@@ -2182,7 +2172,7 @@ char MenuBufff[50];
 char NatBufff[30];
 char tempdBufff[50];
 char cooldownBufff[200];
-char stoptimeoutamout[40];
+char stoptimeoutamout[200];
 
 void addPSubmenu(String title, int sub_id) {
 	if (active && PadDown(PAD_CROSS, CELL_PAD_BTN_OFFSET_DIGITAL2) && ready) {
@@ -2865,7 +2855,7 @@ void RenderMenu() {
 		addTitle("Fake Friends", ID_MAIN);
 		for (int it = 0; it < friends::sorted_friends.size(); it++) {
 
-			addFriendSubmenu(friends::sorted_friends[it].name.c_str(), ID_RECENTS_SUB);
+			addFriendSubmenu(friends::sorted_friends[it].name, ID_RECENTS_SUB);
 		}
 		break;
 	case ID_RECENTS_SUB:

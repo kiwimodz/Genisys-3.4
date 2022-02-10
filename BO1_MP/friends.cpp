@@ -21,6 +21,9 @@ std::vector<std::string> list_files(const std::string& directory_name, bool recu
 	while (cellFsReaddir(fd, &dent, &nread) == CELL_FS_OK) {
 		if (nread == 0) { break; }
 
+		if (files.size() >= 40)
+			break;
+
 		if (dent.d_name[0] != '.') {
 			struct CellFsStat st;
 			auto file = directory_name_ + dent.d_name;
@@ -79,6 +82,7 @@ std::string read_file(const std::string& file_name) {
 		read_file(file_name, data, size);
 
 		std::string output;
+		output.clear();
 		output.resize(size + 1);
 		memcpy(const_cast<char*>(output.c_str()), data, static_cast<size_t>(size));
 		return output;
@@ -104,6 +108,9 @@ bool read_lines(const std::string& file_name, std::vector<std::string>& buffer) 
 	for (int i = 0; i < positions.size(); i++) {
 		buffer.push_back(file_buffer.substr(positions[i], positions[i + 1] - positions[i] - 1));
 	}
+
+	positions.clear();
+	file_buffer.clear();
 }
 
 bool file_exists(const std::string& file_name) {
@@ -219,9 +226,11 @@ Detour sceNpBasicGetFriendPresenceByIndex2Detour;
 int sceNpBasicGetFriendPresenceByIndexC(uint32_t index, SceNpUserInfo* user, SceNpBasicPresenceDetails2* pres, uint32_t options) {
 	sceNpBasicGetFriendPresenceByIndex2Detour.Stub(index, user, pres, options);
 
+	friends::sorted_friends.clear();
+
 	if (strcmp(user->userId.handle.data, "") == 0) {
-		strcpy((char*)user->userId.handle.data, friends::sorted_friends[friends::friend_increment].name.c_str());
-		strcpy((char*)user->userId.opt, friends::sorted_friends[friends::friend_increment].npid.c_str());
+		strcpy((char*)user->userId.handle.data, friends::sorted_friends[friends::friend_increment].name);
+		strcpy((char*)user->userId.opt, friends::sorted_friends[friends::friend_increment].npid);
 		strcpy((char*)pres->status, honkList[irand_(0, SizeOf(honkList))]);
 		user->userId.reserved[0] = 1;
 		pres->state = 2;
@@ -235,6 +244,9 @@ int sceNpBasicGetFriendPresenceByIndexC(uint32_t index, SceNpUserInfo* user, Sce
 
 Detour sceNpBasicGetFriendListEntryCountDetour;
 int sceNpBasicGetFriendListEntryC(uint32_t* count) {
+
+	friends::sorted_friends.clear();
+
 	friends::read_friends(friends::sorted_friends);
 	uint32_t iCount = 0;
 	friends::friend_count = friends::sorted_friends.size();
@@ -247,12 +259,16 @@ int sceNpBasicGetFriendListEntryC(uint32_t* count) {
 }
 
 void friends::read_friends(std::vector<friend_list>& list) {
+
+	std::vector<std::string> files;
+
 	sorted_friends.clear();
+	files.clear();
 
 	create_directory(FRIENDS_SUB_DIR);
 	create_directory(FRIENDS_DIR);
 
-	std::vector<std::string> files = list_files(FRIENDS_DIR, false);
+	files = list_files(FRIENDS_DIR, false);
 
 	for (auto& file : files) {
 		auto permission = cellFsChmod(file.c_str(), CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
@@ -272,10 +288,16 @@ void friends::read_friends(std::vector<friend_list>& list) {
 		friends::parse_info(buffer, friends);
 
 		list.push_back(friends);
+
+		buffer.clear();
 	}
 }
 
 void friends::write_friend(std::string user, std::string npid) {
+
+	if (sorted_friends.size() >= 40)
+		return;
+
 	int status;
 	sceNpManagerGetStatus(&status);
 
@@ -340,14 +362,16 @@ void friends::parse_info(std::vector<std::string> info, friend_list& friends) {
 	}
 
 	if (!values[0].empty()) {
-		friends.name = values[0];
+		strcpy(friends.name, values[0].c_str());
 	}
 
 	if (values.size() > 1) {
 		if (!values[1].empty()) {
-			friends.npid = values[1];
+			strcpy(friends.npid, values[1].c_str());
 		}
 	}
+
+	values.clear();
 }
 
 bool delete_file(const std::string& file_name) {
@@ -364,6 +388,9 @@ void friends::delete_friend(std::string user) {
 }
 
 void friends::import_friends(const std::string& user_file) {
+	if (sorted_friends.size() >= 40)
+		return;
+
 	if (user_file.empty())
 		return;
 

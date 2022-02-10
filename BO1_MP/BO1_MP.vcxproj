@@ -83,8 +83,7 @@
     <Link>
       <AdditionalDependencies>$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SCE_PS3_ROOT)\target\ppu\lib\libcs.a;$(SCE_PS3_ROOT)\target\ppu\lib\libhttp_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libhttp_util_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libnet_stub.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha512.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libmd5.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_np_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libnetctl_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libaudio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysmodule_stub.a;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
-      <InfoStripping>None</InfoStripping>
-      <DataStripping>StripFuncsAndData</DataStripping>
+      <DataStripping>StripFuncs</DataStripping>
       <GenerateOmlData>false</GenerateOmlData>
     </Link>
     <CustomBuildStep />

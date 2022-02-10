@@ -1,7 +1,7 @@
 #ifndef menu_h
 #define menu_h
 
-#define max 40
+#define max 30
 void Wait(float timeout);
 enum ids : int {
 	ID_MAIN,
@@ -137,6 +137,6 @@ extern void HandleMenu();
 extern void Cancel_Reload();
 extern const char* ToLower(std::string name);
 extern bool(*Session_IsHost_f)(int, int);
-extern int UI_OpenToastPopup1_t[2];
-extern void* (*UI_OpenToastPopup1)(int localClientNum, const char* toastPopupIconName, const char* toastPopupTitle, const char* toastPopupDesc, int toastPopupDuration);
+extern int UI_OpenToastPopup_t[2];
+extern void* (*UI_OpenToastPopup)(int localClientNum, const char* toastPopupIconName, const char* toastPopupTitle, const char* toastPopupDesc, int toastPopupDuration);
 #endif
