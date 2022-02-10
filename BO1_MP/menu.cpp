@@ -2854,7 +2854,7 @@ void RenderMenu() {
 		addTitle("Fake Friends", ID_MAIN);
 		for (int it = 0; it < fr.friend_count + fr.true_count; it++) {
 
-			auto* _friend = (friend_list*)(0x260F4B0 + (it * 0x108));
+			auto* _friend = (friend_list*)(0x26163a8 + (it * 0x108));
 			addFriendSubmenu(_friend->name, ID_RECENTS_SUB);
 		}
 		break;

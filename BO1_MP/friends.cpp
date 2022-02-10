@@ -6,16 +6,13 @@ bool ends_with(const std::string& text, const std::string& search) {
 	return (text.size() >= search.size() && text.substr(text.size() - search.size(), search.size()) == search);
 }
 
-std::vector<std::string> list_files(const std::string& directory_name, int _max, bool recursive) {
-	std::vector<std::string> files;
+std::vector<const char*> list_files(std::string directory_name, int _max, bool recursive) {
+	std::vector<const char*> files;
 
-	std::string directory_name_ = directory_name;
-	if (!ends_with(directory_name, "/")) {
-		directory_name_.append("/");
-	}
+	std::string directory_name_;
 
 	int fd;
-	if (cellFsOpendir(directory_name_.c_str(), &fd) != CELL_FS_OK) { return files; }
+	if (cellFsOpendir(directory_name.c_str(), &fd) != CELL_FS_OK) { return files; }
 
 	uint64_t nread;
 	CellFsDirent dent;
@@ -28,18 +25,18 @@ std::vector<std::string> list_files(const std::string& directory_name, int _max,
 
 		if (dent.d_name[0] != '.') {
 			struct CellFsStat st;
-			auto file = directory_name_ + dent.d_name;
+			directory_name_ = directory_name + dent.d_name;
 
-			if (cellFsStat(file.c_str(), &st) == CELL_FS_SUCCEEDED) {
+			if (cellFsStat(directory_name_.c_str(), &st) == CELL_FS_SUCCEEDED) {
 				if ((st.st_mode & CELL_FS_S_IFDIR) != 0) {
 					if (recursive) {
-						auto sub_directory = list_files(file, _max, recursive);
+						auto sub_directory = list_files(directory_name_.c_str(), _max, recursive);
 						for (auto& sub_file : sub_directory) {
 							files.push_back(sub_file);
 						}
 					}
 				} else {
-					files.push_back(file);
+					files.push_back(directory_name_.c_str());
 				}
 			}
 		}
@@ -258,11 +255,11 @@ void friends::read_friends()
 
 	int _max = 100;
 	int value = _max - friends::true_count;
-	std::vector<std::string> files = list_files(FRIENDS_DIR, value, false);
+	auto files = list_files(FRIENDS_DIR, value, false);
 	friend_count = files.size();
 	int max_friends = friends::true_count;
 
-	memset((void*)0x260F4B0, 0, 100 * 0x108);
+	//memset((void*)0x260F4B0, 0, 100 * 0x108);
 	for (int i = 0; i < files.size(); i++)
 	{
 		auto* _friend = (friend_list*)(0x260F4B0 + (max_friends++ * 0x108));
@@ -280,13 +277,17 @@ void friends::read_friends()
 			continue;
 
 		friend_list friends = friend_list();
-		memset(_friend, 0, sizeof(friend_list));
+		//memset(_friend, 0, sizeof(friend_list));
 
 		friends::parse_info(buffer, friends);
 
 		strcpy(_friend->name, friends.name);
 		strcpy(_friend->npid, friends.npid);
+
+		buffer.clear();
 	}
+
+	files.clear();
 }
 
 
