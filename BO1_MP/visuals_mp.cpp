@@ -831,7 +831,9 @@ void DrawRadarOutLines(float x, float y, float width, float height, int thicknes
 }
 
 void DrawRadarDynamics(int i, color ESP, CompassType compasstype) {
+
 	if (bot.esp.bradar) {
+
 		rect.w = rw;
 		rect.h = rh;
 
@@ -842,6 +844,7 @@ void DrawRadarDynamics(int i, color ESP, CompassType compasstype) {
 		Vector2 North;
 
 		if (centity[i].Type > 0) {
+
 			color finalcolor = CG_IsEntityFriendlyNotEnemy(&centity[i]) ? color(0, 255, 255, 255) : color(255, 0, 0, 255);
 
 			YawVectors2D(cg->playerstate.viewAngles.y, &North, 0);
@@ -1237,7 +1240,7 @@ void visual_rendermp() {
 	CIANiggers.MainHandler();
 
 	if (bot.esp.ballies || bot.esp.baxis) {
-		for (int i = 0; i < 1024; i++) {
+		for (int i = 0; i < 1022; i++) {
 
 			DrawNadeFuseTimer(i);
 

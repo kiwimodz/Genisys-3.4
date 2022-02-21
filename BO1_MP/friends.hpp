@@ -38,4 +38,4 @@ public:
 	int friend_increment;
 };
 
-extern friends fr;
+extern friends* fr;

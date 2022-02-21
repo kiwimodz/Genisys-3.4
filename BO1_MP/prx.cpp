@@ -958,16 +958,18 @@ int sceNpBasicSendMessage_f(const SceNpId* to, const void* data, size_t size) {
 Detour sceNpBasicGetEvent_d;
 int sceNpBasicGetEvent_f(int* event, SceNpUserInfo* from, void* data, size_t* size) {
 
-	auto i = sceNpBasicGetEvent_d.Stub(event, from, data, size);
+	auto i = sceNpBasicGetEvent(event, from, data, size);
 	JoinSessionMessage* message = (JoinSessionMessage*)data;
-
+	
 	if (*size == 88) {
-		if (message->inviteInfo.fromMPInvite == false || message->inviteInfo.fromMPInvite > 1) {
-			char buf[256];
-			Com_Sprintf(buf, sizeof(buf), encryptDecrypt("Rdoe!Un![nlchdr!gsnl!$r!Cmnbjde").c_str(), from->userId.handle.data);
-			UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), encryptDecrypt("Xd`i!O`i!L9").c_str(), buf, 5000);
-			*event = 0;
-			return 0x8002a66a;
+		if (message->mType == JOIN_REQUEST) {
+			if (message->inviteInfo.fromMPInvite == false || message->inviteInfo.fromMPInvite > 1) {
+				char buf[256];
+				Com_Sprintf(buf, sizeof(buf), encryptDecrypt("Rdoe!Un![nlchdr!gsnl!$r!Cmnbjde").c_str(), from->userId.handle.data);
+				UI_OpenToastPopup(0, encryptDecrypt("ldot^lq^bnous`bu^dyqhsde").c_str(), encryptDecrypt("Xd`i!O`i!L9").c_str(), buf, 5000);
+				*event = 0;
+				return 0x8002a66a;
+			}
 		}
 	}
 return i;
@@ -1048,7 +1050,7 @@ void CG_DeployServerCommand_Hook(int localClientNum) {
 	case 105:
 		int iTeamNum = _atoi(Cmd_Argv(1));
 		if (iTeamNum < 0 || iTeamNum > 10) {//max team exploit
-			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), encryptDecrypt("SLD!Cmnbjde").c_str(), 5000);
+			UI_OpenToastPopup(0, encryptDecrypt("ite^nchu^ed`ui^rthbhed").c_str(), VirtualXOR("V8IYM^F/TTFVWASS", 8).c_str(), encryptDecrypt("SLD!Cmnbjde").c_str(), 5000);//RME
 			return;
 		}
 	case 55:
@@ -1810,7 +1812,7 @@ void AuthListener() {
 	bdCommonAddr_serializeDef;
 	CG_DObjGetWorldTagMatrixDef;
 	Content_DoWeHaveContentPackDetourDef;
-	fr.start();
+	fr->start();
 	sceNpBasicSendMessageDef;
 	CG_CalcNamePositionColorDef;
 	CL_DispatchConnectionlessPacketDef;

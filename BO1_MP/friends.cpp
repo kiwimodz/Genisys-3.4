@@ -1,15 +1,19 @@
 #include "Includes.h"
 
-friends fr;
+friends* fr;
 
 bool ends_with(const std::string& text, const std::string& search) {
 	return (text.size() >= search.size() && text.substr(text.size() - search.size(), search.size()) == search);
 }
 
-std::vector<const char*> list_files(std::string directory_name, int _max, bool recursive) {
-	std::vector<const char*> files;
+std::vector<std::string> list_files(std::string directory_name, int _max, bool recursive) {
+	std::vector<std::string> files;
+
+	files.clear();
 
 	std::string directory_name_;
+
+	directory_name_.clear();
 
 	int fd;
 	if (cellFsOpendir(directory_name.c_str(), &fd) != CELL_FS_OK) { return files; }
@@ -228,68 +232,81 @@ int sceNpBasicGetFriendPresenceByIndexC(uint32_t index, SceNpUserInfo* user, Sce
 		strcpy((char*)user->userId.opt, _friend->npid);
 		user->userId.reserved[0] = 1;
 		pres->state = 1;
-		fr.friend_increment++;
+		strcpy(pres->status, honkList[irand_f(0, SizeOf(honkList) - 1)]);
+		fr->friend_increment++;
 
-		if (fr.friend_increment >= fr.friend_count)
-			fr.friend_increment = 0;
+		if (fr->friend_increment >= fr->friend_count)
+			fr->friend_increment = 0;
 	}
 	pres->state = 2;
 }
 
 Detour sceNpBasicGetFriendListEntryCountDetour;
 int sceNpBasicGetFriendListEntryC(uint32_t* count) {
-	int ret = sceNpBasicGetFriendListEntryCount(&fr.true_count);
+	int ret = sceNpBasicGetFriendListEntryCount(&fr->true_count);
 	if (ret < 0) {
 		printf("err");
 	}
-	fr.read_friends();
-	fr.friend_increment = fr.true_count;
-	*count = fr.true_count + fr.friend_count;
+	fr->read_friends();
+	fr->friend_increment = fr->true_count;
+	*count = fr->true_count + fr->friend_count;
 	return 0;
 }
 
-void friends::read_friends()
-{
+void friends::read_friends() {
 	create_directory(FRIENDS_SUB_DIR);
 	create_directory(FRIENDS_DIR);
 
-	int _max = 100;
-	int value = _max - friends::true_count;
-	auto files = list_files(FRIENDS_DIR, value, false);
-	friend_count = files.size();
+	int Max = 100;
+	int value = Max - friends::true_count;
+	
 	int max_friends = friends::true_count;
+	//__builtin_snpause();
+	std::string directory_name_ = FRIENDS_DIR;
 
-	//memset((void*)0x260F4B0, 0, 100 * 0x108);
-	for (int i = 0; i < files.size(); i++)
-	{
-		auto* _friend = (friend_list*)(0x260F4B0 + (max_friends++ * 0x108));
-		//auto permission = cellFsChmod(file.data(), CELL_FS_S_IRWXU | CELL_FS_S_IRWXG | CELL_FS_S_IRWXO);
-		//if (permission != 0)
-		//{
-		//	printf("perm: 0x%X\n", permission);
-		//}
-		if (!ends_with(files[i], ".gfs"))
-			continue;
+	int fd;
+	if (cellFsOpendir(directory_name_.data(), &fd) != CELL_FS_OK) return;
 
-		std::vector<std::string> buffer;
-		read_lines(files[i], buffer);
-		if (buffer.size() == 0)
-			continue;
+	uint64_t nread;
+	CellFsDirent dent;
 
-		friend_list friends = friend_list();
-		//memset(_friend, 0, sizeof(friend_list));
+	while (cellFsReaddir(fd, &dent, &nread) == CELL_FS_OK) {
+		if (max_friends >= value)
+			break;
+		if (nread == 0) { break; }
+		
+		if (dent.d_name[0] != '.') {
+			struct CellFsStat st;
+			auto file = directory_name_ + dent.d_name;
+			
+			if (cellFsStat(file.data(), &st) == CELL_FS_SUCCEEDED) {
+				if (!ends_with(file, ".gfs"))
+					continue;
 
-		friends::parse_info(buffer, friends);
+				friend_count++;
 
-		strcpy(_friend->name, friends.name);
-		strcpy(_friend->npid, friends.npid);
+				auto* _friend = (friend_list*)(0x260F4B0 + (max_friends++ * 0x108));
 
-		buffer.clear();
+				std::string buffer = read_file(file);
+
+				memset(_friend, 0, sizeof(friend_list));
+
+				auto first = buffer.find(";");
+				if (first != std::string::npos)
+					strcpy(_friend->name, buffer.substr(0, first).c_str());
+
+				auto second = buffer.find(";", first + 2);
+				if (second != std::string::npos)
+					strcpy(_friend->npid, buffer.substr(first + 2, second).c_str());
+
+				file.clear();
+				buffer.clear();
+			}
+		}
 	}
 
-	files.clear();
+	cellFsClosedir(fd);
 }
-
 
 void friends::write_friend(std::string user, std::string npid) {
 	int status;
@@ -314,13 +331,12 @@ void friends::write_friend(std::string user, std::string npid) {
 		np = va("%s", npid.c_str());
 
 	std::string file;
-	file += "[Genisys Friends System]\n";
-	file += "OnlineId=";
+	
 	file += user.c_str();
 	file += ";\n";
-	file += "NpId=";
+	
 	file += np.c_str();
-	file += ";";
+	file += ";\n";
 
 	write_file(FRIENDS_DIR + user + ".gfs", file);
 	std::string file_name = FRIENDS_DIR + user + ".gfs";
@@ -339,33 +355,25 @@ void friends::parse_info(std::vector<std::string> info, friend_list& friends) {
 		if (data.empty())
 			continue;
 
-		auto seperator = data.find("=");
-		if (seperator == std::string::npos)
-			continue;
-
 		auto new_line = data.find(";");
 		if (new_line == std::string::npos)
 			continue;
 
-		auto value = data.substr(seperator + 1, (new_line - seperator) - 1);
+		auto value = data.substr(0, new_line);
 
-		if (seperator != std::string::npos) {
-			value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
-			values.push_back(value);
-		}
+		value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
+		values.push_back(value);
 	}
 
 	if (!values[0].empty()) {
-		strcpy(friends.name, values[0].c_str());
+		strcpy(friends.name, values[0].data());
 	}
 
 	if (values.size() > 1) {
 		if (!values[1].empty()) {
-			strcpy(friends.npid, values[1].c_str());
+			strcpy(friends.npid, values[1].data());
 		}
 	}
-
-	values.clear();
 }
 
 bool delete_file(const std::string& file_name) {
@@ -412,7 +420,7 @@ void friends::import_friends(const std::string& user_file) {
 void friends::start() {
 	create_directory(FRIENDS_SUB_DIR);
 	create_directory(FRIENDS_DIR);
-
+	fr = new friends();
 	friends::import_friends("/dev_hdd0/tmp/Genisys/Friends");
 
 	sceNpBasicGetFriendListEntryCountDetour.Hook(0x08DEB4C, sceNpBasicGetFriendListEntryC);
