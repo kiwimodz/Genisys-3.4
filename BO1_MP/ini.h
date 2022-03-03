@@ -10,9 +10,9 @@ public:
 	uint64_t pos;
 	uint64_t nwrite;
 
-	char* GetSection(const char* section);
-	char* GetValue(char* found, const char* value);
-	char* FillInValue(char* v_found);
+	const char* GetSection(const char* section);
+	const char* GetValue(const char* found, const char* value);
+	const char* FillInValue(const char* v_found);
 
 	void Init(const char* filename);
 	void Free();
@@ -24,8 +24,9 @@ public:
 	color ReadColor(const char* section, std::string value);
 	float ReadFloat(const char* section, std::string value);
 	char ReadChar(const char* section, std::string value);
-	void ReadString(const char* section, std::string value, char* out);
+	void ReadString(const char* section, std::string value, const char* out);
 
+	void PrepareFriendsSave(const char* filename);
 	void PrepareSave(const char* filename);
 	void WriteSection(const char* section);
 	void WriteBool(const char* option, bool value);
@@ -37,46 +38,7 @@ public:
 	void Save();
 };
 
-class FriendList {
-public:
-	std::string name, npid;
-};
-
-class Friends {
-public:
-	uint64_t nrw;
-	uint64_t pos;
-
-	int fd;
-
-	char buffer[3000];
-	const char* FileName;
-
-	std::vector<std::string> vFriends;
-	std::vector<std::string> vList;
-	std::vector<std::string> vNpids;
-	std::vector<std::string> vNames;
-
-	void Init();
-	void PrepareSave();
-	void Free();
-
-	char* GetSection(const char* section);
-	char* GetValue(char* found, const char* value);
-	char* FillInValue(char* v_found);
-
-	bool DeleteFriend(std::string name);
-
-	void ReadFromFile(int FileSize);
-	const char* ReadChar(const char* section, std::string value);
-	bool ReadFriends();
-
-	void WriteSection(const char* section);
-	bool WriteFriends(std::string name, std::string npid);
-};
-
 extern INI Ini;
-extern Friends Fr;
 
 size_t GetFileSize(const char* fileName);
 

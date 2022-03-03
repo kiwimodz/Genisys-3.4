@@ -3,8 +3,8 @@ class msg_t {
 public:
     int overflowed;
     int readOnly;
-    char* data;
-    char* splitData;
+    const char* data;
+    const char* splitData;
     int maxsize;
     int cursize;
     int splitSize;
@@ -14,8 +14,8 @@ public:
     int flush;
     netsrc_t targetLocalNetID;
 
-    msg_t() { }
-    msg_t(char* data, int length);
+    msg_t() {}
+    msg_t(const char* data, int length);
 
     void write_long(int c);
     void write_string(const char* s);
@@ -33,13 +33,13 @@ public:
     short read_short();
     bool read_bool();
     char read_byte();
-    char* read_string(char* string, unsigned int maxChars);
+    const char* read_string(const char* string, unsigned int maxChars);
     float read_float();
 };
 
 #pragma region MSG_ Functions
 //Write
-extern void(*MSG_Init)(msg_t* buf, char* data, int length);
+extern void(*MSG_Init)(msg_t* buf, const char* data, int length);
 extern void(*MSG_WriteLong)(msg_t* msg, int c);
 extern void(*MSG_WriteString)(msg_t* msg, const char* s);
 extern void(*MSG_WriteShort)(msg_t* msg, short c);

@@ -1,13 +1,11 @@
 #pragma once
 
-enum socket_type
-{
+enum socket_type {
 	SOCKET_TYPE_TCP,
 	SOCKET_TYPE_UDP
 };
 
-class sockets
-{
+class sockets {
 private:
 	int socket_;
 	uint32_t ip_;

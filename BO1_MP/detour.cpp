@@ -4,7 +4,7 @@
 void DetourFunction(int address, int hookFunc, int stubFunc);
 
 unsigned int PRX_TOC_ADDRESS = 0;
-unsigned char* Detour::HookSection = (unsigned char*)STUB_ADDRESS_BLOCK;
+unsigned const char* Detour::HookSection = (unsigned const char*)STUB_ADDRESS_BLOCK;
 unsigned int Detour::HookCount = 0;
 
 void Detour::Restore() {
@@ -32,8 +32,6 @@ unsigned int Detour::AllocateStub() {
 
 	return (unsigned int)&this->stubTOC[0];
 }
-
-
 
 void DetourFunction(int address, int hookFunc, int stubFunc) {
 	int StubData[8], FuncData[4];

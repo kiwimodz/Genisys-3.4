@@ -32,9 +32,6 @@
     <ClCompile Include="console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdio_fix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="detour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,6 +54,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="msg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="friends.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdio_fix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -88,9 +91,6 @@
     <ClInclude Include="includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="detour.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="trampoline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -113,6 +113,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="prx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="friends.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

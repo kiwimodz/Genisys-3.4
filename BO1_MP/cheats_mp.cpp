@@ -130,7 +130,7 @@ void unlock_all()
 	WriteMemory(0x26FED0E, punlocks, sizeof(punlocks));
 	WriteMemory(0x2706938 , punlocks1, 4);
 
-	Cbuf_AddText(";updategamerprofile;uploadstats;");
-	local->stausrank = "^2Unloack all complete";
+	Cbuf_AddText(hash(";updategamerprofile;uploadstats;"));
+	local->stausrank = hash("^2Unlock all complete");
 }
 #pragma endregion

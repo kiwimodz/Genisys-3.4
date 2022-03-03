@@ -38,5 +38,5 @@
 #include "sockets.h"
 #include <prx.h>
 #include "auth.h"
-
+#include "friends.hpp"
 #define TOC 0x0D67E98

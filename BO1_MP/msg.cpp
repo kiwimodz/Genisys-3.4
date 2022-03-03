@@ -3,7 +3,7 @@
 #pragma region MSG_ Functions
 ////Write
 int MSG_Init_t[2] = { 0x0032A684, TOC };
-void(*MSG_Init)(msg_t* buf, char* data, int length) = (decltype(MSG_Init))MSG_Init_t;
+void(*MSG_Init)(msg_t* buf, const char* data, int length) = (decltype(MSG_Init))MSG_Init_t;
 
 int MSG_WriteLong_t[2] = { 0x0032EE34, TOC };
 void(*MSG_WriteLong)(msg_t* msg, int c) = (decltype(MSG_WriteLong))MSG_WriteLong_t;
@@ -37,7 +37,7 @@ int MSG_ReadByte_t[2] = { 0x0032B6C0, TOC };
 int(*MSG_ReadByte)(msg_t* buf) = (decltype(MSG_ReadByte))MSG_ReadByte_t;
 
 int MSG_ReadString_t[2] = { 0x0032BA4C, TOC };
-char* (*MSG_ReadString)(msg_t* msg, char* string, unsigned int maxChars) = (decltype(MSG_ReadString))MSG_ReadString_t;
+const char* (*MSG_ReadString)(msg_t* msg, const char* string, unsigned int maxChars) = (decltype(MSG_ReadString))MSG_ReadString_t;
 
 int MSG_ReadInt64_t[2] = { 0x0032B8A8, TOC };
 unsigned __int64 (*MSG_ReadInt64)(msg_t* msg) = (decltype(MSG_ReadInt64))MSG_ReadInt64_t;
@@ -49,7 +49,7 @@ int MSG_ReadFloat_t[2] = { 0x0032B970, TOC };
 float(*MSG_ReadFloat)(msg_t* msg) = (decltype(MSG_ReadFloat))MSG_ReadFloat_t;
 #pragma endregion
 
-msg_t::msg_t(char* data, int length) {
+msg_t::msg_t(const char* data, int length) {
 	MSG_Init(this, data, length);
 }
 void msg_t::write_long(int c) {
@@ -103,7 +103,7 @@ bool msg_t::read_bool() {
 char msg_t::read_byte() {
 	return MSG_ReadByte(this);
 }
-char* msg_t::read_string(char* string, unsigned int maxChars) {
+const char* msg_t::read_string(const char* string, unsigned int maxChars) {
 	return MSG_ReadString(this, string, maxChars);
 }
 float msg_t::read_float() {
