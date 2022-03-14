@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|PS3">
+      <Configuration>Debug</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DRelease|PS3">
+      <Configuration>DRelease</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|PS3">
+      <Configuration>Release</Configuration>
+      <Platform>PS3</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCTargetsPath Condition="'$(VCTargetsPath12)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath12)</VCTargetsPath>
+    <ProjectGuid>{EB797CC9-CF79-4E64-868E-2BB70BD6E9F6}</ProjectGuid>
+    <ProjectName>Genisys</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>SNC</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DRelease|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>SNC</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>SNC</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(DebuggerFlavor)'=='PS3Debugger'" Label="OverrideDebuggerDefaults">
+    <!--LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand-->
+    <!--LocalDebuggerCommandArguments></LocalDebuggerCommandArguments-->
+    <!--LocalDebuggerCommandLine>-r -e -m</LocalDebuggerCommandLine-->
+    <!--LocalRunCommandLine>-r</LocalRunCommandLine-->
+    <!--LocalTunerCommandLine></LocalTunerCommandLine-->
+    <!--LocalDebuggerFileServingDirectory>$(ProjectDir)</LocalDebuggerFileServingDirectory-->
+    <!--LocalDebuggerHomeDirectory>$(ProjectDir)</LocalDebuggerHomeDirectory-->
+    <!--LocalDebuggerProjectFile></LocalDebuggerProjectFile-->
+    <!--LocalDebuggerResetType>Soft</LocalDebuggerResetType-->
+    <!--LocalDebuggerClearTty>False</LocalDebuggerClearTty-->
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DRelease|PS3'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DRelease|PS3'">
+    <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;__CELL_ASSERT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
+      <Warnings>TurnOffWarnings</Warnings>
+      <OptimizationLevel>Level2</OptimizationLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <InlineFunctionDebug>false</InlineFunctionDebug>
+      <MsErrors>false</MsErrors>
+      <RelaxAlias>Default</RelaxAlias>
+      <AssumeCorrectAlignment>Default</AssumeCorrectAlignment>
+      <AssumeCorrectSign>false</AssumeCorrectSign>
+      <Distributable>false</Distributable>
+      <FastMath>false</FastMath>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SCE_PS3_ROOT)\target\ppu\lib\libcs.a;$(SCE_PS3_ROOT)\target\ppu\lib\libhttp_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libhttp_util_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libnet_stub.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha512.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libmd5.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_np_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libnetctl_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libaudio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysmodule_stub.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateSnMapFile>None</GenerateSnMapFile>
+      <GenerateOmlData>false</GenerateOmlData>
+      <InfoStripping>StripSymsAndDebug</InfoStripping>
+      <DataStripping>StripFuncsAndData</DataStripping>
+    </Link>
+    <CustomBuildStep />
+    <CustomBuildStep>
+      <Message />
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>
+if "$(Username)" == "kiwi_modz"
+ cd C:\Users\kiwi\Desktop\PS3GAY
+
+  del *.sprx
+  del *.map
+
+  cd $(TargetDir)
+
+  xcopy "$(TargetPath)" "C:\Users\kiwi\Desktop\PS3GAY"
+  xcopy "$(TargetDir)Genisys.map" "C:\Users\kiwi\Desktop\PS3GAY"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DRelease|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>_RELEASE;__CELL_ASSERT__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CppLanguageStd>Cpp11</CppLanguageStd>
+      <Warnings>TurnOffWarnings</Warnings>
+      <OptimizationLevel>Level2</OptimizationLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <FastMath>true</FastMath>
+      <MsErrors>false</MsErrors>
+      <Distributable>false</Distributable>
+      <TreatMessagesAsErrors>ReportedErrors</TreatMessagesAsErrors>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SCE_PS3_ROOT)\target\ppu\lib\libc.a;$(SCE_PS3_ROOT)\target\ppu\lib\libcs.a;$(SCE_PS3_ROOT)\target\ppu\lib\libhttp_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libhttp_util_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libnet_stub.a;$(SN_PS3_PATH)\ppu\lib\sn\libsn.a;$(SCE_PS3_ROOT)\target\ppu\lib\libm.a;$(SCE_PS3_ROOT)\target\ppu\lib\libio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\liblv2_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libsha512.a;$(SCE_PS3_ROOT)\target\ppu\lib\hash\libmd5.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysutil_np_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libnetctl_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libaudio_stub.a;$(SCE_PS3_ROOT)\target\ppu\lib\libsysmodule_stub.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateSnMapFile>FullMapFile</GenerateSnMapFile>
+      <InfoStripping>None</InfoStripping>
+      <DataStripping>StripFuncsAndData</DataStripping>
+    </Link>
+    <CustomBuildStep />
+    <CustomBuildStep>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|PS3'">
+    <ClCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OptimizationLevel>Level2</OptimizationLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <FastMath>true</FastMath>
+    </ClCompile>
+    <Link>
+      <InfoStripping>None</InfoStripping>
+    </Link>
+    <Link>
+      <DataStripping>StripFuncsAndData</DataStripping>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="aimassist_mp.cpp" />
+    <ClCompile Include="auth.cpp" />
+    <ClCompile Include="cheats_mp.cpp" />
+    <ClCompile Include="console.cpp" />
+    <ClCompile Include="detour.cpp" />
+    <ClCompile Include="friends.cpp" />
+    <ClCompile Include="functions.cpp" />
+    <ClCompile Include="ini.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="msg.cpp" />
+    <ClCompile Include="npId.cpp" />
+    <ClCompile Include="prx.cpp" />
+    <ClCompile Include="sockets.cpp" />
+    <ClCompile Include="stdio_fix.cpp" />
+    <ClCompile Include="trampoline.cpp" />
+    <ClCompile Include="vector.cpp" />
+    <ClCompile Include="visuals_mp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="aimassist_mp.h" />
+    <ClInclude Include="auth.h" />
+    <ClInclude Include="cellPad.h" />
+    <ClInclude Include="cheats_mp.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="Detour.h" />
+    <ClInclude Include="friends.hpp" />
+    <ClInclude Include="functions.h" />
+    <ClInclude Include="includes.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="msg.h" />
+    <ClInclude Include="npId.h" />
+    <ClInclude Include="prx.h" />
+    <ClInclude Include="sockets.h" />
+    <ClInclude Include="structures.h" />
+    <ClInclude Include="trampoline.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="visuals_mp.h" />
+  </ItemGroup>
+  <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
