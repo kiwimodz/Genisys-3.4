@@ -7,21 +7,21 @@ extern bool strRunning;
 #define FUNCTION_COUNT 255
 
 enum Functions {
-		DetourFunction_t,
-		DecryptFunction_t,
-		Socket_t,
-		TrapUnloder_t,
-		CreateThread_t,
-		Sleep_t,
-		notouch_t,
-		remove_http_header_t,
-		socketclose_t,
-		send_t,
-		recv_t,
-		memset_t,
-		_sys_sprintf_t,
-		strstr_t,
-		strstrFunction_t
+	DetourFunction_t,
+	DecryptFunction_t,
+	Socket_t,
+	TrapUnloder_t,
+	CreateThread_t,
+	Sleep_t,
+	notouch_t,
+	remove_http_header_t,
+	socketclose_t,
+	send_t,
+	recv_t,
+	memset_t,
+	_sys_sprintf_t,
+	strstr_t,
+	strstrFunction_t
 };
 
 struct VirtualTable {
