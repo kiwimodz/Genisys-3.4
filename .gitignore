@@ -1,0 +1,10 @@
+
+*.db
+*.db-wal
+*.opendb
+*.db-shm
+BO1_MP/.vs/BO1_MP/v17/.suo
+*.ipch
+*.o
+*.o
+*.tlog

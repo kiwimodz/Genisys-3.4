@@ -1,0 +1,19 @@
+﻿  aimassist_mp.cpp
+  detour.cpp
+  auth.cpp
+  prx.cpp
+  functions.cpp
+  menu.cpp
+  console.cpp
+  msg.cpp
+  friends.cpp
+  npId.cpp
+  ini.cpp
+  cheats_mp.cpp
+  sockets.cpp
+  stdio_fix.cpp
+  trampoline.cpp
+  vector.cpp
+  visuals_mp.cpp
+  BO1_MP.vcxproj -> D:\Projects\Genisys-3.4\BO1_MP\PS3_Debug\Genisys.sprx
+  Cannot find the expected PRX Stub Library file: cellPrx_Genisys_stub.a

@@ -1,6 +1,6 @@
 #include<Includes.h>
 
-#define STUB_ADDRESS_BLOCK 0xD49540
+#define STUB_ADDRESS_BLOCK 0x10D4954
 void DetourFunction(int address, int hookFunc, int stubFunc);
 
 unsigned int PRX_TOC_ADDRESS = 0;

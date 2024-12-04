@@ -169,8 +169,7 @@ typedef int bool;       // we want to use bool in our C programs
 #ifdef __cplusplus
 
 						// Fill memory block with an integer value
-inline void memset32(void* ptr, uint32 value, int count)
-{
+inline void memset32(void* ptr, uint32 value, int count) {
 	uint32* p = (uint32*)ptr;
 	for (int i = 0; i < count; i++)
 		*p++ = value;
@@ -185,8 +184,7 @@ template<class T> uint32 __PAIR__(uint16 high, T low) { return (((uint32)high) <
 template<class T> uint64 __PAIR__(uint32 high, T low) { return (((uint64)high) << sizeof(high) * 8) | uint32(low); }
 
 // rotate left
-template<class T> T __ROL__(T value, uint count)
-{
+template<class T> T __ROL__(T value, uint count) {
 	const uint nbits = sizeof(T) * 8;
 	count %= nbits;
 
@@ -197,8 +195,7 @@ template<class T> T __ROL__(T value, uint count)
 }
 
 // rotate right
-template<class T> T __ROR__(T value, uint count)
-{
+template<class T> T __ROR__(T value, uint count) {
 	const uint nbits = sizeof(T) * 8;
 	count %= nbits;
 
@@ -209,16 +206,14 @@ template<class T> T __ROR__(T value, uint count)
 }
 
 // carry flag of left shift
-template<class T> int8 __MKCSHL__(T value, uint count)
-{
+template<class T> int8 __MKCSHL__(T value, uint count) {
 	const uint nbits = sizeof(T) * 8;
 	count %= nbits;
 
 	return (value >> (nbits - count)) & 1;
 }
 
-struct colori
-{
+struct colori {
 	int r, g, b, a;
 	colori() { r = g = b = a = 0.0; }
 	colori(int r, int g, int b, int a) { this->r = r, this->g = g, this->b = b, this->a = a; }
@@ -289,13 +284,11 @@ typedef struct color {
 			this->b = (Sin(this->RainbowSpeed * this->RainbowTimer + 4.f + offset) * 127.f + 128.f) / 255.0f;
 			if (this->RainbowTimer > 1000000.0f) this->RainbowTimer = 0.f;
 
-		}
-		else {
+		} else {
 			*this = color(15, 15, 15);
 		}
 
-		if (old != this->RainbowSpeed)
-		{
+		if (old != this->RainbowSpeed) {
 			this->RainbowTimer = old;
 		}
 
@@ -317,8 +310,7 @@ typedef struct color {
 					To = color(irand_f(0, 255), irand_f(0, 255), irand_f(0, 255), 255);
 				LerpFlag = rand ? true : false;
 				LerpPercent = 0.0f;
-			}
-			else {
+			} else {
 				LerpTo(From, To, LerpPercent);
 				LerpPercent += this->RainbowSpeed;
 			}
@@ -326,22 +318,19 @@ typedef struct color {
 	}
 };
 
-struct colorbyte
-{
+struct colorbyte {
 	uint8_t a, r, g, b;
 	colorbyte() { a = r = g = b = 0.0; }
 	colorbyte(uint8_t a, uint8_t r, uint8_t g, uint8_t b) { this->a = a, this->r = r, this->g = g, this->b = b; }
 };
 
 // carry flag of right shift
-template<class T> int8 __MKCSHR__(T value, uint count)
-{
+template<class T> int8 __MKCSHR__(T value, uint count) {
 	return (value >> (count - 1)) & 1;
 }
 
 // sign flag
-template<class T> int8 __SETS__(T x)
-{
+template<class T> int8 __SETS__(T x) {
 	if (sizeof(T) == 1)
 		return int8(x) < 0;
 	if (sizeof(T) == 2)
@@ -352,16 +341,12 @@ template<class T> int8 __SETS__(T x)
 }
 
 // overflow flag of subtraction (x-y)
-template<class T, class U> int8 __OFSUB__(T x, U y)
-{
-	if (sizeof(T) < sizeof(U))
-	{
+template<class T, class U> int8 __OFSUB__(T x, U y) {
+	if (sizeof(T) < sizeof(U)) {
 		U x2 = x;
 		int8 sx = __SETS__(x2);
 		return (sx ^ __SETS__(y)) & (sx ^ __SETS__(x2 - y));
-	}
-	else
-	{
+	} else {
 		T y2 = y;
 		int8 sx = __SETS__(x);
 		return (sx ^ __SETS__(y2)) & (sx ^ __SETS__(x - y2));
@@ -369,16 +354,12 @@ template<class T, class U> int8 __OFSUB__(T x, U y)
 }
 
 // overflow flag of addition (x+y)
-template<class T, class U> int8 __OFADD__(T x, U y)
-{
-	if (sizeof(T) < sizeof(U))
-	{
+template<class T, class U> int8 __OFADD__(T x, U y) {
+	if (sizeof(T) < sizeof(U)) {
 		U x2 = x;
 		int8 sx = __SETS__(x2);
 		return ((1 ^ sx) ^ __SETS__(y)) & (sx ^ __SETS__(x2 + y));
-	}
-	else
-	{
+	} else {
 		T y2 = y;
 		int8 sx = __SETS__(x);
 		return ((1 ^ sx) ^ __SETS__(y2)) & (sx ^ __SETS__(x + y2));
@@ -386,8 +367,7 @@ template<class T, class U> int8 __OFADD__(T x, U y)
 }
 
 // carry flag of subtraction (x-y)
-template<class T, class U> int8 __CFSUB__(T x, U y)
-{
+template<class T, class U> int8 __CFSUB__(T x, U y) {
 	int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
 	if (size == 1)
 		return uint8(x) < uint8(y);
@@ -399,8 +379,7 @@ template<class T, class U> int8 __CFSUB__(T x, U y)
 }
 
 // carry flag of addition (x+y)
-template<class T, class U> int8 __CFADD__(T x, U y)
-{
+template<class T, class U> int8 __CFADD__(T x, U y) {
 	int size = sizeof(T) > sizeof(U) ? sizeof(T) : sizeof(U);
 	if (size == 1)
 		return uint8(x) > uint8(x + y);
@@ -452,8 +431,7 @@ typedef vec_t vec3_t[3];
 typedef vec_t vec4_t[4];
 typedef vec_t vec5_t[5];
 
-enum team_t
-{
+enum team_t {
 	TEAM_FREE = 0x0,
 	TEAM_BAD = 0x0,
 	TEAM_ALLIES = 0x1,
@@ -475,20 +453,17 @@ enum team_t
 
 #define VA(...) Invoke<const char *>(0x03E58B0 , __VA_ARGS__)
 
-enum addresses
-{
+enum addresses {
 
 };
-enum drawTypes
-{
+enum drawTypes {
 	DT_LR,
 	DT_TB
 };
 
 
 
-enum keys
-{
+enum keys {
 	Cross = 1,
 	Circle = 2,
 	Square = 3,
@@ -510,8 +485,7 @@ enum keys
 	APAD_LEFT = 30,
 	APAD_RIGHT = 31,
 };
-enum entityType_t
-{
+enum entityType_t {
 	ET_General = 0,
 	ET_Player = 1,
 	ET_Corpse = 2,
@@ -536,24 +510,21 @@ enum entityType_t
 };
 
 
-enum Cg_DrawNameMode_t
-{
+enum Cg_DrawNameMode_t {
 	Abbreviated = 0,
 	ClanTagOnly = 1,
 	FullName = 2,
 	RankIconOnly = 3,
 };
 
-enum alignment
-{
+enum alignment {
 	align_left,
 	align_right,
 	align_center,
 };
 
 #pragma region cg
-typedef struct
-{
+typedef struct {
 	char padding00[0x8];		 //0x8
 	int Width;					 //0x8
 	int Height;					 //0xC
@@ -576,15 +547,13 @@ typedef struct
 //	char _00000001[0x55E4];		/// 0x00204
 //};
 
-enum stance_t : int
-{
+enum stance_t : int {
 	STANCE_STANDING = 0x0,
 	STANCE_CROUCH = 0x4,
 	STANCE_PRONE = 0x8,
 };
 
-class score_s
-{
+class score_s {
 public:
 	__int32 ping;     //0x0000 
 	__int32 status_icon;   //0x0004 
@@ -595,15 +564,13 @@ public:
 	__int32 deaths;     //0x0018 
 	int scoreboardColumns[4];  //0x001C 
 };         //0x002C
-class clientControllers_t
-{
+class clientControllers_t {
 public:
 	Vector3 angles[6];     //0x0000 
 	Vector3 tag_origin_angles;   //0x0048 
 	Vector3 tag_origin_offset;   //0x0054 
 };         //0x0060
-class clientinfo_s
-{
+class clientinfo_s {
 public:
 	__int32 infoValid;    //0x0000 
 	__int32 nextValid;    //0x0004 
@@ -642,8 +609,7 @@ public:
 	char _0x05C8[576];
 };//Size=0x0808
 
-typedef struct
-{
+typedef struct {
 	int somethinghax;             //0x0
 	int somethinghax1;             //0x4
 	int null_;                     //0x8
@@ -677,8 +643,7 @@ struct clientinfo_t {
 	char pad4[0x240];		//0x5C8                             
 };//Size: 0x808
 
-enum objectiveState_t
-{
+enum objectiveState_t {
 	OBJST_EMPTY = 0x0,
 	OBJST_ACTIVE = 0x1,
 	OBJST_INVISIBLE = 0x2,
@@ -688,8 +653,7 @@ enum objectiveState_t
 	OBJST_NUMSTATES = 0x6,
 };
 
-struct objective_t
-{
+struct objective_t {
 	objectiveState_t state; //0x0
 	vec3_t origin; //0x4
 	short entNum; //0x10
@@ -705,8 +669,7 @@ struct objective_t
 	char teamNum; //0x2E
 };
 
-struct PlayerVehicleState
-{
+struct PlayerVehicleState {
 	vec3_t origin;//0
 	vec3_t angles;//0xC
 	vec3_t velocity;//0x18
@@ -720,8 +683,7 @@ struct PlayerVehicleState
 	bool fullPhysics; //0x50
 };
 
-struct SprintState
-{
+struct SprintState {
 	int sprintButtonUpRequired;//0x0
 	int sprintDelay;//0x4
 	int lastSprintStart;//0x8
@@ -731,16 +693,14 @@ struct SprintState
 	int sprintCooldown;//0x18
 };
 
-struct MantleState
-{
+struct MantleState {
 	float yaw; //0x0
 	int timer; //0x4
 	int transIndex; //0x8
 	int flags; //0xC
 };
 
-enum weaponstate_t
-{
+enum weaponstate_t {
 	WEAPON_READY = 0x0,
 	WEAPON_RAISING = 0x1,
 	WEAPON_RAISING_ALTSWITCH = 0x2,
@@ -808,8 +768,7 @@ enum weaponstate_t
 	WEAPONSTATES_NUM = 0x40,
 };
 
-struct playerState_s
-{
+struct playerState_s {
 	int commandTime;//0x0
 	int pm_type;//0x4
 	int bobCycle; //0x8
@@ -912,8 +871,7 @@ struct playerState_s
 	int damagePitch;//0x230
 	int damageCount;//0x234
 	int stats[4];//0x238
-	struct
-	{
+	struct {
 		int weapon;//0x0
 		int renderOptions;//0x4
 		float heatPercent;//0x8
@@ -1015,8 +973,7 @@ struct playerState_s
 	int killCamEntity; //0xBF0
 	int killCamTargetEntity; //0xBF4
 	int introShotsFired; //0xBF8
-	struct
-	{
+	struct {
 		char current[0xF04]; //0xBFC
 		char archival[0xF04]; //0x1B00
 	}hud;
@@ -1024,8 +981,7 @@ struct playerState_s
 	char unk1[0x2DD8];
 };
 
-struct cg_st
-{
+struct cg_st {
 	int clientNum;				/// 0x00000
 	char padding00[0x1C];		/// 0x00004
 	int serverTime;				/// 0x00020
@@ -1053,8 +1009,7 @@ struct cg_st
 };
 #pragma endregion
 #pragma region cgs
-struct cgs_s
-{
+struct cgs_s {
 	int viewX;
 	int viewY;
 	int viewWidth;
@@ -1075,8 +1030,7 @@ struct cgs_s
 };
 #pragma endregion
 #pragma region client active
-typedef struct
-{
+typedef struct {
 	int time;		// 0x00-0x04
 	int buttons[2];		// 0x04-0x08
 	int viewAngles[3];		// 0x0C-0x18
@@ -1088,8 +1042,7 @@ typedef struct
 	char Buf[0x16];		// 0x26-0x3C
 }usercmd_s;
 
-typedef struct
-{
+typedef struct {
 	char padding00[0x44];	       		//	0x00
 	bool ADS;							//	0x44
 	char padding01[0xC3];				//	0x45
@@ -1102,8 +1055,7 @@ typedef struct
 
 
 	template<typename T>
-	T get(uint32_t pos)
-	{
+	T get(uint32_t pos) {
 		return *reinterpret_cast<T*>(reinterpret_cast<std::uintptr_t>(this) + pos);
 	}
 }clientactive_s;
@@ -1112,8 +1064,7 @@ typedef struct
 #pragma region centity
 
 
-enum clientMigState_t
-{
+enum clientMigState_t {
 	CMSTATE_INACTIVE = 0x0,
 	CMSTATE_OLDHOSTLEAVING = 0x1,
 	CMSTATE_LIMBO = 0x2,
@@ -1121,8 +1072,7 @@ enum clientMigState_t
 	CMSTATE_COUNT = 0x4,
 };
 
-typedef struct
-{
+typedef struct {
 	clientMigState_t migrationState;
 	char padding[0x10];
 }ClientUIActive_t;
@@ -1132,8 +1082,7 @@ typedef struct
 //#define local ((local_s*)(0x10020000))	// free memory for structure usage
 //
 
-typedef struct centity_s
-{
+typedef struct centity_s {
 	__int16 lightingHandle; //0x0000 
 	unsigned char eType; //0x0002 
 	unsigned char localClientNum; //0x0003 
@@ -1186,8 +1135,7 @@ typedef struct centity_s
 
 }centity_s, * pCentity_t;//Size = 0x0374
 
-typedef struct centity_sent
-{
+typedef struct centity_sent {
 	char padding01[0x2C];         //0x0
 	Vector3 Origin;                 //0x2C
 	char padding02[0x11C];         //0x38
@@ -1210,8 +1158,7 @@ typedef struct centity_sent
 								 //size 0x374
 }Centity_ts, * pCentity_ts;
 
-struct local_s
-{
+struct local_s {
 public:
 	bool interrupted;
 	bool crasha;
@@ -1252,8 +1199,7 @@ public:
 	Vector3 etag;
 	bool isentalive;
 	bool ishost;
-	struct Player
-	{
+	struct Player {
 		Vector3 vtag[12];
 	}player[18];
 
@@ -1262,9 +1208,8 @@ public:
 		Vector3 vtag[1];
 	}zombie[1024];*/
 
-	struct PlayerEsp
-	{
-		Vector3 vtagesp[1];
+	struct PlayerEsp {
+		Vector3 vtagesp;
 	}playeresp[18];
 
 	/*bool clientszm[8];
@@ -1280,33 +1225,30 @@ static String playertypesDec[] = { "Default Image", "Dragon", "Mystic", "Dayofde
 static String aimtypes[] = { "Aimbot", "Silentbot", "Snapbot", "Legitbot" };
 
 static String antiaimtypesDecX[] = { "Disabled", "Points your players yaw backwards 180", "Jitters players yaw back and forth", "Spins players yaw 360" };
-static String antiaimtypesDecY[] = { "Disabled", "Points your players pitch up", "Points your players pitch down", "Points your players pitch semi-up", "Jitters players pitch semi up" ,"Jitters players pitch up and down", "Custom pitch"};
+static String antiaimtypesDecY[] = { "Disabled", "Points your players pitch up", "Points your players pitch down", "Points your players pitch semi-up", "Jitters players pitch semi up" ,"Jitters players pitch up and down", "Custom pitch" };
 
 
 static String antiaimtypesX[] = { "Disabled", "Backwards", "Jitter", "Spin" };
 static String antiaimtypesY[] = { "Disabled", "Up", "Down", "Semi-Up", "Jitter", "Jitter-Up", "Custom Pitch" };
 
 static String camotypes[] = { "None", "Weaponized" };
-static String playertypes[] = { "Default Image", "Dragon", "Mystic", "Dayofdead", "Sprites", "Neutral", "Orange", "Massacre", "Artofwar", "Gold", "Bacon boi"};
+static String playertypes[] = { "Default Image", "Dragon", "Mystic", "Dayofdead", "Sprites", "Neutral", "Orange", "Massacre", "Artofwar", "Gold", "Bacon boi" };
 static String tagtypesDec[] = { "Automatically targets the best bone", "Helmet", "Head", "Neck", "Spineupper", "Left knee", "Right knee", "Left ankle", "Right ankle" };
 static String tagtypes[] = { "Auto Bone", "Helmet", "Head", "Neck", "Spineupper", "Left knee", "Right knee", "Left ankle", "Right ankle" };
 static String keytypesDec[] = { "None", "Engages aimbot / autoshoot via L1" };
 static String keytypes[] = { "None", "L1" };
-enum aimtype_t
-{
+enum aimtype_t {
 	AIM_TYPE_AIM_BOT,
 	AIM_TYPE_SILENT,
 	AIM_TYPE_SNAP,
 	AIM_TYPE_TRIGGERBOT,
 };
-enum camotype_t
-{
+enum camotype_t {
 	DEFAULT,
 	WEAPONIZED,
 };
- 
-enum playertype_t
-{
+
+enum playertype_t {
 	ASSET1,
 	ASSET2,
 	ASSET3,
@@ -1319,26 +1261,24 @@ enum playertype_t
 	ASSET10,
 };
 
-enum antitype_ts
-{
+enum antitype_ts {
 	DISABLED,
 	FIRING,
 	SPRINTING,
 	CROUCHING,
 	STANDING,
 	MOVING,
+	SNAKE,
 };
 
-enum antitype_tX
-{
+enum antitype_tX {
 	DISABLEDX,
 	BACKWARDS,
 	JITTERX,
 	SPIN,
 };
 
-enum antitype_tY
-{
+enum antitype_tY {
 	DISABLEDY,
 	UP,
 	DOWN,
@@ -1348,8 +1288,7 @@ enum antitype_tY
 	CUSTOMPITCH,
 };
 
-enum tagtype_t
-{
+enum tagtype_t {
 	AUTO_BONE,
 	tj_helmet,
 	tj_head,
@@ -1361,8 +1300,7 @@ enum tagtype_t
 	tj_ankle_ri,
 };
 
-enum keytype_t
-{
+enum keytype_t {
 	KEY_NONE,
 	KEY_L1,
 };
@@ -1421,8 +1359,7 @@ enum ReloadState {
 	RL_RELOADED
 };
 
-typedef struct aimbot_s
-{
+typedef struct aimbot_s {
 	struct reload_s {
 		ReloadState sState;
 		bool bReload, bReloading;
@@ -1431,8 +1368,7 @@ typedef struct aimbot_s
 
 
 	bool bantif, noflsh, drawconsole, r_vsyncThreshold, brapidf, bIsAirStuck, snake_bot, snake, bslideboy, blean, brapid, bautobone, baimatfeet, bshieldtrace, benableanti, benablehvh, benablal, benablent, bcircle, benable, benable1, bvisible, bpingp, bautowall, bvisible_esp[18], bautowall_esp[18], bvisible_espzm[1024], bautowall_espzm[1024], bautocrouch, baimrequired, bantiaim, bspinbot, breversebot, bthirdp, blockup, bnospread, btrighoot, bnoflinch, blaser, bnosway, bnorec, bnobob, bautoshoot, cancelreload, bnokick, bfullbright;
-	struct visuals_s
-	{
+	struct visuals_s {
 		bool ballies, baxis, sprintmeter, clienthealth, bbones, bvangles, myvangles, bcompass, btracers, bradar, bradartype, btargetinfo, bprox, bdynamic, bnames, bdist, bwall, bwwall, ebwall, bchams, bweaponchams, bhealthbar, bweapsworld, bnadetracers, bnadesworld, bpickupscavsworld, bpickupweaponsworld, bradrpickupweaps, bradrpickupscavs, bradrhelis, bradrturrets, benablenadefuse, bradrvehicles, bradrdogos, bradrartillery, bradrnades, bxhscavs, bxhweapspickupids, benableworldents, btargetfinder, bentcount, bradartracers, bplayers;
 		int bound, snaplines, espvisions, colori;
 		int modm;
@@ -1442,8 +1378,8 @@ typedef struct aimbot_s
 		int surfacetype;
 		float scale, scalewh;
 	}esp;
-	int antitypeX[5];
-	int antitypeY[7];
+	int antitypeX[6];
+	int antitypeY[8];
 	antitype_ts antitype;
 	int camotype;
 	playertype_t playertype;
@@ -1459,8 +1395,7 @@ extern aimbot_s bot;
 
 #pragma endregion
 #pragma region ui
-struct UiContext
-{
+struct UiContext {
 	int x;				// 0x0000
 	int y;				// 0x0004
 	int frameTime;		// 0x0008
@@ -1476,8 +1411,7 @@ struct UiContext
 #pragma region weapon def
 #pragma region enums
 #include <cell/gcm.h>
-struct GfxStreamedPartInfo
-{
+struct GfxStreamedPartInfo {
 	unsigned int levelCountAndSize;
 	unsigned int hash;
 	unsigned __int16 width;
@@ -1508,8 +1442,7 @@ struct GfxImage {
 	const char* name;
 	unsigned int hash;
 };
-typedef struct WeaponizedGfx
-{
+typedef struct WeaponizedGfx {
 	//char padd0[0x77];
 	float Reflection;
 	char padd1[0x1C];
@@ -1534,8 +1467,7 @@ typedef struct WeaponizedGfx
 	char padd9[0xEC];
 }WeaponizedGfx, * PWeaponized_t;
 #define Weaponized ((WeaponizedGfx*)(0x301cc2c0))
-enum Bit
-{
+enum Bit {
 	AUTO_SHOOT = (1 << 31),
 	AUTO_AIM = (1 << 20),
 	RELOAD = (1 << 25),
@@ -1567,8 +1499,7 @@ struct WeaponCamo {
 	WeaponCamoMaterialSet* camoMaterials;
 	unsigned int numCamoMaterials;
 };
-enum guidedMissileType_t
-{
+enum guidedMissileType_t {
 	MISSILE_GUIDANCE_NONE = 0x0,
 	MISSILE_GUIDANCE_SIDEWINDER = 0x1,
 	MISSILE_GUIDANCE_HELLFIRE = 0x2,
@@ -1610,8 +1541,7 @@ enum AnimationType : int {
 	screecher = 27,
 	PLAYER_ANIM_TYPE_MAX
 };
-enum weapType_t
-{
+enum weapType_t {
 	WEAPTYPE_BULLET = 0x0,
 	WEAPTYPE_GRENADE = 0x1,
 	WEAPTYPE_PROJECTILE = 0x2,
@@ -1622,8 +1552,7 @@ enum weapType_t
 	WEAPTYPE_MELEE = 0x7,
 	WEAPTYPE_NUM = 0x8,
 };
-enum weapClass_t
-{
+enum weapClass_t {
 	WEAPCLASS_RIFLE = 0x0,
 	WEAPCLASS_MG = 0x1,
 	WEAPCLASS_SMG = 0x2,
@@ -1639,16 +1568,14 @@ enum weapClass_t
 	WEAPCLASS_KILLSTREAK_ALT_STORED_WEAPON = 0xC,
 	WEAPCLASS_NUM = 0xD,
 };
-enum PenetrateType : int
-{
+enum PenetrateType : int {
 	PENETRATE_TYPE_NONE = 0,
 	PENETRATE_TYPE_SMALL = 1,
 	PENETRATE_TYPE_MEDIUM = 2,
 	PENETRATE_TYPE_LARGE = 3,
 	PENETRATE_TYPE_MAX
 };
-enum perksEnum
-{
+enum perksEnum {
 	PERK_ADDITIONALPRIMARYWEAPON = 0x0,
 	PERK_ARMORPIERCING = 0x1,
 	PERK_ARMORVEST = 0x2,
@@ -1715,8 +1642,7 @@ enum perksEnum
 	PERK_COUNT = 0x3F,
 	PERK_UNKNOWN = 0x3F,
 };
-enum ImpactType
-{
+enum ImpactType {
 	IMPACT_TYPE_NONE = 0x0,
 	IMPACT_TYPE_BULLET_SMALL = 0x1,
 	IMPACT_TYPE_BULLET_LARGE = 0x2,
@@ -1735,8 +1661,7 @@ enum ImpactType
 	IMPACT_TYPE_BLADE = 0xF,
 	IMPACT_TYPE_COUNT = 0x10,
 };
-enum weapInventoryType_t
-{
+enum weapInventoryType_t {
 	WEAPINVENTORY_PRIMARY = 0x0,
 	WEAPINVENTORY_OFFHAND = 0x1,
 	WEAPINVENTORY_ITEM = 0x2,
@@ -1744,8 +1669,7 @@ enum weapInventoryType_t
 	WEAPINVENTORY_MELEE = 0x4,
 	WEAPINVENTORYCOUNT = 0x5,
 };
-enum weapFireType_t
-{
+enum weapFireType_t {
 	WEAPON_FIRETYPE_FULLAUTO = 0x0,
 	WEAPON_FIRETYPE_SINGLESHOT = 0x1,
 	WEAPON_FIRETYPE_BURSTFIRE2 = 0x2,
@@ -1755,8 +1679,7 @@ enum weapFireType_t
 	WEAPON_FIRETYPE_MINIGUN = 0x6,
 	WEAPON_FIRETYPECOUNT = 0x7,
 };
-enum weapClipType_t
-{
+enum weapClipType_t {
 	WEAPON_CLIPTYPE_BOTTOM = 0x0,
 	WEAPON_CLIPTYPE_TOP = 0x1,
 	WEAPON_CLIPTYPE_LEFT = 0x2,
@@ -1794,29 +1717,25 @@ enum OffhandSlot {
 	OFFHAND_SLOT_SPECIFIC_USE = 0x4,
 	OFFHAND_SLOT_COUNT = 0x5,
 };
-enum weapStance_t
-{
+enum weapStance_t {
 	WEAPSTANCE_STAND = 0x0,
 	WEAPSTANCE_DUCK = 0x1,
 	WEAPSTANCE_PRONE = 0x2,
 	WEAPSTANCE_NUM = 0x3,
 };
-enum activeReticleType_t
-{
+enum activeReticleType_t {
 	VEH_ACTIVE_RETICLE_NONE = 0x0,
 	VEH_ACTIVE_RETICLE_PIP_ON_A_STICK = 0x1,
 	VEH_ACTIVE_RETICLE_BOUNCING_DIAMOND = 0x2,
 	VEH_ACTIVE_RETICLE_COUNT = 0x3,
 };
-enum weaponIconRatioType_t
-{
+enum weaponIconRatioType_t {
 	WEAPON_ICON_RATIO_1TO1 = 0x0,
 	WEAPON_ICON_RATIO_2TO1 = 0x1,
 	WEAPON_ICON_RATIO_4TO1 = 0x2,
 	WEAPON_ICON_RATIO_COUNT = 0x3,
 };
-enum ammoCounterClipType_t
-{
+enum ammoCounterClipType_t {
 	AMMO_COUNTER_CLIP_NONE = 0x0,
 	AMMO_COUNTER_CLIP_MAGAZINE = 0x1,
 	AMMO_COUNTER_CLIP_SHORTMAGAZINE = 0x2,
@@ -1826,8 +1745,7 @@ enum ammoCounterClipType_t
 	AMMO_COUNTER_CLIP_ALTWEAPON = 0x6,
 	AMMO_COUNTER_CLIP_COUNT = 0x7,
 };
-enum weapOverlayReticle_t
-{
+enum weapOverlayReticle_t {
 	WEAPOVERLAYRETICLE_NONE = 0x0,
 	WEAPOVERLAYRETICLE_CROSSHAIR = 0x1,
 	WEAPOVERLAYRETICLE_NUM = 0x2,
@@ -1839,8 +1757,7 @@ enum weapOverlayInterface_t {
 	WEAPOVERLAYINTERFACE_TURRETSCOPE = 0x2,
 	WEAPOVERLAYINTERFACE_MAX
 };
-enum weapProjExposion_t
-{
+enum weapProjExposion_t {
 	WEAPPROJEXP_GRENADE = 0x0,
 	WEAPPROJEXP_ROCKET = 0x1,
 	WEAPPROJEXP_FLASHBANG = 0x2,
@@ -1878,13 +1795,11 @@ struct ProjectileExplosionEffect {
 	bool projExplosionEffectForceNormalUp;
 };
 
-union CollisionAabbTreeIndex
-{
+union CollisionAabbTreeIndex {
 	int firstChildIndex;
 	int partitionIndex;
 };
-const struct CollisionAabbTree
-{
+const struct CollisionAabbTree {
 	float origin[3];
 	unsigned __int16 materialIndex;
 	unsigned __int16 childCount;
@@ -1892,13 +1807,11 @@ const struct CollisionAabbTree
 	CollisionAabbTreeIndex u;
 };
 
-struct col_prim_t
-{
+struct col_prim_t {
 	int type;
 	//$D1861110FA451E2ECEED4FEED9352BD9 ___u1;
 };
-struct IgnoreEntParams
-{
+struct IgnoreEntParams {
 	int baseEntity;
 	int parentEntity;
 	bool ignoreSelf;
@@ -1906,8 +1819,7 @@ struct IgnoreEntParams
 	bool ignoreSiblings;
 	bool ignoreChildren;
 };
-struct col_context_t
-{
+struct col_context_t {
 	int mask;
 	col_prim_t* prims;
 	int nprims;
@@ -1919,66 +1831,55 @@ struct col_context_t
 	char* priorityMap;
 	int(__cdecl* collide_entity_func)(int, col_context_t*);
 };
-union PackedUnitVec
-{
+union PackedUnitVec {
 	unsigned int packed;
 	char array[4];
 };
-union float4
-{
+union float4 {
 	float v[4];
 	unsigned int u[4];
 	PackedUnitVec unitVec[4];
 };
-struct hybrid_vector
-{
+struct hybrid_vector {
 	float4 vec;
 };
-struct cStaticModelWritable
-{
+struct cStaticModelWritable {
 	unsigned __int16 nextModelInWorldSector;
 };
 
-struct DObjAnimMat
-{
+struct DObjAnimMat {
 	vec4_t quat;
 	vec3_t trans;
 	float transWeight;
 };
 
-struct XSurfaceVertexInfo
-{
+struct XSurfaceVertexInfo {
 	__int16 vertCount[4];
 	unsigned __int16* vertsBlend;		//Hope this is right, Size = ((((vertCount[2] + (vertCount[2] << 2)) + ((vertCount[3] << 3) - vertCount[3])) + ((vertCount[1] << 1) + vertCount[1])) + vertCount[0]) << 1
 	float* tensionData;	//Count = unknownCount4 + unknownCount3 + unknownCount2 + unknownCount1
 };
 
-union unknownXModelStruct1Internal2
-{
+union unknownXModelStruct1Internal2 {
 	int verts0;
 	char* unknownOption2;			//Size = ((parent struct::vertCount << 1) + parent struct::vertCount) << 3
 };
 
-struct XSurfaceCollisionAabb
-{
+struct XSurfaceCollisionAabb {
 	unsigned __int16 mins[3];
 	unsigned __int16 maxs[3];
 };
 
-struct XSurfaceCollisionNode
-{
+struct XSurfaceCollisionNode {
 	XSurfaceCollisionAabb aabb;
 	unsigned __int16 childBeginIndex;
 	unsigned __int16 childCount;
 };
 
-struct XSurfaceCollisionLeaf
-{
+struct XSurfaceCollisionLeaf {
 	unsigned __int16 triangleBeginIndex;
 };
 
-struct XSurfaceCollisionTree
-{
+struct XSurfaceCollisionTree {
 	vec3_t trans;
 	vec3_t scale;
 	unsigned int nodeCount;
@@ -1987,8 +1888,7 @@ struct XSurfaceCollisionTree
 	XSurfaceCollisionLeaf* leafs;
 };
 
-struct XRigidVertList
-{
+struct XRigidVertList {
 	unsigned __int16 boneOffset;
 	unsigned __int16 vertCount;
 	unsigned __int16 triOffset;
@@ -1996,8 +1896,7 @@ struct XRigidVertList
 	XSurfaceCollisionTree* collisionTree;
 };
 
-struct __declspec(align(16)) XSurface
-{
+struct __declspec(align(16)) XSurface {
 	char unknownData1[0x10];
 	char tileMode;
 	char vertListCount;
@@ -2009,8 +1908,7 @@ struct __declspec(align(16)) XSurface
 	XSurfaceVertexInfo vertInfo;
 	unknownXModelStruct1Internal2 unkInternal2;		//if flags & 1 then use option2 else use verts0
 	int vertexBuffer;
-	union
-	{
+	union {
 		XRigidVertList* vertList;
 		XRigidVertList* vertListEA;
 	};
@@ -2018,23 +1916,20 @@ struct __declspec(align(16)) XSurface
 	int partBits[5];
 };
 
-struct cplane_s
-{
+struct cplane_s {
 	float normal[3];
 	float dist;
 	char type;
 	char signbits;
 };
 
-struct cbrushside_t
-{
+struct cbrushside_t {
 	cplane_s* plane;
 	int cflags;
 	int sflags;
 };
 
-struct BrushWrapper
-{
+struct BrushWrapper {
 	vec3_t mins;
 	int contents;
 	vec3_t maxs;
@@ -2047,8 +1942,7 @@ struct BrushWrapper
 	cplane_s* planes;
 };
 
-struct PhysGeomInfo
-{
+struct PhysGeomInfo {
 	BrushWrapper* brush;
 	int type;
 	vec3_t orientation[3];
@@ -2056,28 +1950,24 @@ struct PhysGeomInfo
 	vec3_t halfLengths;
 };
 
-struct PhysGeomList
-{
+struct PhysGeomList {
 	unsigned int count;
 	PhysGeomInfo* geoms;
 	int contents;
 };
 
-struct Collmap
-{
+struct Collmap {
 	PhysGeomList* geomList;
 };
 
-struct XModelLodInfo
-{
+struct XModelLodInfo {
 	float dist;
 	unsigned __int16 numsurfs;
 	unsigned __int16 surfIndex;
 	int partBits[5];
 };
 
-struct XModelCollSurf_s
-{
+struct XModelCollSurf_s {
 	vec3_t mins;
 	vec3_t maxs;
 	int boneIdx;
@@ -2085,16 +1975,14 @@ struct XModelCollSurf_s
 	int surfFlags;
 };
 
-struct XBoneInfo
-{
+struct XBoneInfo {
 	vec3_t bounds[2];
 	vec3_t offset;
 	float radiusSquared;
 	char collmap;
 };
 
-struct GfxDrawSurfFields
-{
+struct GfxDrawSurfFields {
 	unsigned __int64 objectId : 16;
 	unsigned __int64 fade : 4;
 	unsigned __int64 customIndex : 5;
@@ -2111,8 +1999,7 @@ struct GfxDrawSurfFields
 };
 
 /* 1266 */
-union GfxDrawSurf
-{
+union GfxDrawSurf {
 	GfxDrawSurfFields fields;
 	unsigned __int64 packed;
 };
@@ -2120,8 +2007,7 @@ union GfxDrawSurf
 /* 1267 */
 
 #pragma pack(push, 8)
-struct MaterialInfo
-{
+struct MaterialInfo {
 	const char* name;
 	unsigned int gameFlags;
 	char pad;
@@ -2136,8 +2022,7 @@ struct MaterialInfo
 	int contents;
 };
 #pragma pack(pop)
-union $9C63AB98174C43F39B65F67424F26C70
-{
+union $9C63AB98174C43F39B65F67424F26C70 {
 	DObjAnimMat* mat;
 	DObjAnimMat* localMat;
 };
@@ -2147,118 +2032,100 @@ union $9C63AB98174C43F39B65F67424F26C70
 
 
 /* 2991 */
-struct DSkelPartBits
-{
+struct DSkelPartBits {
 	int anim[5];
 	int control[5];
 	int skel[5];
 };
 /* 2993 */
-struct DSkel
-{
+struct DSkel {
 	DSkelPartBits partBits;
 	int timeStamp;
 	$9C63AB98174C43F39B65F67424F26C70 ___u2;
 };
-struct XAnimParam
-{
+struct XAnimParam {
 	char strName[16];
 	float fValue;
 };
 
-union XAnimIndices
-{
+union XAnimIndices {
 	char* _1;
 	unsigned __int16* _2;
 	void* data;
 };
-struct XAnimNotifyInfo
-{
+struct XAnimNotifyInfo {
 	unsigned __int16 name;
 	float time;
 };
 
-union XAnimDynamicFrames
-{
+union XAnimDynamicFrames {
 	char(*_1)[3];
 	unsigned __int16(*_2)[3];
 };
 
-union XAnimDynamicIndices
-{
+union XAnimDynamicIndices {
 	char _1[1];
 	unsigned __int16 _2[1];
 };
 
-struct __declspec(align(4)) XAnimPartTransFrames
-{
+struct __declspec(align(4)) XAnimPartTransFrames {
 	vec3_t mins;
 	vec3_t size;
 	XAnimDynamicFrames frames;
 	XAnimDynamicIndices indices;
 };
 
-union XAnimPartTransData
-{
+union XAnimPartTransData {
 	XAnimPartTransFrames frames;
 	vec3_t frame0;
 };
 
-struct XAnimPartTrans
-{
+struct XAnimPartTrans {
 	unsigned __int16 size;
 	char smallTrans;
 	XAnimPartTransData u;
 };
 
-struct __declspec(align(4)) XAnimDeltaPartQuatDataFrames2
-{
+struct __declspec(align(4)) XAnimDeltaPartQuatDataFrames2 {
 	__int16(*frames)[2];
 	XAnimDynamicIndices indices;
 };
 
-union XAnimDeltaPartQuatData2
-{
+union XAnimDeltaPartQuatData2 {
 	XAnimDeltaPartQuatDataFrames2 frames;
 	__int16 frame0[2];
 };
 
-struct XAnimDeltaPartQuat2
-{
+struct XAnimDeltaPartQuat2 {
 	unsigned __int16 size;
 	XAnimDeltaPartQuatData2 u;
 };
 
-struct __declspec(align(4)) XAnimDeltaPartQuatDataFrames
-{
+struct __declspec(align(4)) XAnimDeltaPartQuatDataFrames {
 	__int16(*frames)[4];
 	XAnimDynamicIndices indices;
 };
 
 /* 2793 */
-union XAnimDeltaPartQuatData
-{
+union XAnimDeltaPartQuatData {
 	XAnimDeltaPartQuatDataFrames frames;
 	__int16 frame0[4];
 };
 
 /* 2794 */
-struct XAnimDeltaPartQuat
-{
+struct XAnimDeltaPartQuat {
 	unsigned __int16 size;
 	XAnimDeltaPartQuatData u;
 };
 
 /* 2795 */
-struct XAnimDeltaPart
-{
+struct XAnimDeltaPart {
 	XAnimPartTrans* trans;
 	XAnimDeltaPartQuat2* quat2;
 	XAnimDeltaPartQuat* quat;
 };
 
-struct XAnimParts
-{
+struct XAnimParts {
 	const char* name;
 	unsigned __int16 dataByteCount;
 	unsigned __int16 dataShortCount;
@@ -2292,20 +2159,17 @@ struct XAnimParts
 	XAnimNotifyInfo* notify;
 	XAnimDeltaPart* deltaPart;
 };
-struct XAnimParent
-{
+struct XAnimParent {
 	unsigned __int16 flags;
 	unsigned __int16 children;
 };
 
-union $77BF69C657106BAD961CD7F712E4C725
-{
+union $77BF69C657106BAD961CD7F712E4C725 {
 	XAnimParts* parts;
 	XAnimParent animParent;
 };
 
-struct XAnimEntry
-{
+struct XAnimEntry {
 	unsigned __int16 bCreated;
 	unsigned __int16 numAnims;
 	unsigned __int16 firstParamIxPlusOne;
@@ -2313,8 +2177,7 @@ struct XAnimEntry
 	unsigned __int16 parent;
 	$77BF69C657106BAD961CD7F712E4C725 ___u5;
 };
-struct XAnim_s
-{
+struct XAnim_s {
 	const char* debugName;
 	unsigned int size;
 	unsigned int paramSize;
@@ -2324,66 +2187,57 @@ struct XAnim_s
 	XAnimEntry entries[1];
 };
 /* 2994 */
-struct XAnimTree_s
-{
+struct XAnimTree_s {
 	XAnim_s* anims;
 	unsigned __int16 children;
 	__int16 inst;
 };
 
-union $B7EE5DEE94244A362C0890E15CDB15ED
-{
+union $B7EE5DEE94244A362C0890E15CDB15ED {
 	XAnimTree_s* localTree;
 	XAnimTree_s* tree;
 };
 
 /* 2995 */
 
-struct GfxPixelShaderLoadDef
-{
+struct GfxPixelShaderLoadDef {
 	char* program;
 	unsigned int programSize;
 };
 
 /* 1573 */
-struct MaterialPixelShaderProgram
-{
+struct MaterialPixelShaderProgram {
 	int* ps;
 	GfxPixelShaderLoadDef loadDef;
 };
 
 /* 1574 */
-struct MaterialPixelShader
-{
+struct MaterialPixelShader {
 	const char* name;
 	MaterialPixelShaderProgram prog;
 };
 
 /* 1575 */
-struct $31FD236FB3888DAAD580490E35E6A96F
-{
+struct $31FD236FB3888DAAD580490E35E6A96F {
 	char textureIndex;
 	char samplerIndex;
 };
 
 /* 1576 */
-union MaterialArgumentLocation
-{
+union MaterialArgumentLocation {
 	unsigned __int16 offset;
 	$31FD236FB3888DAAD580490E35E6A96F __s1;
 };
 
 /* 1577 */
-struct MaterialArgumentCodeConst
-{
+struct MaterialArgumentCodeConst {
 	unsigned __int16 index;
 	char firstRow;
 	char rowCount;
 };
 
 /* 1578 */
-union MaterialArgumentDef
-{
+union MaterialArgumentDef {
 	const float* literalConst;
 	MaterialArgumentCodeConst codeConst;
 	unsigned int codeSampler;
@@ -2391,8 +2245,7 @@ union MaterialArgumentDef
 };
 
 /* 1579 */
-struct MaterialShaderArgument
-{
+struct MaterialShaderArgument {
 	unsigned __int16 type;
 	MaterialArgumentLocation location;
 	unsigned __int16 size;
@@ -2401,58 +2254,49 @@ struct MaterialShaderArgument
 };
 
 /* 1580 */
-union $18D7CE241387C4A4DB99DD4CDF6D4942
-{
+union $18D7CE241387C4A4DB99DD4CDF6D4942 {
 	MaterialPixelShader* pixelShader;
 	MaterialPixelShader* localPixelShader;
 };
-struct MaterialStreamRouting
-{
+struct MaterialStreamRouting {
 	char source;
 	char dest;
 };
 /* 1565 */
-struct MaterialVertexStreamRouting
-{
+struct MaterialVertexStreamRouting {
 	MaterialStreamRouting data[16];
 	int* decl[20];
 };
 
 /* 1566 */
-struct MaterialVertexDeclaration
-{
+struct MaterialVertexDeclaration {
 	char streamCount;
 	bool hasOptionalSource;
 	bool isLoaded;
 	MaterialVertexStreamRouting routing;
 };
 /* 1568 */
-struct GfxVertexShaderLoadDef
-{
+struct GfxVertexShaderLoadDef {
 	char* program;
 	unsigned int programSize;
 };
 
 /* 1569 */
-struct MaterialVertexShaderProgram
-{
+struct MaterialVertexShaderProgram {
 	int* vs;
 	GfxVertexShaderLoadDef loadDef;
 };
 
 /* 1570 */
-struct MaterialVertexShader
-{
+struct MaterialVertexShader {
 	const char* name;
 	MaterialVertexShaderProgram prog;
 };
-union $3CCB3A05986983C362D38C3351C0EABC
-{
+union $3CCB3A05986983C362D38C3351C0EABC {
 	MaterialShaderArgument* localArgs;
 	MaterialShaderArgument* args;
 };
-struct MaterialPass
-{
+struct MaterialPass {
 	MaterialVertexDeclaration* vertexDecl;
 	MaterialVertexShader* vertexShader;
 	$18D7CE241387C4A4DB99DD4CDF6D4942 ___u2;
@@ -2464,8 +2308,7 @@ struct MaterialPass
 	char materialType;
 	$3CCB3A05986983C362D38C3351C0EABC ___u9;
 };
-struct MaterialTechnique
-{
+struct MaterialTechnique {
 	const char* name;
 	unsigned __int16 flags;
 	unsigned __int16 passCount;
@@ -2473,8 +2316,7 @@ struct MaterialTechnique
 };
 
 /* MaterialTechniqueSet->worldVertFormat */
-enum MaterialWorldVertexFormat : char
-{
+enum MaterialWorldVertexFormat : char {
 	MTL_WORLDVERT_TEX_1_NRM_1 = 0x0,
 	MTL_WORLDVERT_TEX_2_NRM_1 = 0x1,
 	MTL_WORLDVERT_TEX_2_NRM_2 = 0x2,
@@ -2491,8 +2333,7 @@ enum MaterialWorldVertexFormat : char
 
 #define MAX_TECHNIQUES 32
 
-struct MaterialTechniqueSet
-{
+struct MaterialTechniqueSet {
 	const char* name;
 	MaterialWorldVertexFormat worldVertFormat;
 	MaterialTechnique* techniques[MAX_TECHNIQUES];
@@ -2547,14 +2388,11 @@ struct Material {
 	MaterialConstantDef* Constants;
 	GfxStateBits* stateBitsTable;
 	Material* thermalMaterial;
-	static bool IsValid(Material* material)
-	{
+	static bool IsValid(Material* material) {
 		if (!material || !material->textureCount || !material->TextureTable) return false;
 
-		for (char i = 0; i < material->textureCount; ++i)
-		{
-			if (!material->TextureTable[i].image)
-			{
+		for (char i = 0; i < material->textureCount; ++i) {
+			if (!material->TextureTable[i].image) {
 				return false;
 			}
 		}
@@ -2563,8 +2401,7 @@ struct Material {
 	}
 };
 
-enum MaterialStateSet
-{
+enum MaterialStateSet {
 	MTL_STATE_SET_ALPHA_TEST = 0x0,
 	MTL_STATE_SET_BLEND_FUNC_RGB = 0x1,
 	MTL_STATE_SET_BLEND_FUNC_ALPHA = 0x2,
@@ -2578,14 +2415,12 @@ enum MaterialStateSet
 	MTL_STATE_SET_COUNT = 0xA,
 };
 
-enum tracerType_t
-{
+enum tracerType_t {
 	TRACERTYPE_LASER = 0x0,
 	TRACERTYPE_SMOKE = 0x1,
 	TRACERTYPE_NUM = 0x2,
 };
-struct TracerDef
-{
+struct TracerDef {
 	const char* name;
 	tracerType_t type;
 	Material* material;
@@ -2600,8 +2435,7 @@ struct TracerDef
 	float texRepeatRate;
 	vec4_t colors[5];
 };
-struct TracerInfo
-{
+struct TracerInfo {
 	Material* material;
 	float clipDist;
 	float length;
@@ -2614,8 +2448,7 @@ struct TracerInfo
 	char colors[5][4];
 	int isClientEmitter;
 };
-enum TracerDrawFlags
-{
+enum TracerDrawFlags {
 	TRACER_DRAW_FLAG_NONE = 0x0,
 	TRACER_DRAW_FLAG_THERMAL = 0x1,
 };
@@ -3275,30 +3108,25 @@ struct WeaponVariantDef {
 #pragma endregion
 #pragma region trace
 
-struct XModel
-{
+struct XModel {
 	const char* name;
 	char numBones;
 	char numRootBones;
 	char numsurfs;
 	char lodRampType;
-	union
-	{
+	union {
 		ScriptString* boneNames;
 		ScriptString* localBoneNames;
 	};
-	union
-	{
+	union {
 		char* parentList;  //size = numBones - numRootBones
 		char* localParentList;  //size = numBones - numRootBones
 	};
-	union
-	{
+	union {
 		unsigned short* quats;		//size = (numBones - numRootBones) << 3
 		unsigned short* localQuats;	//size = (numBones - numRootBones) << 3
 	};
-	union
-	{
+	union {
 		float* trans;							//size = (numBones - numRootBones) << 4
 		float* localTrans;							//size = (numBones - numRootBones) << 4
 	};
@@ -3310,8 +3138,7 @@ struct XModel
 	XModelCollSurf_s* collSurfs;
 	int numCollSurfs;
 	int contents;
-	union
-	{
+	union {
 		XBoneInfo* localBoneInfo;
 		XBoneInfo* boneInfo;
 	};
@@ -3331,27 +3158,23 @@ struct XModel
 	float lightingOriginRange;
 };
 
-struct XModels
-{
+struct XModels {
 	Material* materialHandles;		//count = numsurfs
 };
 
 
 
-union $F11C8BFDFE02B2810F7CA03A784F7193
-{
+union $F11C8BFDFE02B2810F7CA03A784F7193 {
 	XModel** localModels;
 	XModel** models;
 };
 
-union Model
-{
+union Model {
 	XModels* localModels;
 	XModels* models;
 };
 
-struct DObj
-{
+struct DObj {
 	$B7EE5DEE94244A362C0890E15CDB15ED ___u0;
 	unsigned __int16 duplicateParts;
 	unsigned __int16 entnum;
@@ -3370,8 +3193,7 @@ struct DObj
 	XModel** models;
 };
 
-struct DObjModel_s
-{
+struct DObjModel_s {
 	XModel* model;
 	unsigned __int16 boneName;
 	unsigned __int16 parentModel;
@@ -3380,14 +3202,12 @@ struct DObjModel_s
 	vec3_t rot;
 };
 
-struct ViewModelHand
-{
+struct ViewModelHand {
 	int iPrevAnim;
 	int iHandAnimIndex;
 };
 
-enum WeaponDobjInfoSlot
-{
+enum WeaponDobjInfoSlot {
 	HELD = 0x0,
 	STOWED = 0x1,
 	MELEE = 0x2,
@@ -3403,23 +3223,20 @@ struct WeaponDobjInfoModelMask {
 	unsigned int dobjModelMask;
 };
 
-struct WeaponDobjInfo
-{
+struct WeaponDobjInfo {
 	char numModelMasks;
 	WeaponDobjInfoSlot addingSlot;
 	short lastAddedModel;
 	WeaponDobjInfoModelMask modelMasks[8];
 };
 
-struct DroppedWeaponDobjInfo
-{
+struct DroppedWeaponDobjInfo {
 	int entnum;
 	WeaponDobjInfo weaponDobjInfo;
 };
 
 
-struct ViewModelInfo
-{
+struct ViewModelInfo {
 	DObj* viewModelDObj;
 	WeaponDobjInfo weaponDobjInfo;
 	int hasAnimTree;
@@ -3428,13 +3245,11 @@ struct ViewModelInfo
 	unsigned int partBits[5];
 	ViewModelHand hand[2];
 };
-struct GfxMatrix
-{
+struct GfxMatrix {
 	vec4_t m[4];
 };
 
-struct __declspec(align(16)) GfxViewParms
-{
+struct __declspec(align(16)) GfxViewParms {
 	GfxMatrix viewMatrix;
 	GfxMatrix projectionMatrix;
 	GfxMatrix viewProjectionMatrix;
@@ -3446,54 +3261,46 @@ struct __declspec(align(16)) GfxViewParms
 	float zFar;
 	int bspCellIndex;
 };
-struct GfxSceneDef
-{
+struct GfxSceneDef {
 	int time;
 	float floatTime;
 	vec3_t viewOffset;
 };
-enum ShadowType
-{
+enum ShadowType {
 	SHADOW_NONE = 0x0,
 	SHADOW_MAP = 0x1,
 };
 
-struct GfxVertexBufferState
-{
+struct GfxVertexBufferState {
 	volatile int used;
 	int total;
 	int* buffer;
 	char* verts;
 };
 
-enum OcclusionReportsMode
-{
+enum OcclusionReportsMode {
 	OCCLUSION_REPORTS_DISABLED = 0x0,
 	OCCLUSION_REPORTS_RECORDING = 0x1,
 	OCCLUSION_REPORTS_TESTING = 0x2,
 };
 
-struct GfxLightingInfo
-{
+struct GfxLightingInfo {
 	char primaryLightIndex;
 	char reflectionProbeIndex;
 	unsigned __int16 lightingHandle;
 };
-struct FxCodeMeshData
-{
+struct FxCodeMeshData {
 	unsigned int triCount;
 	unsigned __int16* indices;
 	unsigned __int16 argOffset;
 	unsigned __int16 argCount;
 	GfxLightingInfo lightingInfo;
 };
-struct GfxPlacement
-{
+struct GfxPlacement {
 	vec4_t quat;
 	vec3_t origin;
 };
-struct GfxScaledPlacement
-{
+struct GfxScaledPlacement {
 	GfxPlacement base;
 	float scale;
 };
@@ -3574,8 +3381,7 @@ typedef struct RefDef_t2//1.02
 
 
 
-struct GfxParticleCloud
-{
+struct GfxParticleCloud {
 	GfxScaledPlacement placement;
 	vec3_t velDirWorld;
 	GfxColor color;
@@ -3585,35 +3391,30 @@ struct GfxParticleCloud
 	char gaussian;
 	char pad[3];
 };
-struct GfxBackEndPrimitiveData
-{
+struct GfxBackEndPrimitiveData {
 	int hasSunDirChanged;
 };
-struct GfxEntity
-{
+struct GfxEntity {
 	unsigned int renderFxFlags;
 	float materialTime;
 	float destructibleBurnAmount;
 	int textureOverrideIndex;
 };
 
-struct FxMarkMeshData
-{
+struct FxMarkMeshData {
 	unsigned int triCount;
 	unsigned __int16* indices;
 	unsigned __int16 modelIndex;
 	char modelTypeAndSurf;
 	char pad0;
 };
-struct GfxIndexBufferState
-{
+struct GfxIndexBufferState {
 	volatile int used;
 	int total;
 	int* buffer;
 	unsigned __int16* indices;
 };
-struct GfxFog
-{
+struct GfxFog {
 	int startTime;
 	int finishTime;
 	vec4_t color;
@@ -3627,8 +3428,7 @@ struct GfxFog
 	float sunFogEndAng;
 	float maxDensity;
 };
-struct GfxCmdArray
-{
+struct GfxCmdArray {
 	char* cmds;
 	int usedTotal;
 	int usedCritical;
@@ -3637,39 +3437,33 @@ struct GfxCmdArray
 	int warnSize;
 	int check;
 };
-struct GfxCmdBuf
-{
+struct GfxCmdBuf {
 	int* device;
 	int** commandList;
 	unsigned __int16 viewIndex;
 	unsigned __int16 deviceIndex;
 };
-struct $2BD02F38FBEBD854EF9A531D8B9F9671
-{
+struct $2BD02F38FBEBD854EF9A531D8B9F9671 {
 	int QueuedBatchCount;
 	int ExecutingBatchCount;
 };
 
 /* 3033 */
-union $B0D4309583B7E1A04BB710F938D86DE8
-{
+union $B0D4309583B7E1A04BB710F938D86DE8 {
 	$2BD02F38FBEBD854EF9A531D8B9F9671 __s0;
 	unsigned __int64 BatchCount;
 };
 
 /* 3034 */
-struct jqBatchGroup
-{
+struct jqBatchGroup {
 	$B0D4309583B7E1A04BB710F938D86DE8 ___u0;
 };
-struct GfxWorkerData
-{
+struct GfxWorkerData {
 	int cmdBufValid[33];
 	GfxCmdBuf cmdBuf[33];
 	jqBatchGroup cmdBufBatchGroup[33];
 };
-struct GfxDebugPoly
-{
+struct GfxDebugPoly {
 	vec4_t faceColor;
 	bool faceDepthTest;
 	vec4_t edgeColor;
@@ -3677,8 +3471,7 @@ struct GfxDebugPoly
 	int firstVert;
 	int vertCount;
 };
-struct PolySet
-{
+struct PolySet {
 	vec3_t* verts;
 	int vertCount;
 	int vertLimit;
@@ -3686,8 +3479,7 @@ struct PolySet
 	int polyCount;
 	int polyLimit;
 };
-struct trDebugString_t
-{
+struct trDebugString_t {
 	vec3_t xyz;
 	vec4_t color;
 	float scale;
@@ -3695,31 +3487,27 @@ struct trDebugString_t
 };
 
 /* 3230 */
-struct trDebugLine_t
-{
+struct trDebugLine_t {
 	vec3_t start;
 	vec3_t end;
 	vec4_t color;
 	int depthTest;
 };
-struct GfxDebugPlume
-{
+struct GfxDebugPlume {
 	vec3_t origin;
 	vec4_t color;
 	int score;
 	int startTime;
 	int duration;
 };
-struct trDebugSphere_t
-{
+struct trDebugSphere_t {
 	vec3_t center;
 	float radius;
 	int sideCount;
 	vec4_t color;
 	int depthTest;
 };
-struct DebugGlobals
-{
+struct DebugGlobals {
 	PolySet polySet;
 	trDebugString_t* strings;
 	int stringCount;
@@ -3743,24 +3531,21 @@ struct DebugGlobals
 	int externSphereCount;
 	int externMaxSphereCount;
 };
-struct GfxSunShadowProjection
-{
+struct GfxSunShadowProjection {
 	float viewMatrix[4][4];
 	vec4_t switchPartition;
 	vec4_t shadowmapScale;
 };
 
 /* 3252 */
-struct GfxSunShadowBoundingPoly
-{
+struct GfxSunShadowBoundingPoly {
 	vec2_t snapDelta;
 	int pointCount;
 	vec2_t points[9];
 	int pointIsNear[9];
 };
 
-struct GfxFilm
-{
+struct GfxFilm {
 	bool enabled;
 	vec4_t visColorRangeS;
 	vec4_t visColorRangeE;
@@ -3785,8 +3570,7 @@ struct GfxFilm
 	vec4_t sunFlareTint;
 };
 
-struct GfxBloom
-{
+struct GfxBloom {
 	vec4_t visBloomLevelsRGBYInB;
 	vec4_t visBloomLevelsRGBYInG;
 	vec4_t visBloomLevelsRGBYInW;
@@ -3798,8 +3582,7 @@ struct GfxBloom
 	vec4_t visBloomYLo;
 };
 
-struct GfxReviveFx
-{
+struct GfxReviveFx {
 	bool enabled;
 	float reviveEdgeColorTemp;
 	float reviveEdgeSaturation;
@@ -3810,22 +3593,19 @@ struct GfxReviveFx
 	float reviveEdgeAmount;
 };
 
-struct GfxLightScale
-{
+struct GfxLightScale {
 	float diffuseScale;
 	float specularScale;
 };
 
-struct GfxVisionSet
-{
+struct GfxVisionSet {
 	GfxFilm film;
 	GfxBloom bloom;
 	GfxReviveFx reviveFx;
 	GfxLightScale charPrimaryLightScale;
 };
 
-struct GfxDepthOfField
-{
+struct GfxDepthOfField {
 	float viewModelStart;
 	float viewModelEnd;
 	float nearStart;
@@ -3837,8 +3617,7 @@ struct GfxDepthOfField
 	bool useAltMaterial;
 };
 
-struct GfxDoubleVision
-{
+struct GfxDoubleVision {
 	vec3_t direction;
 	float motionBlurMagnitude;
 	float deltaPerMS;
@@ -3846,8 +3625,7 @@ struct GfxDoubleVision
 	float targ;
 };
 
-struct GfxCompositeFx
-{
+struct GfxCompositeFx {
 	vec2_t distortionScale;
 	float blurRadius;
 	float distortionMagnitude;
@@ -3861,8 +3639,7 @@ struct GfxCompositeFx
 	bool scriptEnabled;
 };
 
-struct GfxGenericFilter
-{
+struct GfxGenericFilter {
 	bool passEnabled[8][4];
 	int* passMaterial[8][4];
 	int passTarget[8][4];
@@ -3873,8 +3650,7 @@ struct GfxGenericFilter
 	int bitFlag[8];
 };
 
-struct GfxSaveScreenParam
-{
+struct GfxSaveScreenParam {
 	float s0;
 	float t0;
 	float ds;
@@ -3883,8 +3659,7 @@ struct GfxSaveScreenParam
 	char mode;
 };
 
-struct GfxBlendSaveScreenBlurredParam
-{
+struct GfxBlendSaveScreenBlurredParam {
 	int fadeMsec;
 	float s0;
 	float t0;
@@ -3894,8 +3669,7 @@ struct GfxBlendSaveScreenBlurredParam
 	char enabled;
 };
 
-struct GfxBlendSaveScreenFlashedParam
-{
+struct GfxBlendSaveScreenFlashedParam {
 	float intensityWhiteout;
 	float intensityScreengrab;
 	float s0;
@@ -3906,27 +3680,23 @@ struct GfxBlendSaveScreenFlashedParam
 	char enabled;
 };
 
-struct GfxSaveScreenFx
-{
+struct GfxSaveScreenFx {
 	GfxSaveScreenParam saveScreenParam;
 	GfxBlendSaveScreenBlurredParam blendBlurredParam;
 	GfxBlendSaveScreenFlashedParam blendFlashedParam;
 };
 
-struct GfxPoison
-{
+struct GfxPoison {
 	float curAmountTarget;
 	float curAmount;
 };
 
-struct GfxLightImage
-{
+struct GfxLightImage {
 	int* image;
 	char samplerState;
 };
 
-struct GfxLightDef
-{
+struct GfxLightDef {
 	const char* name;
 	GfxLightImage attenuation;
 	int lmapLookupStart;
@@ -3939,8 +3709,7 @@ struct float44 {
 	} __u0;
 };
 
-struct GfxLight
-{
+struct GfxLight {
 	char type;
 	char canUseShadowMap;
 	char shadowmapVolume;
@@ -3969,16 +3738,14 @@ struct GfxLight
 	GfxLightDef* def;
 };
 
-struct GfxViewport
-{
+struct GfxViewport {
 	int x;
 	int y;
 	int width;
 	int height;
 };
 
-struct GfxWorldFog
-{
+struct GfxWorldFog {
 	float baseDist;
 	float halfDist;
 	float baseHeight;
@@ -3993,8 +3760,7 @@ struct GfxWorldFog
 	float sunFogOpacity;
 };
 
-struct WaterFogDef
-{
+struct WaterFogDef {
 	int startTime;
 	int finishTime;
 	vec4_t color;
@@ -4008,14 +3774,12 @@ struct WaterFogDef
 	float sunFogEndAng;
 };
 
-struct ExtraCamLodInfo
-{
+struct ExtraCamLodInfo {
 	vec3_t pos[4];
 	unsigned int posValidBits;
 };
 
-struct GfxRippleWave
-{
+struct GfxRippleWave {
 	vec3_t wavePosition;
 	float waveWidth;
 	float waveSpeedScale;
@@ -4027,35 +3791,30 @@ struct GfxRippleWave
 	int waveTimeStamp;
 };
 
-struct __declspec(align(8)) GfxSunShadowPartition
-{
+struct __declspec(align(8)) GfxSunShadowPartition {
 	GfxViewParms shadowViewParms;
 	int partitionIndex;
 	GfxViewport viewport;
 	GfxSunShadowBoundingPoly boundingPoly;
 };
-struct GfxSunShadow
-{
+struct GfxSunShadow {
 	GfxMatrix lookupMatrix;
 	GfxSunShadowProjection sunProj;
 	int sunShadowCount;
 	__declspec(align(16)) GfxSunShadowPartition partition[2];
 };
-struct GfxCodeImageRenderTargetFields
-{
+struct GfxCodeImageRenderTargetFields {
 	unsigned __int64 renderTargetId : 8;
 	unsigned __int64 enable : 1;
 	unsigned __int64 fbufferTexture : 3;
 	unsigned __int64 filtering : 20;
 };
-union GfxCodeImageRenderTarget
-{
+union GfxCodeImageRenderTarget {
 	GfxCodeImageRenderTargetFields fields;
 	unsigned int packed;
 };
 
-struct __declspec(align(16)) GfxSpotShadow
-{
+struct __declspec(align(16)) GfxSpotShadow {
 	GfxViewParms shadowViewParms;
 	GfxMatrix lookupMatrix;
 	char shadowableLightIndex;
@@ -4071,27 +3830,23 @@ struct __declspec(align(16)) GfxSpotShadow
 	int clearScreen;
 };
 
-struct WindState
-{
+struct WindState {
 	vec3_t windDirection;
 	float windSpringAngle[16];
 	vec3_t windRustleAngle[16];
 	float speed;
 };
 
-struct GfxPrimStats
-{
+struct GfxPrimStats {
 	int counters[8];
 };
 
-struct GfxStageStats
-{
+struct GfxStageStats {
 	bool used;
 	GfxPrimStats prims[10];
 };
 
-enum GfxPrimStatsStage
-{
+enum GfxPrimStatsStage {
 	GFX_PRIM_STATS_STAGE_FIRST = 0x0,
 	GFX_PRIM_STATS_STAGE_DEFAULT = 0x0,
 	GFX_PRIM_STATS_STAGE_SHADOW_SUN = 0x1,
@@ -4113,8 +3868,7 @@ enum GfxPrimStatsStage
 	GFX_PRIM_STATS_STAGE_LAST = 0xF,
 };
 
-enum GfxPrimStatsTarget
-{
+enum GfxPrimStatsTarget {
 	GFX_PRIM_STATS_FIRST = 0x0,
 	GFX_PRIM_STATS_DEFAULT = 0x0,
 	GFX_PRIM_STATS_WORLD = 0x1,
@@ -4130,28 +3884,24 @@ enum GfxPrimStatsTarget
 	GFX_PRIM_STATS_COUNT = 0xA,
 };
 
-struct $3C7A8D38A9BF8FC49B52AABA7396F3B0
-{
+struct $3C7A8D38A9BF8FC49B52AABA7396F3B0 {
 	int gfxEntCount;
 	int geoIndexCount;
 	int fxIndexCount;
 };
 
-struct GfxFrameStats
-{
+struct GfxFrameStats {
 	GfxStageStats stages[16];
 	GfxPrimStatsStage currentStage;
 	GfxPrimStatsTarget currentTarget;
 	$3C7A8D38A9BF8FC49B52AABA7396F3B0 counters;
 };
 
-struct GfxQRCodeBackend
-{
+struct GfxQRCodeBackend {
 	vec4_t scale[12];
 };
 
-struct GfxUI3DBackend
-{
+struct GfxUI3DBackend {
 	GfxViewport viewport[6];
 	vec4_t uvSetup[6];
 	int renderCmdCount[6];
@@ -4161,8 +3911,7 @@ struct GfxUI3DBackend
 	float blurRadius;
 };
 
-struct GfxViewRenderControl
-{
+struct GfxViewRenderControl {
 	char mainSceneMSAA;
 	char mainScene;
 	char mainSceneFinal;
@@ -4173,8 +3922,7 @@ struct GfxViewRenderControl
 	unsigned int additionalPostFX;
 };
 
-struct GfxMeshData
-{
+struct GfxMeshData {
 	GfxMeshData* thisPtr;
 	unsigned int indexCount;
 	unsigned int totalIndexCount;
@@ -4184,22 +3932,19 @@ struct GfxMeshData
 	unsigned int vertSize;
 };
 
-struct GfxQuadMeshData
-{
+struct GfxQuadMeshData {
 	float x;
 	float y;
 	float width;
 	float height;
 	GfxMeshData meshData;
 };
-enum D3D11_FILL_MODE
-{
+enum D3D11_FILL_MODE {
 	D3D11_FILL_WIREFRAME = 0x2,
 	D3D11_FILL_SOLID = 0x3,
 };
 
-struct GfxViewInfo_0
-{
+struct GfxViewInfo_0 {
 	GfxViewParms viewParms;
 	GfxViewport sceneViewport;
 	GfxViewport displayViewport;
@@ -4243,8 +3988,7 @@ struct GfxViewInfo_0
 	bool needResolveOpaque;
 	__int16 lutScriptIndex;
 };
-struct GfxDrawSurfListInfo_0
-{
+struct GfxDrawSurfListInfo_0 {
 	GfxDrawSurf* drawSurfs;
 	unsigned int drawSurfCount;
 	char baseTechType;
@@ -4255,15 +3999,13 @@ struct GfxDrawSurfListInfo_0
 	int disableAllShadowTech;
 	int needResolve;
 };
-struct GfxDrawPrimArgs
-{
+struct GfxDrawPrimArgs {
 	int vertexCount;
 	int triCount;
 	int baseIndex;
 };
 #pragma pack(push, 4)
-struct GfxImageLoadDef
-{
+struct GfxImageLoadDef {
 	char levelCount;
 	char flags;
 	int format;
@@ -4271,21 +4013,18 @@ struct GfxImageLoadDef
 	char data[1];
 };
 #pragma pack(pop)
-struct $FDB8261CC12B5D309B88767C5C3FF00F
-{
+struct $FDB8261CC12B5D309B88767C5C3FF00F {
 	unsigned int strides[3];
 	int* vbs[3];
 	unsigned int offsets[3];
 };
 
 /* 3267 */
-union $78EBA6BCFDD3644CB34CBA49D081A17A
-{
+union $78EBA6BCFDD3644CB34CBA49D081A17A {
 	int device;
 	int localDevice;
 };
-enum MaterialVertexDeclType
-{
+enum MaterialVertexDeclType {
 	VERTDECL_GENERIC = 0x0,
 	VERTDECL_PACKED = 0x1,
 	VERTDECL_PACKED_LMAP_VC = 0x2,
@@ -4324,8 +4063,7 @@ union __m128
 };
 
 #pragma pack(push, 16)
-struct GfxCmdBufPrimState
-{
+struct GfxCmdBufPrimState {
 	$78EBA6BCFDD3644CB34CBA49D081A17A ___u0;
 	int* indexBuffer;
 	MaterialVertexDeclType vertDeclType;
@@ -4338,56 +4076,48 @@ struct GfxCmdBufPrimState
 };
 #pragma pack(pop)
 /* 1588 */
-union GfxTexture
-{
+union GfxTexture {
 	int* basemap;
 	GfxImageLoadDef* loadDef;
 };
 
 /* 1581 */
 
-union $F6B2A1A1C143DB014DD3A296E0AEBF4F
-{
+union $F6B2A1A1C143DB014DD3A296E0AEBF4F {
 	MaterialPass* localPass;
 	MaterialPass* pass;
 };
-enum GfxDepthRangeType
-{
+enum GfxDepthRangeType {
 	GFX_DEPTH_RANGE_SCENE = 0x0,
 	GFX_DEPTH_RANGE_VIEWMODEL = 0x40000000,
 	GFX_DEPTH_RANGE_FULL = 0xFFFFFFFF,
 };
 
-struct $96F5ADDD618D2034BA68D397EDF711E2
-{
+struct $96F5ADDD618D2034BA68D397EDF711E2 {
 	GfxImage* img1;
 	GfxImage* img2;
 };
 
 
 /* 3236 */
-struct $6ADBB5CDF6FFC85701C137F4BCDC5249
-{
+struct $6ADBB5CDF6FFC85701C137F4BCDC5249 {
 	Material* mat1;
 	Material* mat2;
 };
 
 /* 3237 */
-struct $7BD3819BAEC75E63D064078187541886
-{
+struct $7BD3819BAEC75E63D064078187541886 {
 	unsigned int constIdx;
 	vec4_t value;
 };
 
 /* 3238 */
-union $BF629B18F740888434A9F5B0C9062942
-{
+union $BF629B18F740888434A9F5B0C9062942 {
 	$96F5ADDD618D2034BA68D397EDF711E2 image;
 	$6ADBB5CDF6FFC85701C137F4BCDC5249 material;
 	$7BD3819BAEC75E63D064078187541886 shaderConst;
 };
-struct GfxTextureOverride
-{
+struct GfxTextureOverride {
 	__int16 prev;
 	char type;
 	unsigned int dobjModelMask;
@@ -4395,23 +4125,20 @@ struct GfxTextureOverride
 	$BF629B18F740888434A9F5B0C9062942 ___u4;
 };
 
-struct GfxSkinCacheEntry
-{
+struct GfxSkinCacheEntry {
 	unsigned int frameCount;
 	int skinnedCachedOffset;
 	unsigned short numSkinnedVerts;
 	unsigned short ageCount;
 };
 
-struct ShaderConstantSet
-{
+struct ShaderConstantSet {
 	Vector4 value[7];
 	char constantSource[7];
 	char used;
 };
 
-const struct GfxBackEndData
-{
+const struct GfxBackEndData {
 	char surfsBuffer[1];
 	__declspec(align(128)) FxCodeMeshData codeMeshes[1];
 	__declspec(align(128)) unsigned int primDrawSurfsBuf[65536];
@@ -4484,16 +4211,14 @@ const struct GfxBackEndData
 	WindState gfxWindState;
 	GfxFrameStats frameStats;
 };
-struct __declspec(align(16)) GfxCmdBufInput
-{
+struct __declspec(align(16)) GfxCmdBufInput {
 	vec4_t consts[211];
 	GfxImage* codeImages[55];
 	char codeImageSamplerStates[55];
 	GfxBackEndData* data;
 };
 
-struct GfxViewInfo
-{
+struct GfxViewInfo {
 	GfxViewParms viewParms;
 	GfxViewport sceneViewport;
 	GfxViewport displayViewport;
@@ -4537,8 +4262,7 @@ struct GfxViewInfo
 	bool needResolveOpaque;
 	__int16 lutScriptIndex;
 };
-struct GfxDrawSurfListInfo
-{
+struct GfxDrawSurfListInfo {
 	GfxDrawSurf* drawSurfs;
 	unsigned int drawSurfCount;
 	char baseTechType;
@@ -4551,8 +4275,7 @@ struct GfxDrawSurfListInfo
 };
 
 #pragma pack(push, 16)
-struct GfxCmdBufState
-{
+struct GfxCmdBufState {
 	char refSamplerState[16];
 	unsigned int samplerState[16];
 	GfxTexture* samplerTexture[16];
@@ -4587,8 +4310,7 @@ struct GfxCmdBufState
 	GfxBackEndData* backEndData;
 };
 #pragma pack(pop)
-struct cStaticModel_s
-{
+struct cStaticModel_s {
 	cStaticModelWritable writable;
 	XModel* xmodel;
 	float origin[3];
@@ -4597,8 +4319,7 @@ struct cStaticModel_s
 	float absmax[3];
 };
 
-enum TraceHitType
-{
+enum TraceHitType {
 	TRACE_HITTYPE_NONE = 0x0,
 	TRACE_HITTYPE_ENTITY = 0x1,
 	TRACE_HITTYPE_DYNENT_MODEL = 0x2,
@@ -4676,31 +4397,24 @@ enum TraceHitType
 
 
 template<int BIT_COUNT>
-struct bitarray
-{
+struct bitarray {
 	int array[(BIT_COUNT + 31) / 32];
 
-	void setBit(unsigned int pos)
-	{
-		if (pos < BIT_COUNT)
-		{
+	void setBit(unsigned int pos) {
+		if (pos < BIT_COUNT) {
 			array[pos / 32] |= 0x80000000 >> (pos % 32);
 		}
 	}
 
-	bool testBit(unsigned int pos)
-	{
-		if (pos < BIT_COUNT)
-		{
+	bool testBit(unsigned int pos) {
+		if (pos < BIT_COUNT) {
 			return (array[pos / 32] & (0x80000000 >> (pos % 32))) != 0;
 		}
 		return false;
 	}
 
-	void resetBit(unsigned int pos)
-	{
-		if (pos < BIT_COUNT)
-		{
+	void resetBit(unsigned int pos) {
+		if (pos < BIT_COUNT) {
 			array[pos / 32] &= ~(0x80000000 >> (pos % 32));
 		}
 	}
@@ -4768,8 +4482,7 @@ enum dvarType_t {
 	DVAR_TYPE_COUNT = 0xD,
 };
 
-enum eSessionModes_mode
-{
+enum eSessionModes_mode {
 	SESSIONMODE_OFFLINE = 0x0,
 	SESSIONMODE_SYSTEMLINK = 0x1,
 	SESSIONMODE_ONLINE = 0x2,
@@ -4779,8 +4492,7 @@ enum eSessionModes_mode
 	SESSIONMODE_INVALID = 0x6,
 };
 
-enum entityType__t
-{
+enum entityType__t {
 	ET_GENERAL = 0x0,
 	ET_PLAYER = 0x1,
 	ET_PLAYER_CORPSE = 0x2,
@@ -4806,8 +4518,7 @@ enum entityType__t
 	ET_DEADBODY = 65536,
 };
 
-enum entityFlags_t
-{
+enum entityFlags_t {
 	FL_GODMODE = 0x1,
 	FL_DEMI_GODMODE = 0x2,
 	FL_NOTARGET = 0x4,
@@ -4845,8 +4556,7 @@ enum entityFlags_t
 #pragma region local ui
 #define isValid(str) (strcmp(str, ""))
 
-enum uiType_t : int
-{
+enum uiType_t : int {
 	UI_TYPE_NONE,
 	UI_TYPE_TEXT,
 	UI_TYPE_MATERIAL,
@@ -4854,8 +4564,7 @@ enum uiType_t : int
 
 
 
-struct rectDef_s
-{
+struct rectDef_s {
 	float x;
 	float y;
 	float w;
@@ -4864,8 +4573,7 @@ struct rectDef_s
 	int vertAlign;
 };
 
-struct localui_s
-{
+struct localui_s {
 	uiType_t type;
 	float x;
 	float y;
@@ -4882,8 +4590,7 @@ struct localui_s
 
 
 
-struct ScreenPlacement
-{
+struct ScreenPlacement {
 	vec2_t scaleVirtualToReal;
 	vec2_t scaleVirtualToFull;
 	vec2_t scaleRealToVirtual;
@@ -5074,8 +4781,7 @@ struct clientEntityS {
 	int Flag;
 };
 
-struct CEntPlayerInfo
-{
+struct CEntPlayerInfo {
 	clientControllers_t* control;
 	char tag[6];
 	float waterHeight;
@@ -5083,8 +4789,7 @@ struct CEntPlayerInfo
 	int nextRippleTime;
 };
 
-struct cpose_t
-{
+struct cpose_t {
 	unsigned short lightingHandle;
 	char eType;
 	char eTypeUnion;
@@ -5108,17 +4813,15 @@ struct cpose_t
 	ShaderConstantSet constantSet;
 };
 
-struct trajectory_t
-{
+struct trajectory_t {
 	char trType; //0x0
 	int trTime; //0x4
 	int trDuration; //0x8
-	vec3_t trBase; //0xC
+	Vector3 trBase; //0xC
 	vec3_t trDelta; //0x18
 };
 
-struct LerpEntityStatePlayer
-{
+struct LerpEntityStatePlayer {
 	float leanf; //0x0
 	int movementDir; //0x4
 	int moveType; //0x8
@@ -5136,8 +4839,7 @@ struct LerpEntityStatePlayer
 	char proneLegsAngle; //0x23
 };
 
-struct LerpEntityStateMissile
-{
+struct LerpEntityStateMissile {
 	int launchTime; //0x0
 	int parentClientNum; //0x4
 	int fuseTime; //0x8
@@ -5145,19 +4847,16 @@ struct LerpEntityStateMissile
 	int autoDetonateTime; //0x10
 };
 
-struct LerpEntityStateAnonymous
-{
+struct LerpEntityStateAnonymous {
 	int data[8]; //0x0
 };
 
-struct LerpEntityStateLoopFx
-{
+struct LerpEntityStateLoopFx {
 	float cullDist; //0x0
 	int period; //0x4
 };
 
-struct LerpEntityStateTurret
-{
+struct LerpEntityStateTurret {
 	float gunAngles[3]; //0x0
 	int ownerNum; //0xC
 	int heatVal; //0x10
@@ -5166,12 +4865,10 @@ struct LerpEntityStateTurret
 	int flags; //0x1C
 };
 
-struct LerpEntityStateVehicle
-{
+struct LerpEntityStateVehicle {
 	float steerYaw; //0x0
 	float bodyRoll; //0x4
-	struct
-	{
+	struct {
 		short pitch;
 		short yaw;
 	}gunnerAngles[4]; //0x8
@@ -5181,25 +4878,21 @@ struct LerpEntityStateVehicle
 	char targetRotorSpeed; //0x1E
 };
 
-struct LerpEntityStateActor
-{
-	struct
-	{
+struct LerpEntityStateActor {
+	struct {
 		int actornum;
 	}index; //0x0
 	int species; //0x4
 	int team; //0x8
 	int enemy; //0xC
 	int freeCameraLockOnAllowed; //0x10
-	struct
-	{
+	struct {
 		short fBodyPitch;
 	}proneInfo;//0x14
 	short aiType; //0x16
 };
 
-struct LerpEntityStateScriptMover
-{
+struct LerpEntityStateScriptMover {
 	char attachTagIndex[4]; //0x0
 	int attachedTagIndex; //0x4
 	short attachModelIndex[4]; //0x8
@@ -5213,11 +4906,9 @@ struct LerpEntityStateScriptMover
 	short aiType; //0x1E
 };
 
-struct LerpEntityStateZBarrier
-{
+struct LerpEntityStateZBarrier {
 	int barrierTypeIndex; //0x0
-	struct
-	{
+	struct {
 		char flags;
 		char animTime;
 	}pieces[6]; //0x4
@@ -5225,14 +4916,12 @@ struct LerpEntityStateZBarrier
 
 
 
-union $9B35D18BE7DE1A49784D3DA3953D5C89
-{
+union $9B35D18BE7DE1A49784D3DA3953D5C89 {
 	char iHeadIconTeam;
 	short teamAndOwnerIndex;
 };
 
-union LerpEntityStateTypeUnion
-{
+union LerpEntityStateTypeUnion {
 	LerpEntityStatePlayer player;
 	LerpEntityStateMissile missile;
 	LerpEntityStateAnonymous anonymous;
@@ -5244,29 +4933,25 @@ union LerpEntityStateTypeUnion
 	LerpEntityStateZBarrier zbarrier;
 };
 
-struct LerpEntityState
-{
+struct LerpEntityState {
 	int eFlags; //0x0
 	int eFlags2; //0x4
 	trajectory_t pos;//0x8
 	trajectory_t apos;//0x2C
 	LerpEntityStateTypeUnion u; //0x50
 	short useCount; //0x74
-	union
-	{
+	union {
 		char iHeadIconTeam;
 		short teamAndOwnerIndex;
 	}faction; //0x76
 	unsigned int clientFields; //0x78
 };
 
-struct renderOptions_s
-{
+struct renderOptions_s {
 	unsigned int s;
 };
 
-struct actorAnimState_t
-{
+struct actorAnimState_t {
 	short state;
 	char subState;
 	float fLeanAmount;
@@ -5274,31 +4959,27 @@ struct actorAnimState_t
 	float fAimLeftRight;
 };
 
-union $8A55D3BB0C758A956A56F8E75035F352
-{
+union $8A55D3BB0C758A956A56F8E75035F352 {
 	int hintString;
 	int vehicleXModel;
 	unsigned int secondBcAlias;
 	unsigned int soundTag;
 };
 
-struct clientLinkInfo_t
-{
+struct clientLinkInfo_t {
 	short parentEnt;
 	char tagIndex;
 	char flags;
 };
 
-union $32A75A724673AB33BA2D603F67D50EA7
-{
+union $32A75A724673AB33BA2D603F67D50EA7 {
 	short brushmodel;
 	short xmodel;
 	short primaryLight;
 	unsigned short bone1;
 };
 
-struct $190F2CF944EC18EE3AF27F473C4F9DBE
-{
+struct $190F2CF944EC18EE3AF27F473C4F9DBE {
 	unsigned int weaponIdx : 8;
 	unsigned int attachment1 : 6;
 	unsigned int attachment2 : 6;
@@ -5306,14 +4987,12 @@ struct $190F2CF944EC18EE3AF27F473C4F9DBE
 	unsigned int padding : 6;
 };
 
-union Weapon
-{
+union Weapon {
 	$190F2CF944EC18EE3AF27F473C4F9DBE __s0;
 	unsigned int weaponData;
 };
 
-union $5941A7488DBCD59DA5C855EBC8EBAB48
-{
+union $5941A7488DBCD59DA5C855EBC8EBAB48 {
 	char scale;
 	char eventParm2;
 	char helicopterStage;
@@ -5321,31 +5000,26 @@ union $5941A7488DBCD59DA5C855EBC8EBAB48
 	char zombieShrinkOn;
 };
 
-struct entityState_s
-{
+struct entityState_s {
 	int number; //0x0
 	LerpEntityState lerp; //0x4
 	int time2; //0x80
 	int loopSoundId; //0x84
 	int solid; //0x88
 	int renderOptions; //0x8C
-	union
-	{
-		struct
-		{
+	union {
+		struct {
 			int legsAnim; //0x90
 			int torsoAnim; //0x94
 			float fTorsoPitch; //0x98
 			float fWaistPitch; //0x9C
 		}anim;
-		struct
-		{
+		struct {
 			char fov; //0x90
 			char treeId; //0x91
 			char animId; //0x92
 		}moverState;
-		struct
-		{
+		struct {
 			short flags; //0x90
 			char vehicleDefIndex; //0x92
 			char treeId; //0x93
@@ -5353,8 +5027,7 @@ struct entityState_s
 			short attachModelIndex[2]; //0x96
 			char attachTagIndex[2]; //0x9A
 		}vehicleState;
-		struct
-		{
+		struct {
 			short state; //0x90
 			char subState; //0x92
 			float fLeanAmount; //0x94
@@ -5362,8 +5035,7 @@ struct entityState_s
 			float fAimLeftRight; //0x9C
 		}animState;
 	}un2; //0x90
-	union
-	{
+	union {
 		char unk0[4]; //0xA0
 	}un3; //0xA0
 	int partBits[5]; //0xA4
@@ -5374,8 +5046,7 @@ struct entityState_s
 	unsigned int eventParm; //0xD4
 	short eType; //0xD8
 	short groundEntityNum; //0xDA
-	union
-	{
+	union {
 		char unk2[2]; //0xDC
 	}index; //0xDC
 	short otherEntityNum; //0xDE
@@ -5390,16 +5061,14 @@ struct entityState_s
 	char clientNum; //0xF3
 	char iHeadIcon; //0xF4
 	char weaponModel; //0xF5
-	union
-	{
+	union {
 		char hintString; //0xF6
 		char helicopterStage; //0xF6
 		char eventParm2; //0xF6
 	}un1; // 0xF6
 };
 
-struct centity_t
-{
+struct centity_t {
 	cpose_t pose;
 	LerpEntityState prevState;
 	entityState_s nextState;
@@ -5450,8 +5119,7 @@ struct centity_t
 
 
 
-struct usercmd__s
-{
+struct usercmd__s {
 	int serverTime; //0x0
 	bitarray<51> buttons; //0x4
 	int viewangles[3]; //0xC
@@ -5467,16 +5135,14 @@ struct usercmd__s
 	char pad[0x12]; //0x2A
 };
 
-enum DemoType
-{
+enum DemoType {
 	DEMO_TYPE_NONE = 0x0,
 	DEMO_TYPE_CLIENT = 0x1,
 	DEMO_TYPE_SERVER = 0x2,
 	DEMO_TYPE_SERVER_SNAPSHOT = 0x3,
 };
 
-enum CubemapShot
-{
+enum CubemapShot {
 	CUBEMAPSHOT_NONE = 0x0,
 	CUBEMAPSHOT_RIGHT = 0x1,
 	CUBEMAPSHOT_LEFT = 0x2,
@@ -5488,16 +5154,14 @@ enum CubemapShot
 };
 
 
-enum ffa_team_t
-{
+enum ffa_team_t {
 	TEAM_FFA_NONE = 0x0,
 	TEAM_FFA_AXIS = 0x1,
 	TEAM_FFA_ALLIES = 0x2,
 	TEAM_FFA_THREE = 0x3,
 };
 
-enum VehicleAnimState
-{
+enum VehicleAnimState {
 	VEHICLEANIMSTATE_IDLE = 0x0,
 	VEHICLEANIMSTATE_ENTRY = 0x1,
 	VEHICLEANIMSTATE_CHANGEPOS = 0x2,
@@ -5506,22 +5170,19 @@ enum VehicleAnimState
 };
 
 
-struct netUInt64
-{
+struct netUInt64 {
 	unsigned int low;
 	unsigned int high;
 };
 
-struct ArchivedMatchState
-{
+struct ArchivedMatchState {
 	int matchUIVisibilityFlags; //0x0
 	int bombTimer[2]; //0x4
 	int roundsPlayed; //0xC
 	int worldFields[8]; //0x10
 };
 
-struct UnarchivedMatchState
-{
+struct UnarchivedMatchState {
 	int teamScores[TEAM_MAX]; //0x0
 	int matchUIVisibilityFlags; //0x24
 	int scoreboardColumnTypes[5]; //0x28
@@ -5530,16 +5191,14 @@ struct UnarchivedMatchState
 	int talkFlags; //0x40
 };
 
-struct MatchState
-{
+struct MatchState {
 	int index; //0x0
 	ArchivedMatchState archivedState; //0x4
 	UnarchivedMatchState unarchivedState; //0x34
 	unsigned int pad[1]; //0x78
 };
 
-struct clientState_s
-{
+struct clientState_s {
 	int clientIndex;
 	team_t team;
 	ffa_team_t ffaTeam;
@@ -5585,8 +5244,7 @@ struct clientState_s
 	int offhandWeaponVisible;
 };
 
-struct actorState_s
-{
+struct actorState_s {
 	int actorIndex;
 	int entityNum;
 	int modelindex;
@@ -5597,8 +5255,7 @@ struct actorState_s
 	int animScriptedAnim;
 };
 
-struct snapshot_s
-{
+struct snapshot_s {
 	int snapFlags;
 	int ping;
 	int serverTime;
@@ -5613,10 +5270,13 @@ struct snapshot_s
 	MatchState matchState;
 	unsigned __int16 entIndices[512];
 	int serverCommandSequence;
+	template<typename T>
+	T get(uint32_t pos) {
+		return *reinterpret_cast<T*>(reinterpret_cast<std::uintptr_t>(this) + pos);
+	}
 };
 
-struct cg_s
-{
+struct cg_s {
 	int clientNum;				/// 0x00000
 	char padding00[0x1C];		/// 0x00004
 	int serverTime;				/// 0x00020
@@ -5647,23 +5307,20 @@ struct cg_s
 	float spreadMultiplier;		/// 0x80E90
 
 	template<typename T>
-	T get(uint32_t pos)
-	{
+	T get(uint32_t pos) {
 		return *reinterpret_cast<T*>(reinterpret_cast<std::uintptr_t>(this) + pos);
 	}
 
 };
 
 
-enum thirdPersonType
-{
+enum thirdPersonType {
 	TP_OFF = 0x0,
 	TP_FOR_MODEL = 0x1,
 	TP_FOR_SHADOW = 0x2,
 };
 
-struct playerEntity_t
-{
+struct playerEntity_t {
 	float fLastWeaponPosFrac;
 	int bPositionToADS;
 	vec3_t vPositionLastOrg;
@@ -5692,19 +5349,16 @@ struct usercmd_s_ {
 	char unk2[0x12]; //0x2A
 };
 #pragma region gentity / gclient
-struct perkBits_s
-{
+struct perkBits_s {
 	__int32 bit; //0x0000 
 	__int32 bit1; //0x0004 
 
 }; //Size=0x0008
-struct ammoPool_s
-{
+struct ammoPool_s {
 	__int32 count; //0x0000 
 }; //Size=0x0004
 
-class gclient_s
-{
+class gclient_s {
 public:
 	__int32 commandTime; //0x0000 
 	__int32 pm_type; //0x0004 
@@ -5833,8 +5487,7 @@ public:
 
 #pragma endregion
 
-struct BulletFireParams
-{
+struct BulletFireParams {
 	int worldEntNum; //0x0
 	int skipNum; //0x4
 	float damageMultiplier; //0x8
@@ -5845,8 +5498,7 @@ struct BulletFireParams
 	Vector3 dir; //0x34
 };
 
-struct __declspec(align(16)) trace_t
-{
+struct __declspec(align(16)) trace_t {
 	Vector4 normal;
 	float fraction;
 	int sflags;
@@ -5864,8 +5516,7 @@ struct __declspec(align(16)) trace_t
 	int hitPartition;
 };
 
-struct __declspec(align(16)) BulletTraceResults
-{
+struct __declspec(align(16)) BulletTraceResults {
 	trace_t trace;
 	gentity_s* hitEnt;
 	Vector3 hitPos;
@@ -5883,8 +5534,7 @@ struct __declspec(align(16)) BulletTraceResults
 //	char padding[0x100]; //0x58
 //};
 
-struct refdef_t
-{
+struct refdef_t {
 	unsigned int x; //0
 	unsigned int y;
 	unsigned int width;
@@ -5998,8 +5648,7 @@ struct refdef_t
 	GfxRippleWave rWaves[1];
 };
 
-struct cg_sa
-{
+struct cg_sa {
 	int clientNum;				/// 0x00000
 	char padding00[0x1C];		/// 0x00004
 	int serverTime;				/// 0x00020
@@ -6028,8 +5677,7 @@ struct cg_sa
 	float spreadMultiplier;		/// 0x80E90
 };
 
-struct bullet_hit_info_t
-{
+struct bullet_hit_info_t {
 	vec3_t hitp;
 	vec3_t hitn;
 	int sflags;
@@ -6038,8 +5686,7 @@ struct bullet_hit_info_t
 	float range;
 };
 
-enum CameraMode
-{
+enum CameraMode {
 	CAM_NORMAL = 0x0,
 	CAM_LINKED = 0x1,
 	CAM_VEHICLE = 0x2,
@@ -6052,8 +5699,7 @@ enum CameraMode
 	CAM_RADIANT = 0x9,
 };
 
-struct ScriptCamera
-{
+struct ScriptCamera {
 	int flags;
 	vec3_t origin;
 	vec3_t angles;
@@ -6062,8 +5708,7 @@ struct ScriptCamera
 	int lookAtCent;
 };
 
-struct ScriptExtraCam
-{
+struct ScriptExtraCam {
 	vec3_t origin[4];
 	vec3_t angles[4];
 	int entNum[4];
@@ -6073,8 +5718,7 @@ struct ScriptExtraCam
 	bool multiCamRequest;
 };
 
-struct Camera
-{
+struct Camera {
 	vec3_t lastViewOrg;
 	vec3_t lastViewAngles;
 	float lastFOV;
@@ -6099,16 +5743,14 @@ struct Camera
 	bool bWasRemoteTurretCam;
 };
 
-enum team_indicator
-{
+enum team_indicator {
 	TEAM_INDICATOR_FULL = 0x0,
 	TEAM_INDICATOR_ABBREVIATED = 0x1,
 	TEAM_INDICATOR_ICON = 0x2,
 	TEAM_INDICATOR_COUNT = 0x3,
 };
 
-enum scoreboardColumnType_t
-{
+enum scoreboardColumnType_t {
 	SB_TYPE_INVALID = 0x0,
 	SB_TYPE_NONE = 0x1,
 	SB_TYPE_SCORE = 0x2,
@@ -6138,8 +5780,7 @@ enum scoreboardColumnType_t
 	NUM_SB_TYPES = 0x1A,
 };
 
-struct __declspec(align(4)) objectiveMapInfo_t
-{
+struct __declspec(align(4)) objectiveMapInfo_t {
 	int* icon;
 	float iconSize;
 	char ignoreEntity : 1;
@@ -6150,8 +5791,7 @@ struct __declspec(align(4)) objectiveMapInfo_t
 	char stencilToPartialMap : 1;
 };
 
-enum InvalidCmdHintType
-{
+enum InvalidCmdHintType {
 	INVALID_CMD_NONE = 0x0,
 	INVALID_CMD_NO_AMMO_BULLETS = 0x1,
 	INVALID_CMD_NO_AMMO_FRAG_GRENADE = 0x2,
@@ -6169,8 +5809,7 @@ enum InvalidCmdHintType
 	INVALID_CMD_CANT_PLANT_EQUIPMENT = 0xE,
 };
 
-enum SuccessfulCmdHintType
-{
+enum SuccessfulCmdHintType {
 	SUCCESSFUL_CMD_NONE = 0x0,
 	SUCCESSFUL_CMD_GOD_MODE_ON = 0x1,
 	SUCCESSFUL_CMD_GOD_MODE_OFF = 0x2,
@@ -6187,28 +5826,24 @@ enum SuccessfulCmdHintType
 	SUCCESSFUL_CMD_LOOKSPRING_OFF = 0xD,
 };
 
-struct viewDirectionalHitIndicator_t
-{
+struct viewDirectionalHitIndicator_t {
 	int time;
 	vec3_t entOrigin;
 };
 
-struct viewDamage_t
-{
+struct viewDamage_t {
 	int time;
 	int duration;
 	float yaw;
 };
 
-enum ShockViewTypes
-{
+enum ShockViewTypes {
 	SHELLSHOCK_VIEWTYPE_BLURRED = 0x0,
 	SHELLSHOCK_VIEWTYPE_FLASHED = 0x1,
 	SHELLSHOCK_VIEWTYPE_NONE = 0x2,
 };
 
-struct $1FFD506E5F9165F79F5344FD9C8F021D
-{
+struct $1FFD506E5F9165F79F5344FD9C8F021D {
 	int blurredFadeTime;
 	int blurredEffectTime;
 	int flashWhiteFadeTime;
@@ -6217,16 +5852,14 @@ struct $1FFD506E5F9165F79F5344FD9C8F021D
 };
 
 /* 2956 */
-struct $B32C35443884083D3CC13DCD5C8D7874
-{
+struct $B32C35443884083D3CC13DCD5C8D7874 {
 	int fadeTime;
 	float kickRate;
 	float kickRadius;
 };
 
 /* 2957 */
-struct $16D8FAD28A08B38292F67C768CC14C4C
-{
+struct $16D8FAD28A08B38292F67C768CC14C4C {
 	bool affect;
 	char loop[64];
 	char loopSilent[64];
@@ -6244,8 +5877,7 @@ struct $16D8FAD28A08B38292F67C768CC14C4C
 };
 
 /* 2958 */
-struct $52C58A71BD00586BA7DCB8AF66236D72
-{
+struct $52C58A71BD00586BA7DCB8AF66236D72 {
 	bool affect;
 	int fadeTime;
 	float mouseSensitivity;
@@ -6254,28 +5886,24 @@ struct $52C58A71BD00586BA7DCB8AF66236D72
 };
 
 /* 2959 */
-struct $02B41AB872540B0D7FA7A4D4D9EBD97F
-{
+struct $02B41AB872540B0D7FA7A4D4D9EBD97F {
 	float scale;
 };
 
 /* 2960 */
-struct $1BC6F870A2CCF543567EAA1D445E0BBA
-{
+struct $1BC6F870A2CCF543567EAA1D445E0BBA {
 	bool affect;
 };
 
 /* 2961 */
-struct $50D21064AB3C35E3954292D19EEA2E03
-{
+struct $50D21064AB3C35E3954292D19EEA2E03 {
 	char name[32];
 	int inTime;
 	int outTime;
 };
 
 /* 2962 */
-const struct shellshock_parms_t
-{
+const struct shellshock_parms_t {
 	$1FFD506E5F9165F79F5344FD9C8F021D screenBlend;
 	$B32C35443884083D3CC13DCD5C8D7874 view;
 	$16D8FAD28A08B38292F67C768CC14C4C sound;
@@ -6285,8 +5913,7 @@ const struct shellshock_parms_t
 	$50D21064AB3C35E3954292D19EEA2E03 visionSet;
 };
 
-struct shellshock_t
-{
+struct shellshock_t {
 	shellshock_parms_t* parms;
 	int startTime;
 	int duration;
@@ -6297,14 +5924,12 @@ struct shellshock_t
 	int visionSetStarted;
 };
 
-struct $F6DFD6D87F75480A1EF1906639406DF5
-{
+struct $F6DFD6D87F75480A1EF1906639406DF5 {
 	int time;
 	int duration;
 };
 
-enum KillCamEntityType
-{
+enum KillCamEntityType {
 	KC_NO_ENTITY = 0x0,
 	KC_HELICOPTER = 0x1,
 	KC_DESTRUCTIBLE = 0x2,
@@ -6319,16 +5944,14 @@ enum KillCamEntityType
 	KC_TURRET = 0xB,
 };
 
-enum KillCamEntityRestState
-{
+enum KillCamEntityRestState {
 	KC_ENT_MOVING = 0x0,
 	KC_ENT_AT_REST = 0x1,
 	KC_ENT_STUCK_GROUND = 0x2,
 	KC_ENT_STUCK_WALL = 0x3,
 };
 
-struct visionSetVars_t
-{
+struct visionSetVars_t {
 	bool filmEnable;
 	vec4_t visBloomLevelsRGBYInB;
 	vec4_t visBloomLevelsRGBYInG;
@@ -6374,15 +5997,13 @@ struct visionSetVars_t
 	char name[64];
 };
 
-struct CompassScrambler
-{
+struct CompassScrambler {
 	vec2_t pos;
 	int startTime;
 	int handle;
 };
 
-enum visionSetLerpStyle_t
-{
+enum visionSetLerpStyle_t {
 	VISIONSETLERP_UNDEFINED = 0x0,
 	VISIONSETLERP_NONE = 0x1,
 	VISIONSETLERP_TO_LINEAR = 0x2,
@@ -6392,21 +6013,18 @@ enum visionSetLerpStyle_t
 	VISIONSETLERP_CUSTOM_VALUE = 0x6,
 };
 
-struct visionSetLerpData_t
-{
+struct visionSetLerpData_t {
 	int timeStart;
 	int timeDuration;
 	float lerpFraction;
 	visionSetLerpStyle_t style;
 };
 
-struct $BE9F66374A020A9809EEAF403416A176
-{
+struct $BE9F66374A020A9809EEAF403416A176 {
 	float aimSpreadScale;
 };
 
-struct transPlayerState_t
-{
+struct transPlayerState_t {
 	int otherFlags;
 	int damageEvent;
 	short predictableEventSequence;
@@ -6415,13 +6033,11 @@ struct transPlayerState_t
 	int unpredictableEvents[4];
 };
 
-struct hudElemSoundInfo_t
-{
+struct hudElemSoundInfo_t {
 	int lastPlayedTime;
 };
 
-enum link_type_e
-{
+enum link_type_e {
 	PITCH_CTRL = 0x0,
 	YAW_CTRL = 0x1,
 	ROLL_CTRL = 0x2,
@@ -6430,8 +6046,7 @@ enum link_type_e
 	COMPASS_CTRL = 0x5,
 };
 
-struct footstepEvent_t
-{
+struct footstepEvent_t {
 	centity_t* cent;
 	unsigned short bone11;
 	unsigned short notetrack;
@@ -6443,8 +6058,7 @@ struct footstepEvent_t
 	unsigned int footprint : 1;
 };
 
-struct targetInfo_t
-{
+struct targetInfo_t {
 	int entNum;
 	vec3_t offset;
 	int materialIndex;
@@ -6452,15 +6066,13 @@ struct targetInfo_t
 	int flags;
 };
 
-struct snd_context
-{
+struct snd_context {
 	unsigned int type;
 	unsigned int value;
 };
 
 /* 3014 */
-struct snd_ambient_script_data
-{
+struct snd_ambient_script_data {
 	bool isAmbientRoom;
 	bool isAmbientPackage;
 	bool isDefaultRoom;
@@ -6472,8 +6084,7 @@ struct snd_ambient_script_data
 	snd_context contexts[16];
 };
 
-struct snd_ambient_collider
-{
+struct snd_ambient_collider {
 	int roomTriggerIndex;
 	int previousRoomTriggerIndex;
 	int packageTriggerIndex;
@@ -6489,13 +6100,11 @@ struct snd_ambient_collider
 	bool localPlayer;
 };
 
-struct ShieldHitDelayedEvent
-{
+struct ShieldHitDelayedEvent {
 	unsigned int eventParm;
 };
 
-struct FogSettings
-{
+struct FogSettings {
 	float start;
 	float r;
 	float g;
@@ -6515,8 +6124,7 @@ struct FogSettings
 	float fogMaxOpacity;
 };
 
-struct cg_t
-{
+struct cg_t {
 	int clientNum;
 	int localClientNum;
 	DemoType demoType;
@@ -6904,8 +6512,7 @@ struct cg_t
 	team_t team;
 };
 
-struct ClientArchiveData
-{
+struct ClientArchiveData {
 	int serverTime;
 	vec3_t origin;
 	vec3_t velocity;
@@ -6914,15 +6521,13 @@ struct ClientArchiveData
 	PlayerVehicleState playerVehStateClientArchive;
 };
 
-struct outPacket_t
-{
+struct outPacket_t {
 	int p_cmdNumber;
 	int p_serverTime;
 	int p_realtime;
 };
 
-struct clSnapshot_t
-{
+struct clSnapshot_t {
 	int valid;
 	int snapFlags;
 	int serverTime;
@@ -6940,6 +6545,11 @@ struct clSnapshot_t
 	int parseClientsIndex;
 	int parseActorsIndex;
 	int serverCommandNum;
+
+	template<typename T>
+	T get(uint32_t pos) {
+		return *reinterpret_cast<T*>(reinterpret_cast<std::uintptr_t>(this) + pos);
+	}
 };
 
 #define FL_NONE 0
@@ -6949,16 +6559,14 @@ struct clSnapshot_t
 #define FL_ZOOM 0x80000
 #define FL_FIRE 0x800000
 
-enum StanceState
-{
+enum StanceState {
 	CL_STANCE_STAND = 0x0,
 	CL_STANCE_CROUCH = 0x1,
 	CL_STANCE_PRONE = 0x2,
 	CL_STANCE_DIVE_TO_PRONE = 0x3,
 };
 
-struct clientActive_t
-{
+struct clientActive_t {
 	MatchState* parseMatchStatesBuf;
 	int numParseMatchStates;
 	int maxParseMatchStates;
@@ -7048,15 +6656,13 @@ struct clientActive_t
 	int serverKbpsCount[2];
 };
 
-struct SonarAttachmentInfo
-{
+struct SonarAttachmentInfo {
 	vec3_t prevOrigin;
 	float movementDistance[60];
 	int nextMovementDistanceIndex;
 };
 
-struct animation_s
-{
+struct animation_s {
 	char name[64];
 	int initialLerp;
 	int finalLerp;
@@ -7072,8 +6678,7 @@ struct animation_s
 	int noteType;
 };
 
-struct lerpFrame_t
-{
+struct lerpFrame_t {
 	float yawAngle;
 	int yawing;
 	float pitchAngle;
@@ -7087,8 +6692,7 @@ struct lerpFrame_t
 	int oldFrameSnapshotTime;
 };
 
-struct clientInfo_t
-{
+struct clientInfo_t {
 	int infoValid;
 	int nextValid;
 	int clientNum;
@@ -7183,32 +6787,28 @@ struct clientInfo_t
 
 #pragma region Vehicle Def
 /* 2747 */
-struct VehicleDriveBySound
-{
+struct VehicleDriveBySound {
 	int apex;
 	const char* name;
 	unsigned int alias;
 };
 
 /* 2748 */
-struct VehicleEngineSound
-{
+struct VehicleEngineSound {
 	const char* name;
 	unsigned int alias;
 	float params[5];
 };
 
 /* 2749 */
-struct VehicleGearData
-{
+struct VehicleGearData {
 	float minRPM;
 	float maxRPM;
 	float ratio;
 };
 
 /* 2750 */
-struct VehicleEngine
-{
+struct VehicleEngine {
 	float idleRpms;
 	float maxRpms;
 	float maxTorque;
@@ -7226,15 +6826,13 @@ struct VehicleEngine
 };
 
 /* 2751 */
-struct VehicleAntenna
-{
+struct VehicleAntenna {
 	float springK;
 	float damp;
 	float length;
 	float gravity;
 };
-struct view_limits_t
-{
+struct view_limits_t {
 	float horizSpanLeft;
 	float horizSpanRight;
 	float vertSpanUp;
@@ -7244,15 +6842,13 @@ struct view_limits_t
 	float vertResistUp;
 	float vertResistDown;
 };
-enum TractionType
-{
+enum TractionType {
 	TRACTION_TYPE_FRONT = 0x0,
 	TRACTION_TYPE_BACK = 0x1,
 	TRACTION_TYPE_ALL_WD = 0x2,
 	NUM_TRACTION_TYPES = 0x3,
 };
-struct VehicleParameter
-{
+struct VehicleParameter {
 	float m_speed_max;
 	float m_accel_max;
 	float m_reverse_scale;
@@ -7305,8 +6901,7 @@ struct VehicleParameter
 	float m_linear_drag_scale;
 	float m_angular_drag_scale;
 };
-const struct VehicleDef
-{
+const struct VehicleDef {
 	const char* name;
 	__int16 type;
 	int remoteControl;
@@ -7523,8 +7118,7 @@ const struct VehicleDef
 /* 1265 */
 
 
-enum eAttachment
-{
+enum eAttachment {
 	ATTACHMENT_NONE = 0x0,
 	ATTACHMENT_ACOG = 0x1,
 	ATTACHMENT_DUALCLIP = 0x2,
@@ -7560,8 +7154,7 @@ enum eAttachment
 };
 
 
-enum eAttachmentPoint
-{
+enum eAttachmentPoint {
 	ATTACHMENT_POINT_NONE = 0x0,
 	ATTACHMENT_POINT_TOP = 0x1,
 	ATTACHMENT_POINT_FIRST = 0x1,
@@ -7574,8 +7167,7 @@ enum eAttachmentPoint
 };
 
 
-struct WeaponAttachment
-{
+struct WeaponAttachment {
 	const char* szInternalName;
 	const char* szDisplayName;
 	eAttachment attachmentType;
@@ -7654,8 +7246,7 @@ struct WeaponAttachment
 };
 
 #pragma region client active
-struct outPacket_tt
-{
+struct outPacket_tt {
 	int p_cmdNumber;
 	int p_serverTime;
 	int p_realtime;
@@ -7704,8 +7295,7 @@ struct playerState_sss {
 	Vector3 viewangles;				/// 0x01F8 - 0x0204
 	char _0x002CAC[0x5604];			/// 0x0204 - 0x5808
 };
-struct clSnapshot_tt
-{
+struct clSnapshot_tt {
 	int valid;
 	int snapFlags;
 	int serverTime;
@@ -7724,8 +7314,7 @@ struct clSnapshot_tt
 	int parseActorsIndex;
 	int serverCommandNum;
 };
-struct usercmd_ss
-{
+struct usercmd_ss {
 	int time;
 	int buttons;
 	int Buf8;
@@ -7737,15 +7326,13 @@ struct usercmd_ss
 	char rDir;
 	char Buf[0x16];
 };
-struct MatchStatee
-{
+struct MatchStatee {
 	/// reverse oneday
 };
 struct entityState_ss {
 	/// reverse later ?
 };
-struct clientState_ss
-{
+struct clientState_ss {
 	int clientIndex;
 	int team;
 	int ffaTeam;
@@ -7858,8 +7445,7 @@ enum XAssetType {
 	ASSET_TYPE_DEPEND,
 	ASSET_TYPE_FULL_COUNT,
 };
-enum visionSetMode_t
-{
+enum visionSetMode_t {
 	VISIONSETMODE_NAKED = 0x0,
 	VISIONSETMODE_SERVER = 0x1,
 	VISIONSETMODE_NIGHT = 0x2,
@@ -7877,8 +7463,7 @@ struct turretcheck {
 };
 
 
-struct compass_shit
-{
+struct compass_shit {
 	float compassNorthYaw;
 	Vector2 compassNorth;
 	void* compassMapMaterial;
@@ -7888,8 +7473,7 @@ struct compass_shit
 };
 
 /* 4439 */
-struct CompassActor
-{
+struct CompassActor {
 	int lastUpdate;
 	float lastPos[2];
 	float lastEnemyPos[2];
@@ -7909,8 +7493,7 @@ struct CompassActor
 };
 
 /* 4440 */
-struct CompassFakeFire
-{
+struct CompassFakeFire {
 	float pos[2];
 	float yaw;
 	int entityNum;
@@ -7920,8 +7503,7 @@ struct CompassFakeFire
 };
 
 /* 4441 */
-struct CompassVehicle
-{
+struct CompassVehicle {
 	int entityNum;
 	int lastUpdate;
 	float lastPos[2];
@@ -7931,8 +7513,7 @@ struct CompassVehicle
 };
 
 /* 4442 */
-struct CompassDogs
-{
+struct CompassDogs {
 	int entityNum;
 	int lastUpdate;
 	float lastPos[2];
@@ -7943,8 +7524,7 @@ struct CompassDogs
 };
 
 /* 4443 */
-struct CompassTurrets
-{
+struct CompassTurrets {
 	int entityNum;
 	int lastUpdate;
 	int beginFadeTime;
@@ -7957,16 +7537,14 @@ struct CompassTurrets
 };
 
 /* 4444 */
-struct CompassArtillery
-{
+struct CompassArtillery {
 	float pos[2];
 	float realPos[2];
 	int fireTime;
 };
 
 /* 4445 */
-struct CompassHelicopter
-{
+struct CompassHelicopter {
 	int entityNum;
 	int lastUpdate;
 	float lastPos[2];
@@ -7976,8 +7554,7 @@ struct CompassHelicopter
 };
 
 /* 4446 */
-struct CompassGuidedMissile
-{
+struct CompassGuidedMissile {
 	int entityNum;
 	int lastUpdate;
 	vec2_t lastPos;
@@ -7987,8 +7564,7 @@ struct CompassGuidedMissile
 	int ownerIndex;
 };
 
-enum SurfaceTypeNum
-{
+enum SurfaceTypeNum {
 	deflt = 0,
 	bark = 1,
 	brick = 2,
@@ -8026,8 +7602,7 @@ enum SurfaceTypeNum
 extern int iloop;
 extern bool awcheck[12];
 
-struct orientation_t
-{
+struct orientation_t {
 	vec3_t origin;
 	vec3_t axis[3];
 };
@@ -8174,14 +7749,12 @@ public:
 	short port;
 };
 
-union netIP_t
-{
+union netIP_t {
 	char ip[4];
 	unsigned int inaddr;
 };
 
-struct netProfilePacket_t
-{
+struct netProfilePacket_t {
 	std::int32_t iTime;
 	std::int32_t iSize;
 	std::int32_t bFragment;
@@ -8189,8 +7762,7 @@ struct netProfilePacket_t
 /*
 //=====================================================================================
 */
-struct netProfileStream_t
-{
+struct netProfileStream_t {
 	netProfilePacket_t packets[60];
 	std::int32_t iCurrPacket;
 	std::int32_t iBytesPerSecond;
@@ -8204,14 +7776,12 @@ struct netProfileStream_t
 /*
 //=====================================================================================
 */
-struct netProfileInfo_t
-{
+struct netProfileInfo_t {
 	netProfileStream_t send;
 	netProfileStream_t recieve;
 };
 
-struct netchan_t
-{
+struct netchan_t {
 	int32_t outgoingSequence;
 	netsrc_t sock;
 	int32_t dropped;
@@ -8235,12 +7805,11 @@ struct netchan_t
 	netProfileInfo_t prof;
 };
 
-struct clientConnection_t
-{
+struct clientConnection_t {
 	char pad[0x8];
 	int lastPacketSentTime;
 	char _0x0[0x24348];
-	
+
 	netchan_t netchan;
 };
 
@@ -8383,7 +7952,7 @@ struct RegisteredUser {
 //=====================================================================================
 
 struct bdSecurityKey {
-	char ab[16];
+	char ab[18];
 };
 
 //=====================================================================================
@@ -8431,8 +8000,7 @@ struct SessionData {
 
 //=====================================================================================
 
-struct __declspec(align(4)) PartyHostDetails
-{
+struct __declspec(align(4)) PartyHostDetails {
 	netadr_t addr;
 	XSESSION_INFO sessionInfo;
 	uint64_t xuid;
@@ -8517,8 +8085,7 @@ extern int ThreadInfo1;
 #define color_white color(255, 255, 255, 255)
 #define __mask_neg_float -1.0f
 
-enum e_JoinRejectionReason
-{
+enum e_JoinRejectionReason {
 	REASON_NONE = 0x0,
 	REASON_PARTY_PRIVACY_CLOSED = 0x1,
 	REASON_PARTY_PRIVACY_INVITE_ONLY = 0x2,
@@ -8526,15 +8093,13 @@ enum e_JoinRejectionReason
 	REASON_SYSTEMLINK_LOBBY = 0x4,
 };
 
-struct InviteMessage
-{
+struct InviteMessage {
 	XSESSION_INFO sessionInfo;
 	int fromMPInvite;
 	bool isDedicated;
 };
 
-enum IMType : char
-{
+enum IMType : char {
 	JOIN_REQUEST = 0x0,
 	JOIN_REPLY = 0x1,
 	INVITE = 0x2,
@@ -8542,8 +8107,7 @@ enum IMType : char
 	NUM_INSTANT_MESSAGE_TYPES = 0x4,
 };
 
-struct JoinSessionMessage
-{
+struct JoinSessionMessage {
 	int inviteID;
 	IMType mType;
 	bool isJoinable;
@@ -8555,26 +8119,22 @@ struct JoinSessionMessage
 	InviteMessage inviteInfo;
 
 	template<typename T>
-	T get(uint32_t pos)
-	{
+	T get(uint32_t pos) {
 		return *reinterpret_cast<T*>(reinterpret_cast<std::uintptr_t>(this) + pos);
 	}
 
 	template<typename T>
-	T get_pointer(uint32_t pos)
-	{
+	T get_pointer(uint32_t pos) {
 		return (reinterpret_cast<std::uintptr_t>(&this) + pos);
 	}
 };
 
-enum pull_flags : char
-{
+enum pull_flags : char {
 	from_bo2 = (1 << 2),
 	from_bo1 = (1 << 4)
 };
 
-class party_pulling
-{
+class party_pulling {
 public:
 	JoinSessionMessage data;
 	uint64_t interval;
@@ -8588,13 +8148,11 @@ public:
 #include <deque>
 static SceNpId temp_npid;
 static PartyData_s* current_party;
-static std::deque<party_pulling> messages;
+extern std::deque<party_pulling> messages;
 
-class party_search
-{
+class party_search {
 public:
-	enum search_state
-	{
+	enum search_state {
 		start,
 		in_progress
 	};
@@ -8607,10 +8165,8 @@ public:
 };
 
 static std::vector<opd_s> symbol_table;
-static void* get_symbol(unsigned int address)
-{
-	for (auto i = 0; i < symbol_table.size(); i++)
-	{
+static void* get_symbol(unsigned int address) {
+	for (auto i = 0; i < symbol_table.size(); i++) {
 		opd_s* opd = &symbol_table[i];
 		if (opd->sub == address)
 			return opd;
@@ -8624,17 +8180,14 @@ static void* get_symbol(unsigned int address)
 	return opd;
 }
 
-template<typename T> class symbol
-{
+template<typename T> class symbol {
 public:
-	operator T* ()
-	{
+	operator T* () {
 		T* type = *reinterpret_cast<T*>(this->mp_object_);
 		return (decltype(type))get_symbol(this->mp_object_);
 	}
 
-	T* get()
-	{
+	T* get() {
 		return this->mp_object_;
 	}
 
@@ -8646,34 +8199,29 @@ static symbol<void(SceNpId* npid, JoinSessionMessage* message)> Live_SendJoinInf
 static symbol<bool(PartyData_s* party)> Party_InParty{ 0x0134E14 };
 
 struct bdReferencable;
-struct bdReferencableVtbl
-{
+struct bdReferencableVtbl {
 	void* (*__vecDelDtor)(bdReferencable* ref, unsigned int);
 };
 
-struct bdStopwatch
-{
+struct bdStopwatch {
 	unsigned __int64 m_start;
 };
 
-struct bdReferencable
-{
+struct bdReferencable {
 public:
 
 	bdReferencableVtbl* vfptr;
 	volatile int m_refCount;
 };
 
-enum bdNATType
-{
+enum bdNATType {
 	BD_NAT_UNKNOWN = 0x0,
 	BD_NAT_OPEN = 0x1,
 	BD_NAT_MODERATE = 0x2,
 	BD_NAT_STRICT = 0x3,
 };
 
-enum errorParm_t
-{
+enum errorParm_t {
 	ERR_FATAL = 0x0,
 	ERR_DROP = 0x1,
 	ERR_FROM_STARTUP = 0x2,
@@ -8691,20 +8239,17 @@ public:
 	unsigned int m_size;
 };
 
-union bdInetAddr
-{
+union bdInetAddr {
 	char m_caddr[4];
 	unsigned int m_iaddr;
 };
 
-struct __declspec(align(4)) bdAddr
-{
+struct __declspec(align(4)) bdAddr {
 	bdInetAddr m_address;
 	unsigned __int16 m_port;
 };
 
-struct __declspec(align(4)) bdCommonAddr : bdReferencable
-{
+struct __declspec(align(4)) bdCommonAddr : bdReferencable {
 public:
 	bdArray<bdAddr> m_localAddrs;
 	bdAddr m_publicAddr;

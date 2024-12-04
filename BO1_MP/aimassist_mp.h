@@ -22,6 +22,8 @@ extern void anti_typeSY(int type);
 extern void anti_typeCY(int type);
 extern void anti_typeMY(int type);
 extern void anti_typeSTY(int type);
+extern void anti_typeSKX(int type);
+extern void anti_typeSKY(int type);
 extern void ShouldSimulateCheck();
 extern void ResetConfig();
 extern bool BulletTrace(int localClientNum, BulletFireParams* bulletFireParams, WeaponDef* weaponIndex, centity_s* centityAttacker, BulletTraceResults* btr, int surfacetype, bool simulate);
@@ -63,8 +65,7 @@ extern void setanglesMP();
 extern int Trace_GetEntityHitId_t[2];
 //extern void setanglesZM();
 
-enum CriticalSection
-{
+enum CriticalSection {
 	CRITSECT_ALLOC_MARK = 0x0,
 	CRITSECT_FX_VIS = 0x1,
 	CRITSECT_OCCLUSION_QUERY = 0x2,

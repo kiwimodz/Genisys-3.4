@@ -116,8 +116,7 @@ public:
 
 #include <sysutil/sysutil_oskdialog.h>
 #include <sysutil/sysutil_msgdialog.h>
-namespace Dialog
-{
+namespace Dialog {
 	static bool Finished = false;
 
 	enum {
@@ -137,8 +136,7 @@ namespace Dialog
 
 	static int msgdialog_mode = MODE_IDLE;
 
-	static void cb_dialogText1(int button_type, void* userdata)
-	{
+	static void cb_dialogText1(int button_type, void* userdata) {
 		switch (button_type) {
 		case CELL_MSGDIALOG_BUTTON_OK:
 		case CELL_MSGDIALOG_BUTTON_ESCAPE:
@@ -151,8 +149,7 @@ namespace Dialog
 		}
 	}
 
-	static void cb_dialogText2(int button_type, void* userdata)
-	{
+	static void cb_dialogText2(int button_type, void* userdata) {
 		switch (button_type) {
 
 		case CELL_MSGDIALOG_BUTTON_YES:
@@ -175,8 +172,7 @@ namespace Dialog
 		v3 = true;
 	}
 
-	static void ShowYESNO(char* msg)
-	{
+	static void ShowYESNO(char* msg) {
 		int ret = 0;
 		unsigned int type = CELL_MSGDIALOG_TYPE_SE_TYPE_NORMAL
 			| CELL_MSGDIALOG_TYPE_BG_INVISIBLE
@@ -184,8 +180,7 @@ namespace Dialog
 			| CELL_MSGDIALOG_TYPE_DISABLE_CANCEL_ON
 			| CELL_MSGDIALOG_TYPE_DEFAULT_CURSOR_YES;
 
-		switch (msgdialog_mode)
-		{
+		switch (msgdialog_mode) {
 		case MODE_IDLE:
 			break;
 		case MODE_STRING_YESNO:
@@ -201,8 +196,7 @@ namespace Dialog
 		}
 	}
 
-	static void Show(char* msg)
-	{
+	static void Show(char* msg) {
 		*(int*)0x10050500 = 0;
 		unsigned int type = CELL_MSGDIALOG_TYPE_SE_TYPE_ERROR
 			| CELL_MSGDIALOG_TYPE_BG_INVISIBLE
@@ -210,8 +204,7 @@ namespace Dialog
 			| CELL_MSGDIALOG_TYPE_DISABLE_CANCEL_ON
 			| CELL_MSGDIALOG_TYPE_DEFAULT_CURSOR_OK;
 
-		switch (msgdialog_mode)
-		{
+		switch (msgdialog_mode) {
 		case MODE_IDLE:
 			break;
 		case MODE_STRING_OK:
@@ -227,8 +220,7 @@ namespace Dialog
 		while (Dialog::msgdialog_mode != Dialog::MODE_EXIT) {}  //wait for the dialog to end :P
 	}
 
-	static void End()
-	{
+	static void End() {
 		Finished = false;
 		YESNO = 2;
 	}
